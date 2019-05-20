@@ -1,29 +1,86 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <div class="py-8 h-full">
+    <div v-if="user">
+      <div class="container mx-auto mb-4">
+        <div class="flex">
+          <router-link class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4" to="/">Notes</router-link>
+
+          <router-link
+            class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
+            to="/about"
+          >About</router-link>
+          <div class="flex-auto"></div>
+          <div class="profile flex ml-1">
+            <img width="40" height="40" :src="user.avatarUrl()">
+            <button
+              class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
+              @click="signOut"
+            >Sign out</button>
+          </div>
+        </div>
+      </div>
+      <router-view/>
     </div>
-    <router-view />
+    <login v-else/>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+import { mapActions } from "vuex";
+
+import { Person } from "blockstack";
+import { userSession } from "./helper/userSession";
+
+import Login from "./components/Login";
+
+export default {
+  name: "app",
+  components: { Login },
+
+  data() {
+    return {};
+  },
+
+  created() {
+    this.setUserSession(userSession);
+  },
+
+  mounted() {
+    if (userSession.isUserSignedIn()) {
+      const userData = userSession.loadUserData();
+      let user = new Person(userData.profile);
+      user.username = userData.username;
+      this.setUser(user);
+    } else if (userSession.isSignInPending()) {
+      userSession.handlePendingSignIn().then(userData => {
+        window.location = window.location.origin;
+      });
+    }
+  },
+
+  methods: {
+    signOut() {
+      this.userSession.signUserOut();
+      this.removeUser();
+    },
+    ...mapActions(["setUser", "removeUser", "setUserSession"])
+  },
+
+  computed: {
+    user() {
+      return this.$store.state.user;
+    },
+    userSession() {
+      return this.$store.state.userSession;
     }
   }
+};
+</script>
+
+<style lang="scss">
+.profile {
+  display: flex;
+  height: 40px;
 }
 </style>
+
