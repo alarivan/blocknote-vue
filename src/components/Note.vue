@@ -7,7 +7,7 @@
     <div class="flex flex-row-reverse">
       <button
         class="bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-3 mb-2 rounded"
-        @click="removeNote()"
+        @click="deleteNote()"
         title="delete"
       >
         <svg class="svg-icon" viewBox="0 0 20 20">
@@ -89,8 +89,8 @@ export default {
       );
     },
 
-    removeNote() {
-      this.$emit("removeNote", this.note);
+    deleteNote() {
+      this.$emit("deleteNote", this.note);
     },
 
     copyNote() {

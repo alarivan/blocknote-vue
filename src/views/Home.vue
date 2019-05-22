@@ -33,7 +33,7 @@
             :note="note"
             :index="index"
             :selected="selected"
-            @removeNote="removeNote"
+            @deleteNote="deleteNote"
             @copyNote="copyNote"
             @editNote="editNote"
           ></note>
@@ -46,7 +46,7 @@
 <script>
 import Mousetrap from "mousetrap";
 import _ from "underscore";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 import noteApi from "../api/notes";
 import tagsApi from "../api/tags";
@@ -61,7 +61,6 @@ export default {
 
   data() {
     return {
-      searchInput: "",
       tagsInput: "",
       noteInput: "",
       adding: false,
@@ -78,8 +77,8 @@ export default {
 
   methods: {
     init() {
-      noteApi.loadNotes().then(notes => {
-        this.notes = notes;
+      noteApi.load().then(notes => {
+        this.setNotes(notes);
 
         if (typeof this.$refs.search !== "undefined") {
           this.$refs.search.focus();
@@ -143,7 +142,7 @@ export default {
 
       Mousetrap.bind("d d", () => {
         if (this.selectMode) {
-          this.removeNote(this.filteredNotes[this.selected]);
+          this.deleteNote(this.filteredNotes[this.selected]);
         }
       });
 
@@ -190,27 +189,23 @@ export default {
       });
     },
 
-    addNote() {
+    addNewNote() {
       const body = this.noteInput.trim();
       const tags = this.tagsInput.trim();
       if (body) {
-        noteApi.createNote(body, tags).then(doc => {
-          this.notes.push(doc);
+        noteApi.create(body, tags).then(doc => {
+          this.addNote(doc);
           this.editMode(false);
         });
       }
     },
 
-    updateNote() {
+    changeNote() {
       const body = this.noteInput.trim();
       const tags = this.tagsInput.trim();
       if (body) {
-        noteApi.updateNote(this.editedNote._id, body, tags).then(doc => {
-          // eslint-disable-next-line no-underscore-dangle
-          const index = this.notes.findIndex(
-            n => n._id === this.editedNote._id
-          );
-          this.notes[index] = doc;
+        noteApi.update(this.editedNote._id, body, tags).then(doc => {
+          this.updateNote(doc);
           this.editMode(false);
         });
       }
@@ -218,24 +213,23 @@ export default {
 
     addOrUpdate() {
       if (this.editedNote) {
-        this.updateNote();
+        this.changeNote();
       } else {
-        this.addNote();
+        this.addNewNote();
       }
     },
 
-    removeNote(note) {
+    deleteNote(note) {
       const confirmation = confirm(
         "Are you sure you want to delete this note?"
       );
       if (confirmation) {
-        noteApi.deleteNote(note).then(() => {
-          // eslint-disable-next-line no-underscore-dangle
-          const index = this.notes.findIndex(n => n._id === note._id);
-          this.notes.splice(index, 1);
+        noteApi.delete(note).then(() => {
+          this.removeNote(note._id);
         });
       }
     },
+
     copyNote(note) {
       const copy = noteApi.getCopy(note.raw);
       if (copy) {
@@ -313,55 +307,43 @@ export default {
 
     getKey(note) {
       return note._id + new Date();
-    }
+    },
+
+    ...mapActions([
+      "setNotes",
+      "updateSearch",
+      "addNote",
+      "updateNote",
+      "removeNote"
+    ])
   },
 
   computed: {
-    filteredNotes() {
-      if (this.searchInput !== "") {
-        const match = this.searchInput.match(/:t (.*?);(.*)/);
-        if (!_.isNull(match)) {
-          const [all, tags, search] = match;
-          return this.notes.filter(n => {
-            const tagList = tags
-              .toLowerCase()
-              .split(",")
-              .map(t => t.trim());
-            const found = n.tags.find(t => {
-              return tagList.includes(t.name);
-            });
-
-            if (search.trim() !== "") {
-              return (
-                !_.isUndefined(found) &&
-                n.raw.toLowerCase().includes(search.trim())
-              );
-            } else {
-              return !_.isUndefined(found);
-            }
-          });
-        }
-
-        return this.notes.filter(n =>
-          n.raw.toLowerCase().includes(this.searchInput)
-        );
-      }
-
-      return this.notes;
-    },
-
     selectedNote() {
       if (this.selected === false) {
         return false;
       }
       return this.filteredNotes[this.selected];
     },
+
     user() {
       return this.$store.state.user;
     },
+
     userSession() {
       return this.$store.state.userSession;
-    }
+    },
+
+    searchInput: {
+      get() {
+        return this.$store.state.search;
+      },
+      set(value) {
+        this.updateSearch(value);
+      }
+    },
+
+    ...mapGetters(["filteredNotes"])
   }
 };
 </script>
