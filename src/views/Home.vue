@@ -10,8 +10,12 @@
           placeholder="press / to focus"
           aria-label="filter"
         >
+        <button
+          @click="editMode()"
+          class="w-40 inline-block py-0 px-3 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 rounded text-white h-7"
+        >new note</button>
         <div
-          class="inline-block border border-gray-600 rounded py-0 px-3 bg-gray-600 text-white h-7"
+          class="inline-block border border-gray-600 py-0 px-3 bg-gray-600 text-white font-bold h-7 ml-2"
           v-if="selectMode"
         >SS</div>
       </div>
@@ -25,7 +29,7 @@
       <div class="flex flex-wrap">
         <template v-for="(note, index) in filteredNotes">
           <note
-            :key="index"
+            :key="getKey(note)"
             :note="note"
             :index="index"
             :selected="selected"
@@ -126,10 +130,14 @@ export default {
       });
 
       Mousetrap.bind("s s", () => {
-        if (this.selectMode) {
-          this.exitSelectMode();
-        } else {
-          this.enterSelectMode();
+        const tag = (event.target || event.srcElement).tagName.toLowerCase();
+        if (tag !== "input" && tag !== "textarea") {
+          event.preventDefault();
+          if (this.selectMode) {
+            this.exitSelectMode();
+          } else {
+            this.enterSelectMode();
+          }
         }
       });
 
@@ -301,6 +309,10 @@ export default {
           .getElementById(this.selectedNote._id)
           .scrollIntoView({ block: "center" });
       }
+    },
+
+    getKey(note) {
+      return note._id + new Date();
     }
   },
 

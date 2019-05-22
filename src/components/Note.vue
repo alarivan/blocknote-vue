@@ -84,8 +84,8 @@ export default {
     body() {
       return marked(
         this.note.body
-          .replace("~c", "<div class='copy'>")
-          .replace("c~", "</div>")
+          .replace("~c", "<span class='copy'>")
+          .replace("c~", "</span>")
       );
     },
 

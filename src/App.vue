@@ -3,19 +3,19 @@
     <div v-if="user">
       <div class="container mx-auto mb-4">
         <div class="flex">
-          <router-link class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4" to="/">Notes</router-link>
+          <router-link class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4" to="/">notes</router-link>
 
           <router-link
             class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
             to="/about"
-          >About</router-link>
+          >about</router-link>
           <div class="flex-auto"></div>
           <div class="profile flex ml-1">
             <img width="40" height="40" :src="user.avatarUrl()">
             <button
               class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
               @click="signOut"
-            >Sign out</button>
+            >sign out</button>
           </div>
         </div>
       </div>
