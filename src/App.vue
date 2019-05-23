@@ -31,6 +31,8 @@ import { mapActions } from "vuex";
 import { Person } from "blockstack";
 import { userSession } from "./helper/userSession";
 
+import tagsApi from "./api/tags";
+
 import Login from "./components/Login";
 
 export default {
@@ -50,7 +52,9 @@ export default {
       const userData = userSession.loadUserData();
       let user = new Person(userData.profile);
       user.username = userData.username;
-      this.setUser(user);
+      this.setUser(user).then(() => {
+        tagsApi.load();
+      });
     } else if (userSession.isSignInPending()) {
       userSession.handlePendingSignIn().then(userData => {
         window.location = window.location.origin;

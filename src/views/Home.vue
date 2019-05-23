@@ -29,7 +29,7 @@
       <div class="flex flex-wrap">
         <template v-for="(note, index) in filteredNotes">
           <note
-            :key="getKey(note)"
+            :key="note._id"
             :note="note"
             :index="index"
             :selected="selected"
@@ -303,10 +303,6 @@ export default {
           .getElementById(this.selectedNote._id)
           .scrollIntoView({ block: "center" });
       }
-    },
-
-    getKey(note) {
-      return note._id + new Date();
     },
 
     ...mapActions([
