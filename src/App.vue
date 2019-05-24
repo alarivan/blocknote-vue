@@ -14,6 +14,7 @@
             <picture>
               <source :srcset="smallest_img" media="(max-width: 640px)">
               <img
+                v-if="user.avatarUrl()"
                 class="hidden sm:block"
                 :src="user.avatarUrl()"
                 alt="avatar"
