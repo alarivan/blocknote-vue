@@ -1,8 +1,8 @@
 {
-    "short_name": "Simple notes",
-    "name": "Simple notes",
+    "short_name": "BlockNote.xyz",
+    "name": "BlockNote.xyz",
     "icons": [{
-        "src": "https://helloblockstack.com/icon-192x192.png",
+        "src": "https://blocknote.xyz/icon-192x192.png",
         "sizes": "192x192",
         "type": "image/png"
     }],
