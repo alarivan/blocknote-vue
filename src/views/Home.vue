@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto relative">
     <div v-if="user">
-      <div class="flex items-center border-b border-b-2 border-teal-500 py-2 mb-2">
+      <div class="flex items-center border-b border-b-2 border-teal-500 py-2 mb-2 mx-1 sm:mx-0">
         <input
           ref="search"
           v-model="searchInput"
@@ -12,18 +12,34 @@
         >
         <button
           @click="editMode()"
-          class="w-40 inline-block py-0 px-3 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 rounded text-white h-7"
-        >new note</button>
+          class="hidden sm:block w-40 sm:w-64 inline-block py-0 px-3 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 rounded text-white h-7"
+        >
+          new note
+          <span class="hidden sm:inline-block">( shift + n )</span>
+        </button>
         <div
           class="inline-block border border-gray-600 py-0 px-3 bg-gray-600 text-white font-bold h-7 ml-2"
           v-if="selectMode"
         >SS</div>
       </div>
+
+      <div class="mx-1 mb-2 sm:hidden">
+        <button
+          @click="editMode()"
+          class="w-full py-2 px-4 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 text-white"
+        >
+          new note
+          <span class="hidden sm:inline-block">( shift + n )</span>
+        </button>
+      </div>
+
       <edit
         v-show="adding"
         :active="adding"
         v-bind:noteInput.sync="noteInput"
         v-bind:tagsInput.sync="tagsInput"
+        @cancel="exitEditMode"
+        @save="addOrUpdate"
       ></edit>
 
       <div class="flex flex-wrap">
@@ -77,13 +93,15 @@ export default {
 
   methods: {
     init() {
-      noteApi.load().then(notes => {
-        this.setNotes(notes);
+      if (this.$store.state.notes.length === 0) {
+        noteApi.load().then(notes => {
+          this.setNotes(notes);
 
-        if (typeof this.$refs.search !== "undefined") {
-          this.$refs.search.focus();
-        }
-      });
+          if (typeof this.$refs.search !== "undefined") {
+            this.$refs.search.focus();
+          }
+        });
+      }
 
       Mousetrap.bind("shift+n", () => {
         event.preventDefault();
@@ -295,6 +313,13 @@ export default {
         this.editedNote = false;
       }
     },
+
+    exitEditMode() {
+      if (this.adding) {
+        this.editMode(false);
+      }
+    },
+
     scrollToSelected() {
       if (this.selected < 2) {
         window.scrollTo(0, 0);

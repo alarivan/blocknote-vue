@@ -1,5 +1,5 @@
 <template>
-  <div class="py-8 h-full">
+  <div class="py-2 sm:py-8 h-full">
     <div v-if="user">
       <div class="container mx-auto mb-4">
         <div class="flex">
@@ -11,7 +11,16 @@
           >about</router-link>
           <div class="flex-auto"></div>
           <div class="profile flex ml-1">
-            <img width="40" height="40" :src="user.avatarUrl()">
+            <picture>
+              <source :srcset="smallest_img" media="(max-width: 640px)">
+              <img
+                class="hidden sm:block"
+                :src="user.avatarUrl()"
+                alt="avatar"
+                width="40"
+                height="40"
+              >
+            </picture>
             <button
               class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
               @click="signOut"
@@ -40,7 +49,9 @@ export default {
   components: { Login },
 
   data() {
-    return {};
+    return {
+      smallest_img: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+    };
   },
 
   created() {

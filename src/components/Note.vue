@@ -2,7 +2,7 @@
   <div
     :id="note._id"
     v-bind:class="{ active: active }"
-    class="flex flex-col note bg-indigo-100 p-2"
+    class="flex flex-col note bg-indigo-100 p-2 w-full sm:w-1/2"
   >
     <div class="flex flex-row-reverse">
       <button

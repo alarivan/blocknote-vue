@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center">
+  <div>
     <h1 class="text-3xl mb-2">Libraries:</h1>
     <div v-for="(item, index) in items" :key="index">
       <a class="underline" :href="item.source" target="_blank">{{item.name}}</a>
@@ -63,11 +63,6 @@ export default {
         }
       ]
     };
-  },
-  methods: {
-    signIn() {
-      userSession.redirectToSignIn();
-    }
   }
 };
 </script>

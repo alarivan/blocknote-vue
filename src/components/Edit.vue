@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mx-1 sm:mx-0 mb-2">
     <div class="flex flex-wrap items-center border-b border-b-2 border-green-500 py-2 mb-2">
       <label
         class="flex-auto uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -24,9 +24,22 @@
         v-on:input="$emit('update:tagsInput', $event.target.value)"
         class="mousetrap flex-auto appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
         type="text"
-        placeholder="Example: work, play, joke"
+        placeholder="work, play, joke"
         aria-label="tags"
       >
+    </div>
+    <div class="flex">
+      <button
+        @click="save"
+        class="flex-auto py-2 px-6 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 rounded text-white font-bold mr-2"
+      >
+        save
+        <span class="hidden sm:inline-block">( alt + enter )</span>
+      </button>
+      <button @click="cancel" class="py-2 px-4">
+        cancel
+        <span class="hidden sm:inline-block">( esc )</span>
+      </button>
     </div>
   </div>
 </template>
@@ -62,7 +75,15 @@ export default {
 
   mounted() {},
 
-  methods: {},
+  methods: {
+    save() {
+      this.$emit("save");
+    },
+
+    cancel() {
+      this.$emit("cancel");
+    }
+  },
 
   computed: {},
 
