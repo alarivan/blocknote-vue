@@ -7,7 +7,7 @@
     <div class="flex flex-row-reverse">
       <button
         :class="buttonClasses"
-        class="bg-red-400 hover:bg-red-500 text-white"
+        class="bg-red-500 hover:bg-red-600 text-white"
         @click="deleteNote()"
         title="delete"
       >
@@ -19,7 +19,7 @@
       </button>
       <button
         :class="buttonClasses"
-        class="bg-blue-400 hover:bg-blue-500 text-white mr-2"
+        class="bg-blue-300 hover:bg-blue-400 text-white mr-2"
         @click="copyNote()"
         title="copy"
       >
