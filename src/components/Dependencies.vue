@@ -60,6 +60,14 @@ export default {
         {
           name: "Vuex",
           source: "https://github.com/vuejs/vuex"
+        },
+        {
+          name: "loading.io css spinner ( https://loading.io/css/ )",
+          source: "https://loading.io/css/"
+        },
+        {
+          name: "EasyMDE - Markdown Editor",
+          source: "https://github.com/Ionaru/easy-markdown-editor"
         }
       ]
     };

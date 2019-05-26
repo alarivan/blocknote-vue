@@ -52,7 +52,7 @@
         @save="addOrUpdate"
       ></edit>
 
-      <div class="flex flex-wrap">
+      <div v-if="notes.length" class="flex flex-wrap">
         <template v-for="(note, index) in filteredNotes">
           <note
             :key="note._id"
@@ -64,6 +64,11 @@
             @editNote="editNote"
           ></note>
         </template>
+      </div>
+      <div v-else class="flex h-48 sm:h-64 justify-center items-center">
+        <div class="lds-circle">
+          <div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -91,7 +96,6 @@ export default {
       noteInput: "",
       adding: false,
       selected: false,
-      notes: [],
       selectMode: false,
       editedNote: false
     };
@@ -366,6 +370,10 @@ export default {
 
     userSession() {
       return this.$store.state.userSession;
+    },
+
+    notes() {
+      return this.$store.state.notes;
     },
 
     searchInput: {
