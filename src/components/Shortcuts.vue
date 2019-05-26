@@ -41,8 +41,14 @@ export default {
               description: "focus on tag search"
             },
             {
+              keys: "enter (when in tag search)",
+              description:
+                "adds a tag to filter (you can click on a tag to remove it)"
+            },
+            {
               keys: "c+l",
-              description: "clear search"
+              description:
+                "clear search, clear tags search, clear selected tags"
             },
             {
               keys: "s s",
