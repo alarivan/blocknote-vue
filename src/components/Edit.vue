@@ -1,12 +1,12 @@
 <template>
   <div class="mx-1 sm:mx-0 mb-2">
-    <div class="flex flex-wrap items-center border-b border-b-2 border-green-500 py-2 mb-2">
+    <div class="mb-2">
       <label
-        class="flex-auto uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+        class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
         for="note"
       >content (markdown)</label>
       <textarea
-        class="mousetrap flex-auto appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none h-56"
+        class="mousetrap"
         ref="noteinput"
         id="note"
         :value="noteInput"
@@ -31,7 +31,7 @@
     <div class="flex">
       <button
         @click="save"
-        class="save-button fixed shadow-2xl sm:shadow-none sm:static flex-auto py-2 px-6 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 rounded text-white font-bold mr-2"
+        class="save-button fixed shadow-2xl sm:shadow-none sm:static flex-auto py-2 px-6 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 rounded text-white font-bold sm:mr-2 z-20"
       >
         save
         <span class="hidden sm:inline-block">( alt + enter )</span>
@@ -46,6 +46,7 @@
 
 <script>
 import marked from "marked";
+import EasyMDE from "easymde";
 
 export default {
   name: "note-edit",
@@ -73,7 +74,15 @@ export default {
     }
   },
 
-  mounted() {},
+  mounted() {
+    this.easyMDE = new EasyMDE({
+      element: this.$refs.noteinput,
+      autofocus: true
+    });
+    this.easyMDE.codemirror.on("change", () => {
+      this.$emit("update:noteInput", this.easyMDE.value());
+    });
+  },
 
   methods: {
     save() {
@@ -91,6 +100,7 @@ export default {
     active: function(n, o) {
       if (n) {
         this.$refs.noteinput.focus();
+        this.easyMDE.value(this.noteInput);
       }
     }
   }
@@ -101,5 +111,10 @@ export default {
 .save-button {
   bottom: 10px;
   right: 10px;
+}
+
+.editor-toolbar,
+.CodeMirror.cm-s-easymde.CodeMirror-wrap {
+  border-radius: 0;
 }
 </style>

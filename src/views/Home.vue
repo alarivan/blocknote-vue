@@ -140,8 +140,9 @@ export default {
       });
 
       Mousetrap.bind("alt+enter", event => {
+        console.log("noteedit");
         const tag = (event.target || event.srcElement).tagName.toLowerCase();
-        if (tag === "textarea" || tag === "input") {
+        if (this.noteInput) {
           this.addOrUpdate();
         }
       });
@@ -311,10 +312,8 @@ export default {
       if (enable) {
         this.adding = true;
         this.$nextTick(() => {
-          if (typeof this.$refs.newnote !== "undefined") {
-            this.$refs.newnote.focus();
-            this.$refs.newnote.scrollIntoView();
-          }
+          const el = document.getElementsByClassName("editor-toolbar")[0];
+          el.scrollIntoView({ block: "center" });
         });
       } else {
         this.adding = false;

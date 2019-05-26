@@ -5,6 +5,7 @@ import store from "./store";
 
 import "./styles/main.scss";
 import "../node_modules/github-markdown-css";
+import "../node_modules/easymde/dist/easymde.min.css";
 
 Vue.config.productionTip = false;
 
