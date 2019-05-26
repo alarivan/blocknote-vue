@@ -32,6 +32,18 @@ export default {
         {
           title: "Add import/export",
           description: ""
+        },
+        {
+          title: "Add RegExp to search.",
+          description: ""
+        },
+        {
+          title: "Add sorting",
+          description: ""
+        },
+        {
+          title: "Add caching",
+          description: "Only load data from storage if it was changed."
         }
       ]
     };
