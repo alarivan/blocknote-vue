@@ -10,16 +10,18 @@ class NotesApi extends GenericApi {
 
   load() {
     return this.loadFromStorage().then(ns => {
-      return this.clearDb().then(() => {
-        return notesDb.insert(ns).then(docs => {
-          const promises = docs.map(n => {
-            return tagsApi.getForNote(n).then(tags => {
-              return this.build(n, tags);
+      return tagsApi.load().then(() => {
+        return this.clearDb().then(() => {
+          return notesDb.insert(ns).then(docs => {
+            const promises = docs.map(n => {
+              return tagsApi.getForNote(n).then(tags => {
+                return this.build(n, tags);
+              });
             });
-          });
 
-          return Promise.all(promises).then(result => {
-            return result;
+            return Promise.all(promises).then(result => {
+              return result;
+            });
           });
         });
       });

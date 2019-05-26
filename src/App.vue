@@ -64,9 +64,7 @@ export default {
       const userData = userSession.loadUserData();
       let user = new Person(userData.profile);
       user.username = userData.username;
-      this.setUser(user).then(() => {
-        tagsApi.load();
-      });
+      this.setUser(user);
     } else if (userSession.isSignInPending()) {
       userSession.handlePendingSignIn().then(userData => {
         window.location = window.location.origin;
