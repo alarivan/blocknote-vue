@@ -31,7 +31,7 @@
     <div class="flex">
       <button
         @click="save"
-        class="flex-auto py-2 px-6 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 rounded text-white font-bold mr-2"
+        class="save-button fixed shadow-2xl sm:shadow-none sm:static flex-auto py-2 px-6 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 rounded text-white font-bold mr-2"
       >
         save
         <span class="hidden sm:inline-block">( alt + enter )</span>
@@ -98,13 +98,8 @@ export default {
 </script>
 
 <style lang="scss">
-.note {
-  width: 50%;
-  box-sizing: border-box;
-  border: 2px solid white;
-
-  &.active {
-    border-color: #2b6cb0;
-  }
+.save-button {
+  bottom: 10px;
+  right: 10px;
 }
 </style>
