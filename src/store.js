@@ -91,7 +91,8 @@ export default new Vuex.Store({
   getters: {
     filteredNotes: state => {
       if (state.search !== "") {
-        const match = state.search.match(/:t (.*?);(.*)/);
+        const lowerCaseSearch = state.search.toLowerCase();
+        const match = lowerCaseSearch.match(/:t (.*?);(.*)/);
         if (!_.isNull(match)) {
           const [, tags, search] = match;
           return state.notes.filter(n => {
@@ -115,7 +116,7 @@ export default new Vuex.Store({
         }
 
         return state.notes.filter(n =>
-          n.raw.toLowerCase().includes(state.search)
+          n.raw.toLowerCase().includes(lowerCaseSearch)
         );
       }
 
