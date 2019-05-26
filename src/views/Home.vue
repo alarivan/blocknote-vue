@@ -1,13 +1,15 @@
 <template>
   <div class="container mx-auto relative">
     <div v-if="user">
-      <div class="flex items-center border-b border-b-2 border-teal-500 py-2 mb-2 mx-1 sm:mx-0">
+      <div
+        class="flex flex-wrap items-center border-b border-b-2 border-teal-500 py-2 mb-2 mx-1 sm:mx-0"
+      >
         <input
           ref="search"
           v-model="searchInput"
-          class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+          class="flex-auto appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
           type="text"
-          placeholder="press / to focus"
+          placeholder="search: press '/' to focus"
           aria-label="filter"
         >
         <button
@@ -31,6 +33,34 @@
           class="inline-block border border-gray-600 py-0 px-3 bg-gray-600 text-white font-bold h-7 ml-2"
           v-if="selectMode"
         >SS</div>
+      </div>
+      <div class="flex flex-wrap items-center mb-2 mx-1 sm:mx-0">
+        <div class="w-full flex-auto border-b border-b-2 border-teal-500 py-2 mb-2">
+          <input
+            ref="tagsearch"
+            v-model="tagSearch"
+            class="mousetrap w-full appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+            type="text"
+            placeholder="tags: press 't /' to focus"
+            aria-label="tags filter"
+          >
+        </div>
+        <div class>
+          <div
+            class="tag text-xs font-bold text-gray-800"
+            v-for="(tag, index) in filteredTags"
+            :key="index"
+          >{{tag.name}}</div>
+        </div>
+        <div class="border-l-2 border-white">
+          <button
+            v-for="(tag, index) in selectedTags"
+            :key="index"
+            @click="removeSelectedTag(tag)"
+            class="relative tag text-xs font-bold text-gray-800"
+            :style="{ backgroundColor: tag.color }"
+          >{{tag.name}}</button>
+        </div>
       </div>
 
       <div class="mx-1 mb-2 sm:hidden">
@@ -135,6 +165,18 @@ export default {
         }
       });
 
+      Mousetrap.bind("t /", event => {
+        const tag = (event.target || event.srcElement).tagName.toLowerCase();
+        if (tag !== "input" && tag !== "textarea") {
+          event.preventDefault();
+          this.exitSelectMode();
+          this.editMode(false);
+          if (typeof this.$refs.tagsearch !== "undefined") {
+            this.$refs.tagsearch.focus();
+          }
+        }
+      });
+
       Mousetrap.bind("c+l", event => {
         const tag = (event.target || event.srcElement).tagName.toLowerCase();
         if (tag !== "input" && tag !== "textarea") {
@@ -144,10 +186,16 @@ export default {
       });
 
       Mousetrap.bind("alt+enter", event => {
-        console.log("noteedit");
         const tag = (event.target || event.srcElement).tagName.toLowerCase();
         if (this.noteInput) {
           this.addOrUpdate();
+        }
+      });
+
+      Mousetrap.bind("enter", event => {
+        const tag = (event.target || event.srcElement).tagName.toLowerCase();
+        if (event.target == this.$refs.tagsearch && this.filteredTags.length) {
+          this.addSelectedTag(this.filteredTags[0]);
         }
       });
 
@@ -345,6 +393,8 @@ export default {
 
     clearSearch() {
       this.searchInput = "";
+      this.tagSearch = "";
+      this.clearSelectedTags();
     },
 
     ...mapActions([
@@ -352,7 +402,11 @@ export default {
       "updateSearch",
       "addNote",
       "updateNote",
-      "removeNote"
+      "removeNote",
+      "updateTagSearch",
+      "addSelectedTag",
+      "removeSelectedTag",
+      "clearSelectedTags"
     ])
   },
 
@@ -376,6 +430,10 @@ export default {
       return this.$store.state.notes;
     },
 
+    selectedTags() {
+      return this.$store.state.selectedTags;
+    },
+
     searchInput: {
       get() {
         return this.$store.state.search;
@@ -385,10 +443,23 @@ export default {
       }
     },
 
-    ...mapGetters(["filteredNotes"])
+    tagSearch: {
+      get() {
+        return this.$store.state.tagSearch;
+      },
+      set(value) {
+        this.updateTagSearch(value);
+      }
+    },
+
+    ...mapGetters(["filteredNotes", "filteredTags"])
   }
 };
 </script>
 
 <style lang="scss">
+.tag-icon-remove {
+  top: 5px;
+  right: 3px;
+}
 </style>

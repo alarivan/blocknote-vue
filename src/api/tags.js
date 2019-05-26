@@ -1,4 +1,5 @@
 import randomColor from "randomcolor";
+import store from "../store";
 import tagsDb from "../db/tags";
 
 import GenericApi from "./generic";
@@ -9,7 +10,9 @@ class TagsApi extends GenericApi {
   load() {
     return this.loadFromStorage().then(data => {
       return this.clearDb().then(() => {
-        return this.db.insert(data);
+        return this.db.insert(data).then(docs => {
+          return store.dispatch("setTags", docs);
+        });
       });
     });
   }

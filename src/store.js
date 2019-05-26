@@ -9,7 +9,10 @@ export default new Vuex.Store({
     user: null,
     userSession: null,
     notes: [],
-    search: ""
+    search: "",
+    tagSearch: "",
+    tags: [],
+    selectedTags: []
   },
   mutations: {
     SET_USER(state, user) {
@@ -52,6 +55,30 @@ export default new Vuex.Store({
       } else {
         console.error(`Note with id: ${id} was not found.`);
       }
+    },
+
+    SET_TAGS(state, tags) {
+      state.tags = tags;
+    },
+
+    SET_TAG_SEARCH(state, val) {
+      state.tagSearch = val;
+    },
+
+    ADD_SELECTED_TAG(state, tag) {
+      state.selectedTags.push(tag);
+    },
+
+    REMOVE_SELECTED_TAG(state, tag) {
+      // eslint-disable-next-line no-underscore-dangle
+      const index = state.selectedTags.findIndex(t => t._id === tag._id);
+      if (index !== -1) {
+        state.selectedTags.splice(index, 1);
+      }
+    },
+
+    CLEAR_SELECTED_TAGS(state) {
+      state.selectedTags = [];
     }
   },
   actions: {
@@ -85,17 +112,40 @@ export default new Vuex.Store({
 
     removeNote({ commit }, id) {
       commit("REMOVE_NOTE", id);
+    },
+
+    setTags({ commit }, tags) {
+      commit("SET_TAGS", tags);
+    },
+
+    updateTagSearch({ commit }, val) {
+      commit("SET_TAG_SEARCH", val);
+    },
+
+    addSelectedTag({ commit }, val) {
+      commit("ADD_SELECTED_TAG", val);
+      commit("SET_TAG_SEARCH", "");
+    },
+
+    removeSelectedTag({ commit }, val) {
+      commit("REMOVE_SELECTED_TAG", val);
+    },
+
+    clearSelectedTags({ commit }) {
+      commit("CLEAR_SELECTED_TAGS");
     }
   },
 
   getters: {
     filteredNotes: state => {
-      if (state.search !== "") {
+      let result = state.notes;
+      if (state.search !== "" || state.selectedTags.length) {
         const lowerCaseSearch = state.search.toLowerCase();
         const match = lowerCaseSearch.match(/:t (.*?);(.*)/);
         if (!_.isNull(match)) {
           const [, tags, search] = match;
-          return state.notes.filter(n => {
+
+          result = state.notes.filter(n => {
             const tagList = tags
               .toLowerCase()
               .split(",")
@@ -113,14 +163,38 @@ export default new Vuex.Store({
               return !_.isUndefined(found);
             }
           });
-        }
+        } else if (state.selectedTags.length) {
+          const selectedTagNames = state.selectedTags.map(t => t.name);
 
-        return state.notes.filter(n =>
-          n.raw.toLowerCase().includes(lowerCaseSearch)
-        );
+          result = state.notes.filter(n => {
+            const intr = _.intersection(
+              n.tags.map(t => t.name),
+              selectedTagNames
+            );
+
+            return intr.length;
+          });
+        } else {
+          result = state.notes.filter(n =>
+            n.raw.toLowerCase().includes(lowerCaseSearch)
+          );
+        }
       }
 
-      return state.notes;
+      return _.sortBy(result, "createdAt");
+    },
+
+    filteredTags: state => {
+      if (state.tagSearch !== "") {
+        return state.tags.filter(t => {
+          return (
+            t.name.includes(state.tagSearch.toLowerCase()) &&
+            !state.selectedTags.includes(t)
+          );
+        });
+      }
+
+      return [];
     }
   }
 });
