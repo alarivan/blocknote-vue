@@ -11,6 +11,16 @@
           aria-label="filter"
         >
         <button
+          @click="clearSearch()"
+          class="sm:hidden inline-block py-0 px-1 border border-gray-300 bg-gray-300 hover:bg-gray-400 hover:border-gray-400 text-gray-700 rounded h-6"
+        >
+          <svg class="svg-icon fill-current" viewBox="0 0 20 20">
+            <path
+              d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"
+            ></path>
+          </svg>
+        </button>
+        <button
           @click="editMode()"
           class="hidden sm:block w-40 sm:w-64 inline-block py-0 px-3 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 rounded text-white h-7"
         >
@@ -125,7 +135,7 @@ export default {
         const tag = (event.target || event.srcElement).tagName.toLowerCase();
         if (tag !== "input" && tag !== "textarea") {
           event.preventDefault();
-          this.searchInput = "";
+          this.clearSearch();
         }
       });
 
@@ -328,6 +338,10 @@ export default {
           .getElementById(this.selectedNote._id)
           .scrollIntoView({ block: "center" });
       }
+    },
+
+    clearSearch() {
+      this.searchInput = "";
     },
 
     ...mapActions([

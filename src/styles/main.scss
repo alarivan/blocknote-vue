@@ -21,3 +21,11 @@ body {
 .router-link-exact-active {
     @apply underline;
 }
+
+button {
+
+    &,
+    &:focus {
+        outline: none;
+    }
+}
