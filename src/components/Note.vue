@@ -6,7 +6,8 @@
   >
     <div class="flex flex-row-reverse">
       <button
-        class="bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-3 mb-2 rounded"
+        :class="buttonClasses"
+        class="bg-red-400 hover:bg-red-500 text-white"
         @click="deleteNote()"
         title="delete"
       >
@@ -17,7 +18,8 @@
         </svg>
       </button>
       <button
-        class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-1 px-3 mb-2 rounded mr-2"
+        :class="buttonClasses"
+        class="bg-blue-400 hover:bg-blue-500 text-white mr-2"
         @click="copyNote()"
         title="copy"
       >
@@ -28,7 +30,8 @@
         </svg>
       </button>
       <button
-        class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 mb-2 rounded mr-2"
+        :class="buttonClasses"
+        class="bg-yellow-400 hover:bg-yellow-500 text-white mr-2"
         @click="editNote()"
         title="edit"
       >
@@ -61,7 +64,9 @@ export default {
   components: {},
 
   data() {
-    return {};
+    return {
+      buttonClasses: "font-bold py-3 px-5 sm:py-1 sm:px-3 mb-2 rounded"
+    };
   },
 
   props: {
