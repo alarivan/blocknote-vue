@@ -38,6 +38,11 @@ export default {
           description: ""
         },
         {
+          title: "Improve tag search logic",
+          description:
+            "Allow to set 'AND' and 'OR' logical operators when searching tags. Right now it only works as 'OR'."
+        },
+        {
           title: "Add sorting",
           description: ""
         },
