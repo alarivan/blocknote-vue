@@ -46,7 +46,7 @@ export default {
                 "adds a tag to filter (you can click on a tag to remove it)"
             },
             {
-              keys: "c+l",
+              keys: "r r",
               description:
                 "clear search, clear tags search, clear selected tags"
             },

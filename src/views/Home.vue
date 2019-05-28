@@ -177,7 +177,7 @@ export default {
         }
       });
 
-      Mousetrap.bind("c+l", event => {
+      Mousetrap.bind("r r", event => {
         const tag = (event.target || event.srcElement).tagName.toLowerCase();
         if (tag !== "input" && tag !== "textarea") {
           event.preventDefault();
