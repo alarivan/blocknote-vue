@@ -35,7 +35,7 @@ class NotesApi extends GenericApi {
   }
 
   getCopy(raw) {
-    const m = raw.match(/(?<=~c)([\s\S]*?)(?=c~)/);
+    const m = raw.match(/~c([\s\S]*?)c~/);
 
     if (!_.isNull(m) && !_.isUndefined(m[1])) {
       return m[1].trim();
