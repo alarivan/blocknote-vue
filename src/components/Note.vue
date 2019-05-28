@@ -4,7 +4,7 @@
     v-bind:class="{ active: active }"
     class="flex flex-col note bg-indigo-100 p-2 w-full sm:w-1/2"
   >
-    <div class="flex flex-row-reverse">
+    <div class="flex flex-row-reverse mb-2">
       <button
         :class="buttonClasses"
         class="bg-red-500 hover:bg-red-600 text-white"
@@ -41,6 +41,8 @@
           ></path>
         </svg>
       </button>
+
+      <div v-if="copied" class="text-gray-800 flex-auto font-bold px-2">copied!</div>
     </div>
     <div class="markdown-body p-3 flex-auto" v-html="body()"></div>
     <div v-if="note.tags.length" class="flex">
@@ -65,14 +67,14 @@ export default {
 
   data() {
     return {
-      buttonClasses: "font-bold py-3 px-5 sm:py-1 sm:px-3 mb-2 rounded"
+      buttonClasses: "font-bold py-3 px-5 sm:py-1 sm:px-3 rounded",
+      copied: false
     };
   },
 
   props: {
     note: {
-      type: Object,
-      default: 100
+      type: Object
     },
     index: {
       type: Number
@@ -99,6 +101,11 @@ export default {
     },
 
     copyNote() {
+      this.copied = true;
+      setTimeout(() => {
+        this.copied = false;
+      }, 1000);
+
       this.$emit("copyNote", this.note);
     },
 
