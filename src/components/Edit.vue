@@ -2,6 +2,7 @@
   <div class="mx-1 sm:mx-0 mb-2">
     <div class="mb-2">
       <label
+        ref="edittoplabel"
         class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
         for="note"
       >content (markdown)</label>
@@ -36,7 +37,10 @@
         save
         <span class="hidden sm:inline-block">( alt + enter )</span>
       </button>
-      <button @click="cancel" class="py-2 px-4">
+      <button
+        @click="cancel"
+        class="py-2 px-4 w-full sm:w-auto border border-gray-500 hover:border-gray-600 rounded font-bold text-gray-700"
+      >
         cancel
         <span class="hidden sm:inline-block">( esc )</span>
       </button>
@@ -99,7 +103,8 @@ export default {
   watch: {
     active: function(n, o) {
       if (n) {
-        this.$refs.noteinput.focus();
+        this.$refs.edittoplabel.scrollIntoView(true);
+        this.easyMDE.codemirror.focus();
         this.easyMDE.value(this.noteInput);
       }
     }
