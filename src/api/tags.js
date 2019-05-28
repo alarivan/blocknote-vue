@@ -42,6 +42,7 @@ class TagsApi extends GenericApi {
         return Promise.all(promises).then(result => {
           if (newTags.length > 0) {
             this.loadToStorage();
+            this.updateStore();
           }
 
           return { obj: docs.concat(result), arr: arr };
@@ -75,6 +76,12 @@ class TagsApi extends GenericApi {
     }
 
     return color;
+  }
+
+  updateStore() {
+    return this.db.find({}).then(docs => {
+      return store.dispatch("setTags", docs);
+    });
   }
 }
 
