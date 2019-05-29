@@ -7,7 +7,7 @@
         <input
           ref="search"
           v-model="searchInput"
-          class="flex-auto appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+          class="mousetrap flex-auto appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
           type="text"
           placeholder="search: press '/' to focus"
           aria-label="filter"
@@ -186,16 +186,16 @@ export default {
       });
 
       Mousetrap.bind("alt+enter", event => {
-        const tag = (event.target || event.srcElement).tagName.toLowerCase();
         if (this.noteInput) {
           this.addOrUpdate();
         }
       });
 
       Mousetrap.bind("enter", event => {
-        const tag = (event.target || event.srcElement).tagName.toLowerCase();
         if (event.target == this.$refs.tagsearch && this.filteredTags.length) {
           this.addSelectedTag(this.filteredTags[0]);
+        } else if (event.target == this.$refs.search) {
+          this.$refs.tagsearch.focus();
         }
       });
 

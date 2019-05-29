@@ -1,5 +1,5 @@
 <template>
-  <div class="py-2 sm:py-8 h-full">
+  <div class="py-2 sm:py-8">
     <div v-if="user">
       <div class="container mx-auto mb-4">
         <div class="flex">
