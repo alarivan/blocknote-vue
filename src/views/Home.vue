@@ -39,7 +39,7 @@
           <input
             ref="tagsearch"
             v-model="tagSearch"
-            class="mousetrap w-full appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+            class="mousetrap w-full appearance-none bg-transparent border-none text-gray-700 py-1 px-2 leading-tight focus:outline-none"
             type="text"
             placeholder="tags: press 't /' to focus"
             aria-label="tags filter"
