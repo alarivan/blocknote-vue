@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full justify-center items-center">
+  <div class="flex justify-center items-center h-100vh">
     <div class="text-center">
       <h1 class="mb-4 text-2xl font-bold">BlockNote.xyz</h1>
       <p class="mb-3">

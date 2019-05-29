@@ -1,6 +1,6 @@
 <template>
-  <div class="py-2 sm:py-8">
-    <div v-if="user">
+  <div>
+    <div v-if="user" class="py-2 sm:py-8">
       <div class="container mx-auto mb-4">
         <div class="flex">
           <router-link class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4" to="/">notes</router-link>
