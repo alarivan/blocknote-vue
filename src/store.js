@@ -1,6 +1,18 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import _ from "underscore";
+import Fuse from "fuse.js";
+
+const options = {
+  shouldSort: true,
+  findAllMatches: true,
+  threshold: 0.1,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 32,
+  minMatchCharLength: 1,
+  keys: ["raw", "tags.name"]
+};
 
 Vue.use(Vuex);
 
@@ -133,46 +145,25 @@ export default new Vuex.Store({
   getters: {
     filteredNotes: state => {
       let result = state.notes;
-      if (state.search !== "" || state.selectedTags.length) {
-        const lowerCaseSearch = state.search.toLowerCase();
-        const match = lowerCaseSearch.match(/:t (.*?);(.*)/);
-        if (!_.isNull(match)) {
-          const [, tags, search] = match;
 
-          result = state.notes.filter(n => {
-            const tagList = tags
-              .toLowerCase()
-              .split(",")
-              .map(t => t.trim());
-            const found = n.tags.find(t => {
-              return tagList.includes(t.name);
-            });
+      if (state.selectedTags.length) {
+        const selectedTagNames = state.selectedTags.map(t => t.name).sort();
 
-            if (search.trim() !== "") {
-              return (
-                !_.isUndefined(found) &&
-                n.raw.toLowerCase().includes(search.trim())
-              );
-            } else {
-              return !_.isUndefined(found);
-            }
-          });
-        } else if (state.selectedTags.length) {
-          const selectedTagNames = state.selectedTags.map(t => t.name);
-
-          result = state.notes.filter(n => {
-            const intr = _.intersection(
-              n.tags.map(t => t.name),
-              selectedTagNames
-            );
-
-            return intr.length;
-          });
-        } else {
-          result = state.notes.filter(n =>
-            n.raw.toLowerCase().includes(lowerCaseSearch)
+        result = state.notes.filter(n => {
+          const intr = _.intersection(
+            n.tags.map(t => t.name),
+            selectedTagNames
           );
-        }
+
+          return _.isEqual(intr.sort(), selectedTagNames);
+        });
+      }
+
+      if (state.search !== "") {
+        let fuse = new Fuse(result, options); // "list" is the item array
+        result = fuse.search(state.search);
+
+        return result;
       }
 
       return _.sortBy(result, "createdAt");

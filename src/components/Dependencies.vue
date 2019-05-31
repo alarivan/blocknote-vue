@@ -68,6 +68,10 @@ export default {
         {
           name: "EasyMDE - Markdown Editor",
           source: "https://github.com/Ionaru/easy-markdown-editor"
+        },
+        {
+          name: "Fuse.js",
+          source: "https://github.com/krisk/fuse"
         }
       ]
     };

@@ -11,6 +11,7 @@
     "blockstack": "^19.1.0",
     "core-js": "^2.6.5",
     "easymde": "^2.6.0",
+    "fuse.js": "^3.4.5",
     "github-markdown-css": "^3.0.1",
     "marked": "^0.6.2",
     "mousetrap": "^1.6.3",
