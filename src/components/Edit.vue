@@ -52,9 +52,11 @@
 import marked from "marked";
 import EasyMDE from "easymde";
 
+import TagInput from "./TagInput";
+
 export default {
   name: "note-edit",
-  components: {},
+  components: { TagInput },
 
   data() {
     return {

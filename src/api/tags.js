@@ -26,14 +26,16 @@ class TagsApi extends GenericApi {
 
   createFromString(str) {
     if (str.length > 0) {
-      const arr = str.toLowerCase().split(", ");
+      const arr = str.toLowerCase().split(",");
       return this.db.find({ name: { $in: arr } }).then(docs => {
-        const newTags = arr.filter(tagName => {
-          const index = docs.findIndex(t => {
-            return t.name === tagName;
+        const newTags = arr
+          .map(t => t.trim())
+          .filter(tagName => {
+            const index = docs.findIndex(t => {
+              return t.name === tagName;
+            });
+            return index === -1;
           });
-          return index === -1;
-        });
 
         const promises = newTags.map(t => {
           return this.create(t);

@@ -34,34 +34,16 @@
           v-if="selectMode"
         >SS</div>
       </div>
-      <div class="flex flex-wrap items-center mb-2 mx-1 sm:mx-0">
-        <div class="w-full flex-auto border-b border-b-2 border-teal-500 py-2 mb-2">
-          <input
-            ref="tagsearch"
-            v-model="tagSearch"
-            class="mousetrap w-full appearance-none bg-transparent border-none text-gray-700 py-1 px-2 leading-tight focus:outline-none"
-            type="text"
-            placeholder="tags: press 't /' to focus"
-            aria-label="tags filter"
-          >
-        </div>
-        <div class>
-          <div
-            class="tag text-xs font-bold text-gray-800"
-            v-for="(tag, index) in filteredTags"
-            :key="index"
-          >{{tag.name}}</div>
-        </div>
-        <div class="border-l-2 border-white">
-          <button
-            v-for="(tag, index) in selectedTags"
-            :key="index"
-            @click="removeSelectedTag(tag)"
-            class="relative tag text-xs font-bold text-gray-800"
-            :style="{ backgroundColor: tag.color }"
-          >{{tag.name}}</button>
-        </div>
-      </div>
+
+      <tag-input
+        ref="tagsearch"
+        placeholder="tags: press 't /' to focus"
+        label="tags filter"
+        :selected="selectedTags"
+        @add="addSelectedTag"
+        @remove="removeSelectedTag"
+        @clear="clearSelectedTags"
+      ></tag-input>
 
       <div class="mx-1 mb-2 sm:hidden">
         <button
@@ -115,10 +97,11 @@ import clipboard from "../helper/clipboard";
 
 import Note from "../components/Note";
 import Edit from "../components/Edit";
+import TagInput from "../components/TagInput";
 
 export default {
   name: "landing-page",
-  components: { Note, Edit },
+  components: { Note, Edit, TagInput },
 
   data() {
     return {
@@ -171,9 +154,8 @@ export default {
           event.preventDefault();
           this.exitSelectMode();
           this.editMode(false);
-          if (typeof this.$refs.tagsearch !== "undefined") {
-            this.$refs.tagsearch.focus();
-          }
+
+          this.$refs.tagsearch.focus();
         }
       });
 
@@ -192,8 +174,8 @@ export default {
       });
 
       Mousetrap.bind("enter", event => {
-        if (event.target == this.$refs.tagsearch && this.filteredTags.length) {
-          this.addSelectedTag(this.filteredTags[0]);
+        if (event.target == this.tagSearchInput) {
+          this.$refs.tagsearch.addFirstFiltered();
         } else if (event.target == this.$refs.search) {
           this.$refs.tagsearch.focus();
         }
@@ -393,7 +375,7 @@ export default {
 
     clearSearch() {
       this.searchInput = "";
-      this.tagSearch = "";
+      this.$refs.tagsearch.clear();
       this.clearSelectedTags();
     },
 
@@ -403,10 +385,10 @@ export default {
       "addNote",
       "updateNote",
       "removeNote",
-      "updateTagSearch",
+      "clearSelectedTags",
+      "setSelectedTags",
       "addSelectedTag",
-      "removeSelectedTag",
-      "clearSelectedTags"
+      "removeSelectedTag"
     ])
   },
 
@@ -430,10 +412,6 @@ export default {
       return this.$store.state.notes;
     },
 
-    selectedTags() {
-      return this.$store.state.selectedTags;
-    },
-
     searchInput: {
       get() {
         return this.$store.state.search;
@@ -443,16 +421,15 @@ export default {
       }
     },
 
-    tagSearch: {
-      get() {
-        return this.$store.state.tagSearch;
-      },
-      set(value) {
-        this.updateTagSearch(value);
-      }
+    tagSearchInput() {
+      return this.$refs.tagsearch.$refs.tagsearchinput;
     },
 
-    ...mapGetters(["filteredNotes", "filteredTags"])
+    selectedTags() {
+      return this.$store.state.selectedTags;
+    },
+
+    ...mapGetters(["filteredNotes"])
   }
 };
 </script>

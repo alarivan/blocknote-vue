@@ -10,7 +10,6 @@ export default new Vuex.Store({
     userSession: null,
     notes: [],
     search: "",
-    tagSearch: "",
     tags: [],
     selectedTags: []
   },
@@ -61,8 +60,8 @@ export default new Vuex.Store({
       state.tags = tags;
     },
 
-    SET_TAG_SEARCH(state, val) {
-      state.tagSearch = val;
+    SET_SELECTED_TAGS(state, tags) {
+      state.selectedTags = tags;
     },
 
     ADD_SELECTED_TAG(state, tag) {
@@ -75,10 +74,6 @@ export default new Vuex.Store({
       if (index !== -1) {
         state.selectedTags.splice(index, 1);
       }
-    },
-
-    CLEAR_SELECTED_TAGS(state) {
-      state.selectedTags = [];
     }
   },
   actions: {
@@ -118,21 +113,20 @@ export default new Vuex.Store({
       commit("SET_TAGS", tags);
     },
 
-    updateTagSearch({ commit }, val) {
-      commit("SET_TAG_SEARCH", val);
+    clearSelectedTags({ commit }) {
+      commit("SET_SELECTED_TAGS", []);
+    },
+
+    setSelectedTags({ commit }, tags) {
+      commit("SET_SELECTED_TAGS", tags);
     },
 
     addSelectedTag({ commit }, val) {
       commit("ADD_SELECTED_TAG", val);
-      commit("SET_TAG_SEARCH", "");
     },
 
     removeSelectedTag({ commit }, val) {
       commit("REMOVE_SELECTED_TAG", val);
-    },
-
-    clearSelectedTags({ commit }) {
-      commit("CLEAR_SELECTED_TAGS");
     }
   },
 
@@ -182,19 +176,6 @@ export default new Vuex.Store({
       }
 
       return _.sortBy(result, "createdAt");
-    },
-
-    filteredTags: state => {
-      if (state.tagSearch !== "") {
-        return state.tags.filter(t => {
-          return (
-            t.name.includes(state.tagSearch.toLowerCase()) &&
-            !state.selectedTags.includes(t)
-          );
-        });
-      }
-
-      return [];
     }
   }
 });
