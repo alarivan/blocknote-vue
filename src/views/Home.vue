@@ -1,6 +1,18 @@
 <template>
   <div class="container mx-auto relative">
     <div v-if="user">
+      <button
+        v-if="scrolled > 800"
+        @click="scrollToTop"
+        class="to-top fixed bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-1 rounded-full shadow-xl"
+        title="Back to top"
+      >
+        <svg class="fill-current w-8 h-8" viewBox="0 0 20 20">
+          <path
+            d="M13.889,11.611c-0.17,0.17-0.443,0.17-0.612,0l-3.189-3.187l-3.363,3.36c-0.171,0.171-0.441,0.171-0.612,0c-0.172-0.169-0.172-0.443,0-0.611l3.667-3.669c0.17-0.17,0.445-0.172,0.614,0l3.496,3.493C14.058,11.167,14.061,11.443,13.889,11.611 M18.25,10c0,4.558-3.693,8.25-8.25,8.25c-4.557,0-8.25-3.692-8.25-8.25c0-4.557,3.693-8.25,8.25-8.25C14.557,1.75,18.25,5.443,18.25,10 M17.383,10c0-4.07-3.312-7.382-7.383-7.382S2.618,5.93,2.618,10S5.93,17.381,10,17.381S17.383,14.07,17.383,10"
+          ></path>
+        </svg>
+      </button>
       <div
         class="flex flex-wrap items-center border-b border-b-2 border-teal-500 py-2 mb-2 mx-1 sm:mx-0"
       >
@@ -111,12 +123,20 @@ export default {
       selected: false,
       selectMode: false,
       editedNote: false,
-      loading: false
+      loading: false,
+      scrolled: 0
     };
   },
 
   mounted() {
     this.init();
+  },
+
+  created() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
 
   methods: {
@@ -380,6 +400,14 @@ export default {
       this.clearSelectedTags();
     },
 
+    handleScroll() {
+      this.scrolled = window.scrollY;
+    },
+
+    scrollToTop() {
+      window.scrollTo(0, 0);
+    },
+
     ...mapActions([
       "updateSearch",
       "addNote",
@@ -438,5 +466,10 @@ export default {
 .tag-icon-remove {
   top: 5px;
   right: 3px;
+}
+
+.to-top {
+  left: 10px;
+  bottom: 10px;
 }
 </style>
