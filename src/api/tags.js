@@ -25,22 +25,6 @@ class TagsApi extends GenericApi {
     });
   }
 
-  createFromString(str) {
-    if (str.length > 0) {
-      const arr = str.toLowerCase().split(",");
-
-      return this.createFromArray(arr).then(result => {
-        if (result.created.length > 0) {
-          this.loadToStorage();
-          this.updateStore();
-        }
-
-        return { obj: result.all, arr: arr };
-      });
-    }
-    return Promise.resolve({ obj: [], arr: [] });
-  }
-
   update(id, color) {
     return this.db.update(
       { _id: id },
@@ -73,40 +57,75 @@ class TagsApi extends GenericApi {
     });
   }
 
+  createFromString(str) {
+    if (str.length > 0) {
+      const arr = str
+        .toLowerCase()
+        .trim()
+        .split(",")
+        .map(t => t.trim());
+
+      return this.createMultiple(arr).then(result => {
+        if (result.created.length > 0) {
+          this.loadToStorage();
+          this.updateStore();
+        }
+
+        return { obj: result.all, arr: arr };
+      });
+    }
+    return Promise.resolve({ obj: [], arr: [] });
+  }
+
   createFromNotes(notes) {
-    const promises = notes
+    const tags = notes
       .filter(n => {
         return _.isArray(n.tags);
       })
       .map(n => {
-        return this.createFromArray(n.tags);
+        return n.tags;
       });
 
-    return Promise.all(promises).then(() => {
-      this.loadToStorage();
-      this.updateStore();
+    return this.createMultiple(tags).then(data => {
+      if (data.created.length) {
+        this.loadToStorage();
+        this.updateStore();
+      }
     });
   }
 
-  createFromArray(tags) {
-    const arr = tags.map(t => t.trim());
+  // tags = ["tag", "tag1"]
+  createMultiple(tags) {
+    const flat = _.uniq(_.flatten(tags));
 
-    return this.db.find({ name: { $in: arr } }).then(docs => {
-      const newTags = arr.filter(tagName => {
+    return this.db.find({ name: { $in: flat } }).then(docs => {
+      const newTags = flat.filter(tagName => {
         const index = docs.findIndex(t => {
           return t.name === tagName;
         });
         return index === -1;
       });
 
-      const promises = newTags.map(t => {
-        return this.create(t);
-      });
+      const toInsert = this.buildMultiple(newTags);
 
-      return Promise.all(promises).then(result => {
+      return this.db.insert(toInsert).then(result => {
         return { created: result, all: docs.concat(result) };
       });
     });
+  }
+
+  // tags = ["tag", "tag1"]
+  buildMultiple(tags) {
+    return tags
+      .filter(t => {
+        return !_.isEmpty(t);
+      })
+      .map(t => {
+        return {
+          name: t,
+          color: this.generateColor()
+        };
+      });
   }
 }
 

@@ -64,7 +64,12 @@
         @save="addOrUpdate"
       ></edit>
 
-      <div v-if="notes.length" class="flex flex-wrap">
+      <div v-if="loading" class="flex h-48 sm:h-64 justify-center items-center">
+        <div class="lds-circle">
+          <div></div>
+        </div>
+      </div>
+      <div v-else class="flex flex-wrap">
         <template v-for="(note, index) in filteredNotes">
           <note
             :key="note._id"
@@ -76,11 +81,6 @@
             @editNote="editNote"
           ></note>
         </template>
-      </div>
-      <div v-else class="flex h-48 sm:h-64 justify-center items-center">
-        <div class="lds-circle">
-          <div></div>
-        </div>
       </div>
     </div>
   </div>
@@ -110,7 +110,8 @@ export default {
       adding: false,
       selected: false,
       selectMode: false,
-      editedNote: false
+      editedNote: false,
+      loading: false
     };
   },
 
@@ -121,7 +122,9 @@ export default {
   methods: {
     init() {
       if (this.$store.state.notes.length === 0) {
+        this.loading = true;
         noteApi.load().then(notes => {
+          this.loading = false;
           if (typeof this.$refs.search !== "undefined") {
             this.$refs.search.focus();
           }

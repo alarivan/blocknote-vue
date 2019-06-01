@@ -18,7 +18,7 @@ export default class {
     return store.state.userSession
       .getFile(this.FILE, this.GET_OPTIONS)
       .then(data => {
-        if (_.isNull(data)) {
+        if (_.isNull(data) || _.isEmpty(data)) {
           return [];
         } else {
           return JSON.parse(data);

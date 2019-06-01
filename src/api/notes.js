@@ -15,20 +15,24 @@ class NotesApi extends GenericApi {
       return tagsApi.load().then(() => {
         return this.clearDb().then(() => {
           return notesDb.insert(ns).then(docs => {
-            const promises = docs.map(n => {
-              return tagsApi.getForNote(n).then(tags => {
-                return this.build(n, tags);
+            return tagsApi.createFromNotes(docs).then(() => {
+              const promises = docs.map(n => {
+                return tagsApi.getForNote(n).then(tags => {
+                  return this.build(n, tags);
+                });
               });
-            });
 
-            return Promise.all(promises).then(result => {
-              return store.dispatch("setNotes", result);
+              return Promise.all(promises).then(result => {
+                return store.dispatch("setNotes", result);
+              });
             });
           });
         });
       });
     });
   }
+
+  loadNotes() {}
 
   build(note, tags) {
     note.raw = removeMd(note.body);
@@ -100,12 +104,10 @@ class NotesApi extends GenericApi {
     const notes = this.validateImportData(data);
 
     return this.load().then(() => {
-      return tagsApi.load().then(() => {
-        return tagsApi.createFromNotes(notes).then(() => {
-          return notesDb.insert(notes).then(docs => {
-            return this.loadToStorage().then(() => {
-              return this.load();
-            });
+      return tagsApi.createFromNotes(notes).then(() => {
+        return notesDb.insert(notes).then(docs => {
+          return this.loadToStorage().then(() => {
+            return this.load();
           });
         });
       });
@@ -113,7 +115,7 @@ class NotesApi extends GenericApi {
   }
 
   validateImportData(data) {
-    return data.map(n => {
+    const notes = data.map(n => {
       let result = { _id: n._id, body: n.body };
 
       if (_.isArray(n.tags)) {
@@ -123,6 +125,19 @@ class NotesApi extends GenericApi {
       }
 
       return result;
+    });
+
+    return this.fixTags(notes);
+  }
+
+  fixTags(notes) {
+    return notes.map(n => {
+      n.tags = _.uniq(
+        n.tags.map(t => {
+          return t.trim();
+        })
+      );
+      return n;
     });
   }
 }

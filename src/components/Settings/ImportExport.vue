@@ -2,7 +2,7 @@
   <div class>
     <h2>Import/Export are not yet available.</h2>
     <div class="mb-4">
-      <!-- <button :class="buttonClasses" @click="exportNotes">Export Notes</button> -->
+      <button :class="buttonClasses" @click="exportNotes">Export Notes</button>
       <p class="my-2">Notes are exported in plain JSON in the following format:</p>
       <div class="markdown-body">
         <pre>
@@ -16,8 +16,8 @@
       </div>
     </div>
     <div>
-      <!-- <label class="inline-block" :class="buttonClasses" for="import-notes">Import Notes</label>
-      <input class="hidden" @change="importNotes" ref="import" id="import-notes" type="file">-->
+      <label class="inline-block" :class="buttonClasses" for="import-notes">Import Notes</label>
+      <input class="hidden" @change="importNotes" ref="import" id="import-notes" type="file">
       <p class="my-2">Imported JSON objects has to have "body". "_id" and "tags" are optional.</p>
     </div>
   </div>
