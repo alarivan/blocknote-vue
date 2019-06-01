@@ -26,6 +26,10 @@ export default {
           source: "https://github.com/markedjs/marked"
         },
         {
+          name: "marked-plaintext",
+          source: "https://github.com/etler/marked-plaintext"
+        },
+        {
           name: "Mousetrap",
           source: "https://github.com/ccampbell/mousetrap"
         },
@@ -40,10 +44,6 @@ export default {
         {
           name: "Random Color",
           source: "https://github.com/davidmerfield/randomColor"
-        },
-        {
-          name: "remove-markdown",
-          source: "https://github.com/stiang/remove-markdown"
         },
         {
           name: "underscore",

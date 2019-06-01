@@ -68,8 +68,9 @@
       </div>
 
       <edit
-        v-show="adding"
-        :active="adding"
+        ref="editcomponent"
+        v-show="editModeActive"
+        :active="editModeActive"
         v-bind:noteInput.sync="noteInput"
         v-bind:tagsInput.sync="tagsInput"
         @cancel="exitEditMode"
@@ -119,7 +120,7 @@ export default {
     return {
       tagsInput: "",
       noteInput: "",
-      adding: false,
+      editModeActive: false,
       selected: false,
       selectMode: false,
       editedNote: false,
@@ -190,24 +191,36 @@ export default {
 
       Mousetrap.bind("alt+enter", event => {
         if (this.noteInput) {
+          event.preventDefault();
           this.addOrUpdate();
+        }
+      });
+
+      Mousetrap.bind("tab", event => {
+        if (this.editModeActive) {
+          event.preventDefault();
+          this.$refs.editcomponent.$refs.tags.focus();
         }
       });
 
       Mousetrap.bind("enter", event => {
         if (event.target == this.tagSearchInput) {
+          event.preventDefault();
           this.$refs.tagsearch.addFirstFiltered();
         } else if (event.target == this.$refs.search) {
+          event.preventDefault();
           this.$refs.tagsearch.focus();
         }
       });
 
       Mousetrap.bind("esc", () => {
         if (this.selectMode) {
+          event.preventDefault();
           this.exitSelectMode();
         }
 
-        if (this.adding) {
+        if (this.editModeActive) {
+          event.preventDefault();
           this.editMode(false);
         }
       });
@@ -226,6 +239,7 @@ export default {
 
       Mousetrap.bind("d d", () => {
         if (this.selectMode) {
+          event.preventDefault();
           this.deleteNote(this.filteredNotes[this.selected]);
         }
       });
@@ -365,13 +379,13 @@ export default {
       }
 
       if (enable) {
-        this.adding = true;
+        this.editModeActive = true;
         this.$nextTick(() => {
           const el = document.getElementsByClassName("editor-toolbar")[0];
           el.scrollIntoView({ block: "center" });
         });
       } else {
-        this.adding = false;
+        this.editModeActive = false;
         this.noteInput = "";
         this.tagsInput = "";
         this.editedNote = false;
@@ -379,7 +393,7 @@ export default {
     },
 
     exitEditMode() {
-      if (this.adding) {
+      if (this.editModeActive) {
         this.editMode(false);
       }
     },

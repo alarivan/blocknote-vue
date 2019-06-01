@@ -1,4 +1,5 @@
-import removeMd from "remove-markdown";
+import marked from "marked";
+import PlainTextRenderer from "marked-plaintext";
 import _ from "underscore";
 import { saveAs } from "file-saver";
 
@@ -6,6 +7,8 @@ import store from "../store";
 import GenericApi from "./generic";
 import notesDb from "../db/notes";
 import tagsApi from "../api/tags";
+
+const renderer = new PlainTextRenderer();
 
 class NotesApi extends GenericApi {
   FILE = "notes.json";
@@ -35,13 +38,13 @@ class NotesApi extends GenericApi {
   loadNotes() {}
 
   build(note, tags) {
-    note.raw = removeMd(note.body);
+    note.raw = marked(note.body, { renderer: renderer });
     note.tags = tags;
     return note;
   }
 
   getCopy(raw) {
-    const m = raw.match(/~c([\s\S]*?)c~/);
+    const m = raw.match(/\^c([\s\S]*?)c\^/);
 
     if (!_.isNull(m) && !_.isUndefined(m[1])) {
       return m[1].trim();
