@@ -72,6 +72,15 @@ export default {
         {
           name: "Fuse.js",
           source: "https://github.com/krisk/fuse"
+        },
+        {
+          name: "Icons by Bryn Taylor",
+          source:
+            "https://dribbble.com/shots/1934932-77-Essential-Icons-Free-Download"
+        },
+        {
+          name: "FileSaver.js",
+          source: "https://github.com/eligrey/FileSaver.js"
         }
       ]
     };

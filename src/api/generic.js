@@ -27,10 +27,12 @@ export default class {
   }
 
   loadToStorage() {
-    this.db.find().then(docs => {
-      store.state.userSession
-        .putFile(this.FILE, JSON.stringify(docs), this.PUT_OPTIONS)
-        .then(() => {});
+    return this.db.find().then(docs => {
+      return store.state.userSession.putFile(
+        this.FILE,
+        JSON.stringify(docs),
+        this.PUT_OPTIONS
+      );
     });
   }
 

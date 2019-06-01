@@ -122,8 +122,6 @@ export default {
     init() {
       if (this.$store.state.notes.length === 0) {
         noteApi.load().then(notes => {
-          this.setNotes(notes);
-
           if (typeof this.$refs.search !== "undefined") {
             this.$refs.search.focus();
           }
@@ -380,7 +378,6 @@ export default {
     },
 
     ...mapActions([
-      "setNotes",
       "updateSearch",
       "addNote",
       "updateNote",

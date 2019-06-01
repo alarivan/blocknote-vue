@@ -1,4 +1,5 @@
 import randomColor from "randomcolor";
+import _ from "underscore";
 import store from "../store";
 import tagsDb from "../db/tags";
 
@@ -27,28 +28,14 @@ class TagsApi extends GenericApi {
   createFromString(str) {
     if (str.length > 0) {
       const arr = str.toLowerCase().split(",");
-      return this.db.find({ name: { $in: arr } }).then(docs => {
-        const newTags = arr
-          .map(t => t.trim())
-          .filter(tagName => {
-            const index = docs.findIndex(t => {
-              return t.name === tagName;
-            });
-            return index === -1;
-          });
 
-        const promises = newTags.map(t => {
-          return this.create(t);
-        });
+      return this.createFromArray(arr).then(result => {
+        if (result.created.length > 0) {
+          this.loadToStorage();
+          this.updateStore();
+        }
 
-        return Promise.all(promises).then(result => {
-          if (newTags.length > 0) {
-            this.loadToStorage();
-            this.updateStore();
-          }
-
-          return { obj: docs.concat(result), arr: arr };
-        });
+        return { obj: result.all, arr: arr };
       });
     }
     return Promise.resolve({ obj: [], arr: [] });
@@ -83,6 +70,42 @@ class TagsApi extends GenericApi {
   updateStore() {
     return this.db.find({}).then(docs => {
       return store.dispatch("setTags", docs);
+    });
+  }
+
+  createFromNotes(notes) {
+    const promises = notes
+      .filter(n => {
+        return _.isArray(n.tags);
+      })
+      .map(n => {
+        return this.createFromArray(n.tags);
+      });
+
+    return Promise.all(promises).then(() => {
+      this.loadToStorage();
+      this.updateStore();
+    });
+  }
+
+  createFromArray(tags) {
+    const arr = tags.map(t => t.trim());
+
+    return this.db.find({ name: { $in: arr } }).then(docs => {
+      const newTags = arr.filter(tagName => {
+        const index = docs.findIndex(t => {
+          return t.name === tagName;
+        });
+        return index === -1;
+      });
+
+      const promises = newTags.map(t => {
+        return this.create(t);
+      });
+
+      return Promise.all(promises).then(result => {
+        return { created: result, all: docs.concat(result) };
+      });
     });
   }
 }

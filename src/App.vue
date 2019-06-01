@@ -9,8 +9,28 @@
             class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
             to="/about"
           >about</router-link>
+
+          <router-link
+            class="hidden sm:block text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
+            to="/settings"
+          >settings</router-link>
+
           <div class="flex-auto"></div>
-          <div class="profile flex ml-1">
+          <dropdown class="block sm:hidden">
+            <li>
+              <router-link
+                class="block text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
+                to="/settings"
+              >settings</router-link>
+            </li>
+            <li>
+              <button
+                class="block text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
+                @click="signOut"
+              >sign out</button>
+            </li>
+          </dropdown>
+          <div class="profile ml-1 hidden sm:flex">
             <picture>
               <source :srcset="smallest_img" media="(max-width: 640px)">
               <img
@@ -44,10 +64,11 @@ import { userSession } from "./helper/userSession";
 import tagsApi from "./api/tags";
 
 import Login from "./components/Login";
+import Dropdown from "./components/Dropdown";
 
 export default {
   name: "app",
-  components: { Login },
+  components: { Login, Dropdown },
 
   data() {
     return {

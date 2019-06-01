@@ -30,8 +30,8 @@ export default {
             "Combine all the color definitions in to a theme. Add the abilty to create new themes."
         },
         {
-          title: "Add import/export",
-          description: ""
+          title: "Improve import/export",
+          description: "Add more options to Import and export."
         },
         {
           title: "Add RegExp to search.",

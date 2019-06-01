@@ -1,6 +1,8 @@
 import removeMd from "remove-markdown";
 import _ from "underscore";
+import { saveAs } from "file-saver";
 
+import store from "../store";
 import GenericApi from "./generic";
 import notesDb from "../db/notes";
 import tagsApi from "../api/tags";
@@ -20,7 +22,7 @@ class NotesApi extends GenericApi {
             });
 
             return Promise.all(promises).then(result => {
-              return result;
+              return store.dispatch("setNotes", result);
             });
           });
         });
@@ -80,6 +82,47 @@ class NotesApi extends GenericApi {
     // eslint-disable-next-line no-underscore-dangle
     return notesDb.remove({ _id: note._id }).then(() => {
       this.loadToStorage();
+    });
+  }
+
+  export(filename = "export.json") {
+    return this.db.find({}, { createdAt: 0, updatedAt: 0 }).then(docs => {
+      console.log(docs);
+      console.log(JSON.stringify(docs));
+      const blob = new Blob([JSON.stringify(docs)], {
+        type: "text/json;charset=utf-8"
+      });
+      saveAs(blob, filename);
+    });
+  }
+
+  import(data) {
+    const notes = this.validateImportData(data);
+
+    return this.load().then(() => {
+      return tagsApi.load().then(() => {
+        return tagsApi.createFromNotes(notes).then(() => {
+          return notesDb.insert(notes).then(docs => {
+            return this.loadToStorage().then(() => {
+              return this.load();
+            });
+          });
+        });
+      });
+    });
+  }
+
+  validateImportData(data) {
+    return data.map(n => {
+      let result = { _id: n._id, body: n.body };
+
+      if (_.isArray(n.tags)) {
+        result.tags = n.tags;
+      } else {
+        result.tags = [];
+      }
+
+      return result;
     });
   }
 }
