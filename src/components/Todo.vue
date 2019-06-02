@@ -17,7 +17,7 @@ export default {
     return {
       items: [
         {
-          title: "Add settings",
+          title: "Add more settings",
           description: ""
         },
         {

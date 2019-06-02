@@ -13,6 +13,7 @@
           <li>
             Markdown editor has it's own
             <a
+              target="_blank"
               class="underline"
               href="https://github.com/Ionaru/easy-markdown-editor#keyboard-shortcuts"
             >shortcuts</a> so you will need to press "esc" or click outside of the editor for app shortcuts to work.
