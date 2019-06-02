@@ -85,6 +85,7 @@
       <div v-else class="flex flex-wrap">
         <template v-for="(note, index) in filteredNotes">
           <note
+            :ref="note._id"
             :key="note._id"
             :note="note"
             :index="index"
@@ -276,7 +277,8 @@ export default {
       Mousetrap.bind("c", event => {
         if (this.selectMode) {
           event.preventDefault();
-          this.copyNote(this.selectedNote);
+          const note = this.$refs[this.selectedNote._id][0];
+          note.copyNote();
         }
       });
       Mousetrap.bind("e", event => {
