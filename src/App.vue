@@ -11,6 +11,11 @@
           >about</router-link>
 
           <router-link
+            class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
+            to="/howto"
+          >how to</router-link>
+
+          <router-link
             v-if="user"
             class="hidden sm:block text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
             to="/settings"
