@@ -59,10 +59,7 @@ export default {
   components: { TagInput },
 
   data() {
-    return {
-      note: "",
-      tags: ""
-    };
+    return {};
   },
 
   props: {
@@ -126,6 +123,10 @@ export default {
 
     cancel() {
       this.$emit("cancel");
+    },
+
+    focusEditor() {
+      this.easyMDE.codemirror.focus();
     }
   },
 

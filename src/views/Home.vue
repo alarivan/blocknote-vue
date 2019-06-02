@@ -112,6 +112,7 @@ import clipboard from "../helper/clipboard";
 import Note from "../components/Note";
 import Edit from "../components/Edit";
 import TagInput from "../components/TagInput";
+import { setTimeout } from "timers";
 
 export default {
   name: "landing-page",
@@ -153,7 +154,7 @@ export default {
         });
       }
 
-      Mousetrap.bind("shift+n", () => {
+      Mousetrap.bind("shift+n", event => {
         const tag = (event.target || event.srcElement).tagName.toLowerCase();
         if (tag !== "input" && tag !== "textarea") {
           event.preventDefault();
@@ -217,7 +218,7 @@ export default {
         }
       });
 
-      Mousetrap.bind("esc", () => {
+      Mousetrap.bind("esc", event => {
         if (this.selectMode) {
           event.preventDefault();
           this.exitSelectMode();
@@ -225,11 +226,32 @@ export default {
 
         if (this.editModeActive) {
           event.preventDefault();
-          this.editMode(false);
+          if (
+            (this.editedNote && this.noteInput !== this.editedNote.body) ||
+            (!this.editedNote && this.noteInput !== "")
+          ) {
+            this.$confirm(
+              "You have unsaved changes that will be lost. Are you sure you want to close the editor?",
+              () => {
+                if (!_.isUndefined(this.$refs.editcomponent)) {
+                  this.editMode(false);
+                }
+              },
+              () => {
+                if (!_.isUndefined(this.$refs.editcomponent)) {
+                  setTimeout(() => {
+                    this.$refs.editcomponent.focusEditor();
+                  }, 100);
+                }
+              }
+            );
+          } else {
+            this.editMode(false);
+          }
         }
       });
 
-      Mousetrap.bind("s s", () => {
+      Mousetrap.bind("s s", event => {
         const tag = (event.target || event.srcElement).tagName.toLowerCase();
         if (tag !== "input" && tag !== "textarea") {
           event.preventDefault();
@@ -241,7 +263,7 @@ export default {
         }
       });
 
-      Mousetrap.bind("d d", () => {
+      Mousetrap.bind("d d", event => {
         if (this.selectMode) {
           event.preventDefault();
           this.deleteNote(this.filteredNotes[this.selected]);
@@ -323,14 +345,15 @@ export default {
     },
 
     deleteNote(note) {
-      const confirmation = confirm(
-        "Are you sure you want to delete this note?"
+      this.$confirm(
+        "Are you sure you want to delete this note?",
+        () => {
+          noteApi.delete(note).then(() => {
+            this.removeNote(note._id);
+          });
+        },
+        () => {}
       );
-      if (confirmation) {
-        noteApi.delete(note).then(() => {
-          this.removeNote(note._id);
-        });
-      }
     },
 
     copyNote(note) {
