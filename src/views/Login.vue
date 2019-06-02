@@ -4,7 +4,7 @@
       <h1 class="mb-4 text-2xl font-bold">BlockNote.xyz</h1>
       <p class>Note taking application with keyboard shortcuts for everything.</p>
       <p class="mb-3">
-        Built on
+        Built with
         <a
           class="underline hover:text-green-600"
           href="https://blockstack.org"
