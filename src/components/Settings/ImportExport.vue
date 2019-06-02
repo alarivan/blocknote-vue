@@ -1,6 +1,5 @@
 <template>
   <div class>
-    <h2>Import/Export are not yet available.</h2>
     <div class="mb-4">
       <button :class="buttonClasses" @click="exportNotes">Export Notes</button>
       <p class="my-2">Notes are exported in plain JSON in the following format:</p>
