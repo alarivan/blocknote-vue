@@ -81,6 +81,10 @@ export default {
         {
           name: "FileSaver.js",
           source: "https://github.com/eligrey/FileSaver.js"
+        },
+        {
+          name: "he (HTML entity encoder/decoder)",
+          source: "https://github.com/mathiasbynens/he"
         }
       ]
     };

@@ -1,6 +1,9 @@
+import he from "he";
+
 export default function clipboard(text) {
+  const decoded = he.decode(text);
   const textarea = document.createElement("textarea");
-  textarea.value = text;
+  textarea.value = decoded;
   textarea.setAttribute("readonly", "");
   textarea.style = { position: "absolute", left: "-9999px" };
   document.body.appendChild(textarea);
