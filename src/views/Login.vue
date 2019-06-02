@@ -1,9 +1,10 @@
 <template>
   <div class="flex justify-center items-center h-70vh">
-    <div class="text-center">
+    <div class="text-center sm:w-1/2">
       <h1 class="mb-4 text-2xl font-bold">BlockNote.xyz</h1>
+      <p class>Note taking application with keyboard shortcuts for everything.</p>
       <p class="mb-3">
-        A decentralized Notes app built on
+        Built on
         <a
           class="underline hover:text-green-600"
           href="https://blockstack.org"

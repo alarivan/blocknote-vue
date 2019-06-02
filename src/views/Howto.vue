@@ -80,7 +80,7 @@ export default {
       copy: "e66i0k8ez0",
       blockClasses: "flex flex-wrap how-to-block my-20",
       videoClasses: "w-full sm:w-1/2",
-      descClasses: "sm:w-1/2 px-4"
+      descClasses: "sm:w-1/2 px-4 py-4 sm:py-0"
     };
   }
 };
