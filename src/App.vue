@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="user" class="py-2 sm:py-8">
+    <div class="py-2 sm:py-8">
       <div class="container mx-auto mb-4">
         <div class="flex">
           <router-link class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4" to="/">notes</router-link>
@@ -11,12 +11,13 @@
           >about</router-link>
 
           <router-link
+            v-if="user"
             class="hidden sm:block text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
             to="/settings"
           >settings</router-link>
 
           <div class="flex-auto"></div>
-          <dropdown class="block sm:hidden">
+          <dropdown v-if="user" class="block sm:hidden">
             <li>
               <router-link
                 class="block text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
@@ -30,7 +31,7 @@
               >sign out</button>
             </li>
           </dropdown>
-          <div class="profile ml-1 hidden sm:flex">
+          <div v-if="user" class="profile ml-1 hidden sm:flex">
             <picture>
               <source :srcset="smallest_img" media="(max-width: 640px)">
               <img
@@ -51,7 +52,6 @@
       </div>
       <router-view/>
     </div>
-    <login v-else/>
   </div>
 </template>
 
@@ -63,12 +63,11 @@ import { userSession } from "./helper/userSession";
 
 import tagsApi from "./api/tags";
 
-import Login from "./components/Login";
 import Dropdown from "./components/Dropdown";
 
 export default {
   name: "app",
-  components: { Login, Dropdown },
+  components: { Dropdown },
 
   data() {
     return {
@@ -86,6 +85,7 @@ export default {
       let user = new Person(userData.profile);
       user.username = userData.username;
       this.setUser(user);
+      this.$router.push("/");
     } else if (userSession.isSignInPending()) {
       userSession.handlePendingSignIn().then(userData => {
         window.location = window.location.origin;
