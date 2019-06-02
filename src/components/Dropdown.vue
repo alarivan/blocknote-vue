@@ -13,6 +13,7 @@
         </svg>
       </button>
       <ul
+        @click="open = false"
         v-show="open"
         class="dropdown-content w-32 mt-px text-sm text-grey-darker leading-normal bg-white border absolute z-20"
       >
