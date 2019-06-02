@@ -154,9 +154,12 @@ export default {
       }
 
       Mousetrap.bind("shift+n", () => {
-        event.preventDefault();
+        const tag = (event.target || event.srcElement).tagName.toLowerCase();
+        if (tag !== "input" && tag !== "textarea") {
+          event.preventDefault();
 
-        this.editMode();
+          this.editMode();
+        }
       });
 
       Mousetrap.bind("/", event => {

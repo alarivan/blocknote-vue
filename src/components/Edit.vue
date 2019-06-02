@@ -83,7 +83,36 @@ export default {
   mounted() {
     this.easyMDE = new EasyMDE({
       element: this.$refs.noteinput,
-      autofocus: true
+      autofocus: true,
+      shortcuts: {
+        focusTags: "Alt-Enter"
+      },
+      toolbar: [
+        "bold",
+        "italic",
+        "heading",
+        "|",
+        "quote",
+        "unordered-list",
+        "ordered-list",
+        "|",
+        "link",
+        "image",
+        "|",
+        "preview",
+        "side-by-side",
+        "fullscreen",
+        "|",
+        {
+          name: "focusTags",
+          action: editor => {
+            this.$refs.tags.focus();
+          },
+          className: "fa fa-tags",
+          title: "Focus Tags"
+        },
+        "guide"
+      ]
     });
     this.easyMDE.codemirror.on("change", () => {
       this.$emit("update:noteInput", this.easyMDE.value());

@@ -19,6 +19,7 @@
             >shortcuts</a> so you will need to press "esc" or click outside of the editor for app shortcuts to work.
           </li>
           <li>When editor is open pressing "tab" will focus on tags input.</li>
+          <li>When focused in editor pressing "alt+enter" will move focus to tags.</li>
           <li>Press "alt+enter" to save the note.</li>
           <li>Press "/" to focus on search input.</li>
           <li>Search input searches note by content and tags.</li>

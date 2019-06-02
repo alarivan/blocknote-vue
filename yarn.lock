@@ -2284,7 +2284,7 @@ codemirror-spell-checker@1.1.2:
   dependencies:
     typo-js "*"
 
-codemirror@^5.43.0:
+codemirror@^5.47.0:
   version "5.47.0"
   resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.47.0.tgz#c13a521ae5660d3acc655af252f4955065293789"
   integrity sha512-kV49Fr+NGFHFc/Imsx6g180hSlkGhuHxTSDDmDHOuyln0MQYFLixDY4+bFkBVeCEiepYfDimAF/e++9jPJk4QA==
@@ -3099,12 +3099,12 @@ easy-stack@^1.0.0:
   resolved "https://registry.yarnpkg.com/easy-stack/-/easy-stack-1.0.0.tgz#12c91b3085a37f0baa336e9486eac4bf94e3e788"
   integrity sha1-EskbMIWjfwuqM26UhurEv5Tj54g=
 
-easymde@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/easymde/-/easymde-2.6.0.tgz#9ee35ee10f285bf41dca2e0e9e4f2fe8e818735c"
-  integrity sha512-WhSvcAqBFfSGeSkanib2+WN7K9Ri+AS1vGXUyDs/tTaaKjVNwiuWjlKiRkV4AJjC45QPjT1GfZmIrQEgs9dlTA==
+easymde@2.6.1-165.0:
+  version "2.6.1-165.0"
+  resolved "https://registry.yarnpkg.com/easymde/-/easymde-2.6.1-165.0.tgz#8aa75255c6814be401c32aa3e0cc58e4e27180de"
+  integrity sha512-1ZoOKbkdfISdlxcYDqeCsFAg/AUX8fxrK+oHlWsrRewLc8xbhJcYV8v8+lTkW1X9Hnkb9B2Zk4v8kROSM7EiVA==
   dependencies:
-    codemirror "^5.43.0"
+    codemirror "^5.47.0"
     codemirror-spell-checker "1.1.2"
     marked "^0.6.2"
 
