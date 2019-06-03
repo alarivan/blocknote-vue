@@ -1,21 +1,21 @@
 <template>
   <div>
     <h1 class="text-3xl mb-2">Shortcuts:</h1>
-    <p
-      class="italic mb-2"
-    >IMPORTANT: When focused in markdown editor you need to press esc or click outside of markdown editor for app shorcuts to work.</p>
+    <p class="italic mb-2">
+      IMPORTANT: Markdown editor has it's own shortcuts so you need to press esc or click outside of markdown editor for app shorcuts to work.
+      <a
+        class="mb-2 underline"
+        href="https://github.com/Ionaru/easy-markdown-editor#keyboard-shortcuts"
+        target="_blank"
+      >EasyMDE - Markdown Editor Shortcuts</a>
+    </p>
     <div v-for="(mode, index) in modes" :key="index" class="mb-2">
       <h4 class="text-xl mb-1">{{mode.name}}:</h4>
       <div v-for="(item, index) in mode.items" :key="index" class="shortcut flex pl-2">
-        <div class="w-1/2">{{item.keys}}</div>
-        <div class="w-1/2">{{item.description}}</div>
+        <div class="w-1/2 px-2">{{item.keys}}</div>
+        <div class="w-1/2 px-2">{{item.description}}</div>
       </div>
     </div>
-    <a
-      class="mb-2 underline"
-      href="https://github.com/Ionaru/easy-markdown-editor#keyboard-shortcuts"
-      target="_blank"
-    >EasyMDE - Markdown Editor Shortcuts</a>
   </div>
 </template>
 
