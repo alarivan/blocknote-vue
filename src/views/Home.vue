@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto relative">
-    <div v-if="user">
+    <div v-if="user" class="pb-12 md:pb-3">
       <button
         v-if="scrolled > 800"
         @click="scrollToTop"
