@@ -11,7 +11,7 @@
         <ul class="list-disc px-4">
           <li>Press "shift+n" to create a new note.</li>
           <li>
-            Markdown editor has it's own
+            Markdown editor has its own
             <a
               target="_blank"
               class="underline"
@@ -21,7 +21,7 @@
           <li>When focused in editor pressing "alt+enter" will move focus to tags.</li>
           <li>When focused in tags or not focused on any input pressing "alt+enter" will save the note.</li>
           <li>Press "/" to focus on search input.</li>
-          <li>Search input searches note by content and tags.</li>
+          <li>Search input searches notes by content and tags.</li>
           <li>Pressing "r r" will clear search input, tags input and selected tags</li>
           <li>Press "t /" to focus on tags input.</li>
           <li>Tags input allows to only search notes with selected tags.</li>
@@ -53,7 +53,7 @@
         <h2 class="text-xl mb-2">Copy Block</h2>
         <ul class="list-disc px-4">
           <li>You can wrap a part of your note in "^c" and "c^".</li>
-          <li>When you click on copy button or press "c" in select mode only the part between "^c" and "c^" will be copied.</li>
+          <li>When you click copy button or press "c" in select mode only the part between "^c" and "c^" will be copied.</li>
           <li>Notes without copy block will copy the whole note content without markdown.</li>
         </ul>
       </div>
