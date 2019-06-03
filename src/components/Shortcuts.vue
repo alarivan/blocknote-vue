@@ -64,7 +64,11 @@ export default {
               description: "exit edit mode"
             },
             {
-              keys: "alt+enter (when in content or tags input)",
+              keys: "alt+enter (when in content)",
+              description: "move focus to tags"
+            },
+            {
+              keys: "alt+enter (when in tags input or not focused on anything)",
               description: "save note"
             }
           ]

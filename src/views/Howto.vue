@@ -18,9 +18,8 @@
               href="https://github.com/Ionaru/easy-markdown-editor#keyboard-shortcuts"
             >shortcuts</a> so you will need to press "esc" or click outside of the editor for app shortcuts to work.
           </li>
-          <li>When editor is open pressing "tab" will focus on tags input.</li>
           <li>When focused in editor pressing "alt+enter" will move focus to tags.</li>
-          <li>Press "alt+enter" to save the note.</li>
+          <li>When focused in tags or not focused on any input pressing "alt+enter" will save the note.</li>
           <li>Press "/" to focus on search input.</li>
           <li>Search input searches note by content and tags.</li>
           <li>Pressing "r r" will clear search input, tags input and selected tags</li>
@@ -77,9 +76,9 @@ export default {
   components: { Wistia },
   data() {
     return {
-      basics: "b6xsepwrmk",
-      select: "mgcqbd1jon",
-      copy: "e66i0k8ez0",
+      basics: "edp5n44kcs",
+      select: "k9jr9i4ien",
+      copy: "k1dgmbvsuo",
       blockClasses: "flex flex-wrap how-to-block my-20",
       videoClasses: "w-full sm:w-1/2",
       descClasses: "sm:w-1/2 px-4 py-4 sm:py-0"
