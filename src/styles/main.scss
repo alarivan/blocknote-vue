@@ -4,6 +4,14 @@
 
 @tailwind utilities;
 
+.markdown-body {
+
+    ul,
+    ol {
+        list-style: inherit;
+    }
+}
+
 /* -----
 SVG Icons - svgicons.sparkk.fr
 ----- */
