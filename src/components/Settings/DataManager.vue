@@ -1,7 +1,7 @@
 <template>
   <div class>
     <div>
-      <button :class="buttonClasses" @click="clearTags">Clerar tags</button>
+      <button :class="buttonClasses" @click="clearTags">Clear Tags</button>
     </div>
     <div>
       <button :class="buttonClasses" @click="clearNotes">Clear Notes</button>
