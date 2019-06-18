@@ -105,7 +105,7 @@ import Mousetrap from "mousetrap";
 import _ from "underscore";
 import { mapActions, mapGetters } from "vuex";
 
-import noteApi from "../api/notes";
+import notesApi from "../api/notes";
 import tagsApi from "../api/tags";
 import clipboard from "../helper/clipboard";
 
@@ -133,6 +133,21 @@ export default {
 
   mounted() {
     this.init();
+
+    this.loading = true;
+
+    this.$store.subscribeAction((action, state) => {
+      switch (action.type) {
+        case "versionUpdateEnd":
+          notesApi.init().then(notes => {
+            this.loading = false;
+            if (typeof this.$refs.search !== "undefined") {
+              this.$refs.search.focus();
+            }
+          });
+          break;
+      }
+    });
   },
 
   created() {
@@ -144,16 +159,6 @@ export default {
 
   methods: {
     init() {
-      if (this.$store.state.notes.length === 0) {
-        this.loading = true;
-        noteApi.load().then(notes => {
-          this.loading = false;
-          if (typeof this.$refs.search !== "undefined") {
-            this.$refs.search.focus();
-          }
-        });
-      }
-
       Mousetrap.bind("shift+n", event => {
         const tag = (event.target || event.srcElement).tagName.toLowerCase();
         if (tag !== "input" && tag !== "textarea") {
@@ -318,7 +323,7 @@ export default {
       const body = this.noteInput.trim();
       const tags = this.tagsInput.trim();
       if (body) {
-        noteApi.create(body, tags).then(doc => {
+        notesApi.create(body, tags).then(doc => {
           this.addNote(doc);
           this.editMode(false);
         });
@@ -329,7 +334,7 @@ export default {
       const body = this.noteInput.trim();
       const tags = this.tagsInput.trim();
       if (body) {
-        noteApi.update(this.editedNote._id, body, tags).then(doc => {
+        notesApi.update(this.editedNote._id, body, tags).then(doc => {
           this.updateNote(doc);
           this.editMode(false);
         });
@@ -348,7 +353,7 @@ export default {
       this.$confirm(
         "Are you sure you want to delete this note?",
         () => {
-          noteApi.delete(note).then(() => {
+          notesApi.delete(note).then(() => {
             this.removeNote(note._id);
           });
         },
@@ -357,7 +362,7 @@ export default {
     },
 
     copyNote(note) {
-      const copy = noteApi.getCopy(note.raw);
+      const copy = notesApi.getCopy(note.raw);
       if (copy) {
         clipboard(copy);
       } else {
@@ -497,6 +502,10 @@ export default {
 
     selectedTags() {
       return this.$store.state.selectedTags;
+    },
+
+    versionUpdating() {
+      return this.$store.state.version_updating;
     },
 
     ...mapGetters(["filteredNotes"])

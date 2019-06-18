@@ -18,6 +18,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    version_updating: false,
     user: null,
     userSession: null,
     notes: [],
@@ -86,6 +87,10 @@ export default new Vuex.Store({
       if (index !== -1) {
         state.selectedTags.splice(index, 1);
       }
+    },
+
+    SET_VERSION_UPDATING(state, value) {
+      state.version_updating = value;
     }
   },
   actions: {
@@ -139,6 +144,14 @@ export default new Vuex.Store({
 
     removeSelectedTag({ commit }, val) {
       commit("REMOVE_SELECTED_TAG", val);
+    },
+
+    versionUpdateBegin({ commit }) {
+      commit("SET_VERSION_UPDATING", true);
+    },
+
+    versionUpdateEnd({ commit }) {
+      commit("SET_VERSION_UPDATING", false);
     }
   },
 

@@ -1,7 +1,7 @@
 import _ from "underscore";
 import store from "../store";
 
-import GenericApi from "./generic";
+import defaultSettings from "../constants/settings";
 
 class SettingsApi {
   LOCAL_STORAGE_KEY = "blocknote_settings";
@@ -20,19 +20,40 @@ class SettingsApi {
 
   update_version(files) {
     return {
-      version: {
-        timestamp: new Date().getTime(),
-        changed: files || this.ALL_FILES
-      }
+      timestamp: new Date().getTime(),
+      changed: files || this.ALL_FILES
     };
   }
 
   init() {
     this.loadFromStorage.then(data => {
       if (_.isNull(data)) {
-        const updated_settins = update_version(false);
-        localStorage.setItem(this.LOCAL_STORAGE_KEY, updated_settins);
-        this.loadToStorage(updated_settins);
+        const updated_settings = {
+          version: update_version(false),
+          settings: defaultSettings
+        };
+
+        localStorage.setItem(this.LOCAL_STORAGE_KEY, updated_settings);
+        this.loadToStorage(updated_settings);
+      } else {
+        const remote_settings = JSON.parse(data);
+        const local_settings = JSON.parse(
+          localStorage.getItem(this.LOCAL_STORAGE_KEY)
+        );
+
+        if (
+          local_settings !== null &&
+          remote_settings.version.timestamp !== local_settings.version.timestamp
+        ) {
+          // then load all the changed files
+          remote_settings.version.changed.forEach(f => {
+            // load file
+          });
+
+          localStorage.setItem(this.LOCAL_STORAGE_KEY, data);
+        } else if (local_settings === null) {
+          localStorage.setItem(this.LOCAL_STORAGE_KEY, data);
+        }
       }
     });
   }
@@ -63,10 +84,6 @@ class SettingsApi {
       .then(() => {
         console.log(`${this.FILE} cleared`);
       });
-  }
-
-  clearDb() {
-    return this.db.remove({}, { multi: true });
   }
 }
 

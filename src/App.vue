@@ -66,7 +66,7 @@ import { mapActions } from "vuex";
 import { Person } from "blockstack";
 import { userSession } from "./helper/userSession";
 
-import tagsApi from "./api/tags";
+import versionApi from "./api/version";
 
 import Dropdown from "./components/Dropdown";
 
@@ -89,7 +89,9 @@ export default {
       const userData = userSession.loadUserData();
       let user = new Person(userData.profile);
       user.username = userData.username;
-      this.setUser(user);
+      this.setUser(user).then(() => {
+        versionApi.init();
+      });
       this.$router.push("/");
     } else if (userSession.isSignInPending()) {
       userSession.handlePendingSignIn().then(userData => {
