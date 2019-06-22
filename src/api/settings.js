@@ -1,15 +1,10 @@
 import _ from "underscore";
 import store from "../store";
+import defaultSettings, { options } from "../constants/settings";
 
-import defaultSettings from "../constants/settings";
+import versionApi from "./version";
 
 class SettingsApi {
-  LOCAL_STORAGE_KEY = "blocknote_settings";
-
-  FILE = "settings.json";
-
-  ALL_FILES = ["notes.json", "tags.json"];
-
   GET_OPTIONS = {
     encrypt: true
   };
@@ -18,44 +13,21 @@ class SettingsApi {
     decrypt: true
   };
 
-  update_version(files) {
-    return {
-      timestamp: new Date().getTime(),
-      changed: files || this.ALL_FILES
-    };
-  }
+  NAME = "settings";
+  FILE = "settings.json";
 
   init() {
-    this.loadFromStorage.then(data => {
-      if (_.isNull(data)) {
-        const updated_settings = {
-          version: update_version(false),
-          settings: defaultSettings
-        };
+    const local_data = JSON.parse(
+      localStorage.getItem(versionApi.LOCAL_STORAGE_KEY)
+    );
 
-        localStorage.setItem(this.LOCAL_STORAGE_KEY, updated_settings);
-        this.loadToStorage(updated_settings);
-      } else {
-        const remote_settings = JSON.parse(data);
-        const local_settings = JSON.parse(
-          localStorage.getItem(this.LOCAL_STORAGE_KEY)
-        );
+    const local = this.decrypt(local_data.settings);
 
-        if (
-          local_settings !== null &&
-          remote_settings.version.timestamp !== local_settings.version.timestamp
-        ) {
-          // then load all the changed files
-          remote_settings.version.changed.forEach(f => {
-            // load file
-          });
+    return store.dispatch("setSettings", local);
+  }
 
-          localStorage.setItem(this.LOCAL_STORAGE_KEY, data);
-        } else if (local_settings === null) {
-          localStorage.setItem(this.LOCAL_STORAGE_KEY, data);
-        }
-      }
-    });
+  load() {
+    return this.loadFromStorage();
   }
 
   loadFromStorage() {
@@ -63,19 +35,17 @@ class SettingsApi {
       .getFile(this.FILE, this.GET_OPTIONS)
       .then(data => {
         if (_.isNull(data) || _.isEmpty(data)) {
-          return null;
+          return defaultSettings;
         } else {
           return JSON.parse(data);
         }
       });
   }
 
-  loadToStorage(data) {
-    return store.state.userSession.putFile(
-      this.FILE,
-      JSON.stringify(data),
-      this.PUT_OPTIONS
-    );
+  loadToStorage() {
+    const data = JSON.stringify(store.state.settings);
+
+    return store.state.userSession.putFile(this.FILE, data, this.PUT_OPTIONS);
   }
 
   clearStorage() {
@@ -84,6 +54,31 @@ class SettingsApi {
       .then(() => {
         console.log(`${this.FILE} cleared`);
       });
+  }
+
+  getEncrypted() {
+    const data = JSON.stringify(store.state.settings);
+    return {
+      name: this.NAME,
+      data: store.state.userSession.encryptContent(data)
+    };
+  }
+
+  decrypt(data) {
+    return JSON.parse(store.state.userSession.decryptContent(data));
+  }
+
+  verifyOption(key, value) {
+    return (
+      typeof options[key] !== "undefined" &&
+      options[key].find(o => {
+        return o.value == value;
+      }) !== undefined
+    );
+  }
+
+  save() {
+    return versionApi.update_version([this.NAME]);
   }
 }
 

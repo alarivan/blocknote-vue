@@ -91,8 +91,7 @@ export default {
   data() {
     return {
       buttonClasses: "font-bold py-3 px-5 sm:py-1 sm:px-3 rounded",
-      copied: false,
-      layout: "layout-3"
+      copied: false
     };
   },
 
@@ -172,6 +171,10 @@ export default {
   computed: {
     active() {
       return this.selected !== false && this.selected == this.index;
+    },
+
+    layout() {
+      return this.$store.state.settings.layout.cssClass;
     }
   }
 };

@@ -22,12 +22,14 @@
 .layout-1 {
     @screen md {
         @apply w-full;
+        max-height: 300px;
     }
 }
 
 .layout-2 {
     @screen md {
         @apply w-1/2;
+        max-height: 300px;
     }
 }
 
@@ -50,21 +52,3 @@
         @apply w-1/4;
     }
 }
-
-
-// .layout-1,
-// .layout-2,
-//     {
-//     .markdown-body {
-//         @apply flex-auto;
-//     }
-// }
-
-// .layout-3,
-// .layout-4,
-//     {
-//     .markdown-body {
-//         @apply flex-initial;
-//         overflow: hidden;
-//     }
-// }

@@ -1,13 +1,15 @@
 <template>
-  <a-modal
-    v-model="editorActive"
-    :footer="null"
-    :title="null"
+  <modal
+    name="edit-modal"
     width="80%"
-    :closable="false"
-    wrapClassName="editor-modal"
+    class="editor-modal"
+    height="100%"
+    :adaptive="true"
+    @closed="close"
+    @before-open="beforeOpen"
+    @before-close="beforeClose"
   >
-    <div class="flex flex-col mx-1 sm:mx-0 h-full">
+    <div class="flex flex-col mx-1 sm:mx-0 h-full p-2">
       <div class="flex-auto flex flex-col">
         <!-- <textarea class="mousetrap" ref="noteinput" id="note" :model="content"></textarea> -->
         <label
@@ -54,13 +56,14 @@
         </button>
       </div>
     </div>
-  </a-modal>
+  </modal>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import marked from "marked";
 import Mousetrap from "mousetrap";
+import scrollLock from "scroll-lock";
 
 import { Editor } from "@toast-ui/vue-editor";
 
@@ -121,6 +124,18 @@ export default {
   },
 
   methods: {
+    close() {
+      this.cancel();
+    },
+
+    beforeOpen() {
+      scrollLock.disablePageScroll(document.documentElement);
+    },
+
+    beforeClose() {
+      scrollLock.enablePageScroll(document.documentElement);
+    },
+
     save() {
       if (this.editedNote) {
         this.changeNote();
@@ -221,11 +236,12 @@ export default {
   watch: {
     editorActive: function(n, o) {
       if (n) {
+        this.$modal.show("edit-modal");
         this.$nextTick(() => {
-          this.$refs.tuiEditor.invoke("focus");
+          // this.$refs.tuiEditor.invoke("focus");
         });
       } else {
-        this.cancel();
+        this.$modal.hide("edit-modal");
       }
     }
   }
@@ -239,20 +255,9 @@ export default {
 }
 
 .editor-modal {
-  .ant-modal {
-    top: 0;
-    max-height: 100vh;
-
-    .ant-modal-content {
-      max-height: 100vh;
-      height: 100vh;
-      border-radius: 0;
-
-      .ant-modal-body {
-        height: 100%;
-        @apply p-2;
-      }
-    }
+  @apply w-full;
+  .v--modal-box.v--modal {
+    border-radius: 0;
 
     .editor-main {
       .tui-editor-defaultUI {
@@ -279,10 +284,8 @@ export default {
     }
   }
 
-  @media (max-width: 767px) {
-    .ant-modal {
-      margin: 0;
-    }
+  @screen sm {
+    width: 80%;
   }
 }
 </style>

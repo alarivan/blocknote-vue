@@ -3,17 +3,19 @@ import store from "../store";
 
 import tagsApi from "./tags";
 import notesApi from "./notes";
+import settingsApi from "./settings";
 
 class VersionApi {
   LOCAL_STORAGE_KEY = "blocknotexyz";
 
   FILE = "version.json";
 
-  ALL_FILES = ["notes", "tags"];
+  ALL_FILES = ["notes", "tags", "settings"];
 
   APIS = {
     notes: notesApi,
-    tags: tagsApi
+    tags: tagsApi,
+    settings: settingsApi
   };
 
   GET_OPTIONS = {
@@ -59,11 +61,7 @@ class VersionApi {
     };
 
     const promises = this.ALL_FILES.map(f => {
-      if (this.APIS[f]) {
-        return this.APIS[f].getEncrypted();
-      }
-
-      return Promise.resolve(false);
+      return this.APIS[f].getEncrypted();
     });
 
     return Promise.all(promises).then(data => {
@@ -108,12 +106,8 @@ class VersionApi {
   }
 
   init_local(remote) {
-    const promises = remote.changed.map(f => {
-      if (this.APIS[f]) {
-        return this.APIS[f].load();
-      }
-
-      return Promise.resolve();
+    const promises = this.ALL_FILES.map(f => {
+      return this.APIS[f].load();
     });
 
     return Promise.all(promises).then(data => {

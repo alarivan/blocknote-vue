@@ -1,30 +1,27 @@
 <template>
   <div>
     <div class="py-2 sm:py-8">
-      <a-drawer
-        :visible="drawer"
-        :closable="false"
-        :title="null"
-        placement="right"
-        wrapClassName="nav-drawer"
-        @close="setDrawer(false)"
+      <Drawer
+        v-if="isHome"
+        class="nav-drawer"
+        :direction="'right'"
+        :exist="true"
+        ref="drawer"
+        @close="closeDrawer"
       >
         <div class="container mx-auto mb-4 text-right">
           <div v-if="user" class="profile flex px-4 py-2 justify-end">
-            <div class="mr-2 text-right">
+            <div class="mr-2 text-right text-sm">
               <div>{{user.name()}}</div>
               <div>{{user.username}}</div>
             </div>
-            <picture>
-              <source :srcset="smallest_img" media="(max-width: 640px)">
-              <img
-                v-if="user.avatarUrl()"
-                :src="user.avatarUrl()"
-                alt="avatar"
-                width="40"
-                height="40"
-              >
-            </picture>
+            <img
+              v-if="user.avatarUrl()"
+              :src="user.avatarUrl()"
+              alt="avatar"
+              width="40"
+              height="40"
+            >
           </div>
           <ul>
             <li>
@@ -41,12 +38,15 @@
               <router-link @click="closeDrawer" class="nav-drawer-link" to="/settings">settings</router-link>
             </li>
             <li v-if="user">
+              <router-link @click="closeDrawer" class="nav-drawer-link" to="/manage">import/export</router-link>
+            </li>
+            <li v-if="user">
               <button @click="signOut" class="w-full text-right nav-drawer-link">sign out</button>
             </li>
           </ul>
         </div>
-      </a-drawer>
-
+      </Drawer>
+      <navigation v-else/>
       <router-view/>
     </div>
   </div>
@@ -60,12 +60,14 @@ import { Person } from "blockstack";
 import { userSession } from "./helper/userSession";
 
 import versionApi from "./api/version";
+import settingsApi from "./api/settings";
 
-import Dropdown from "./components/Dropdown";
+import Navigation from "./components/Navigation";
+import Drawer from "./components/Drawer.vue";
 
 export default {
   name: "app",
-  components: { Dropdown },
+  components: { Drawer, Navigation },
 
   data() {
     return {
@@ -90,10 +92,11 @@ export default {
     if (userSession.isUserSignedIn()) {
       const userData = userSession.loadUserData();
       let user = new Person(userData.profile);
-      console.log(user);
       user.username = userData.username;
       this.setUser(user).then(() => {
-        versionApi.init();
+        versionApi.init().then(() => {
+          settingsApi.init();
+        });
       });
       this.$router.push("/");
     } else if (userSession.isSignInPending()) {
@@ -137,6 +140,20 @@ export default {
 
       set(value) {
         return this.setDrawer(value);
+      }
+    },
+
+    isHome() {
+      return this.$route.name === "home";
+    }
+  },
+
+  watch: {
+    drawer(n) {
+      if (n) {
+        this.$refs.drawer.open();
+      } else {
+        this.$refs.drawer.close();
       }
     }
   }

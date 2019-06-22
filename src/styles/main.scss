@@ -9,9 +9,12 @@
 
 .markdown-body {
 
-    ul,
+    ul {
+        @apply list-disc;
+    }
+
     ol {
-        list-style: inherit;
+        @apply list-decimal;
     }
 }
 

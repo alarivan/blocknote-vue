@@ -3,6 +3,9 @@ import Vuex from "vuex";
 import _ from "underscore";
 import Fuse from "fuse.js";
 
+import defaultSettings from "./constants/settings";
+import settingsApi from "./api/settings";
+
 const options = {
   shouldSort: true,
   findAllMatches: true,
@@ -32,7 +35,8 @@ export default new Vuex.Store({
       tags: ""
     },
     noteView: false,
-    drawer: false
+    drawer: false,
+    settings: defaultSettings
   },
   mutations: {
     SET_USER(state, user) {
@@ -131,6 +135,18 @@ export default new Vuex.Store({
 
     SET_DRAWER(state, value) {
       state.drawer = value;
+    },
+
+    SET_SETTINGS_VALUE(state, { key, data }) {
+      if (settingsApi.verifyOption(key, data.value)) {
+        state.settings[key] = data;
+      }
+
+      settingsApi.save();
+    },
+
+    SET_SETTINGS(state, data) {
+      state.settings = data;
     }
   },
   actions: {
@@ -219,6 +235,14 @@ export default new Vuex.Store({
 
     setDrawer({ commit }, value) {
       commit("SET_DRAWER", value);
+    },
+
+    setSettings({ commit }, data) {
+      commit("SET_SETTINGS", data);
+    },
+
+    setLayout({ commit }, data) {
+      commit("SET_SETTINGS_VALUE", { key: "layout", data });
     }
   },
 

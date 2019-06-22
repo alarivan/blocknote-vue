@@ -37,6 +37,15 @@ const router = new Router({
         import(/* webpackChunkName: "about" */ "./views/Settings.vue")
     },
     {
+      path: "/manage",
+      name: "manager",
+      meta: {
+        requiresAuth: true
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./views/Manager.vue")
+    },
+    {
       path: "/login",
       name: "login",
       component: () =>

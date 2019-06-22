@@ -3,14 +3,13 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-import { Modal } from "ant-design-vue";
-import { Drawer } from "ant-design-vue";
+import VModal from "vue-js-modal";
 
 import Confirm from "./plugins/confirm/index";
 
 import "./styles/main.scss";
 import "../node_modules/github-markdown-css";
-import "ant-design-vue/dist/antd.css";
+
 import "tui-editor/dist/tui-editor.css";
 import "tui-editor/dist/tui-editor-contents.css";
 import "codemirror/lib/codemirror.css";
@@ -18,8 +17,7 @@ import "codemirror/lib/codemirror.css";
 Vue.config.productionTip = false;
 
 Vue.use(new Confirm(Vue));
-Vue.use(Modal);
-Vue.use(Drawer);
+Vue.use(VModal);
 
 new Vue({
   router,

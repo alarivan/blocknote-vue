@@ -1,18 +1,20 @@
 <template>
-  <a-modal
-    v-model="active"
-    wrapClassName="view-modal"
-    :footer="null"
-    :title="null"
-    width="80%"
-    :closable="true"
+  <modal
+    name="note-view-modal"
+    class="view-modal"
+    height="100%"
+    :adaptive="true"
+    @closed="close"
+    @before-open="beforeOpen"
+    @before-close="beforeClose"
   >
     <note v-if="note" :note="note" :index="1000" :selected="false"></note>
-  </a-modal>
+  </modal>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import scrollLock from "scroll-lock";
 import Note from "../components/Note";
 
 export default {
@@ -28,6 +30,18 @@ export default {
   mounted() {},
 
   methods: {
+    close() {
+      this.setNoteView(false);
+    },
+
+    beforeOpen() {
+      scrollLock.disablePageScroll(document.documentElement);
+    },
+
+    beforeClose() {
+      scrollLock.enablePageScroll(document.documentElement);
+    },
+
     ...mapActions(["setNoteView"])
   },
 
@@ -39,12 +53,10 @@ export default {
 
   watch: {
     note(n) {
-      this.active = !!n;
-    },
-
-    active(n) {
-      if (!n) {
-        this.setNoteView(false);
+      if (!!n) {
+        this.$modal.show("note-view-modal");
+      } else {
+        this.$modal.hide("note-view-modal");
       }
     }
   }
@@ -53,53 +65,32 @@ export default {
 
 <style lang="scss">
 .view-modal {
-  .ant-modal {
-    top: 0;
-    max-height: 100vh;
+  @apply w-full;
 
-    // margin: 0;
+  .v--modal-box.v--modal {
+    border-radius: 0;
+    > div {
+      width: 100%;
+      height: 100%;
+      max-height: none;
+      padding: 0;
+    }
 
-    .ant-modal-content {
-      max-height: 100vh;
-      height: 100vh;
-      border-radius: 0;
-      background: transparent;
+    .note {
+      border: none;
 
-      .ant-modal-body {
-        height: 100%;
-
-        @screen sm {
-          @apply p-2;
-        }
-
-        > div {
-          width: 100%;
-          height: 100%;
-          max-height: none;
-        }
-
-        .note {
-          border: none;
-
-          .view-action {
-            display: none;
-          }
-        }
-
-        .markdown-body {
-          overflow: auto;
-        }
+      .view-action {
+        display: none;
       }
+    }
+
+    .markdown-body {
+      overflow: auto;
     }
   }
 
-  @media (max-width: 767px) {
-    .ant-modal {
-      margin: 0;
-      .ant-modal-body {
-        padding: 0;
-      }
-    }
+  @screen sm {
+    width: 80%;
   }
 }
 </style>
