@@ -178,9 +178,10 @@ export default new Vuex.Store({
       commit("SET_SELECTED_TAGS", tags);
     },
 
-    addSelectedTag({ commit, state }, val) {
-      if (!state.selectedTags.includes(val)) {
-        commit("ADD_SELECTED_TAG", val);
+    addSelectedTag({ commit, state }, tag) {
+      const index = state.selectedTags.findIndex(t => t._id === tag._id);
+      if (index === -1) {
+        commit("ADD_SELECTED_TAG", tag);
       }
     },
 
