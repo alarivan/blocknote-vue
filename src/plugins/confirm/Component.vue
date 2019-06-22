@@ -1,5 +1,7 @@
 <template>
-  <div class="fixed inset-0 w-100vw h-100vh z-50 flex flex-wrap justify-center items-center">
+  <div
+    class="confirm-wrapper fixed inset-0 w-100vw h-100vh flex flex-wrap justify-center items-center"
+  >
     <div class="confirm p-8 border border-gray-300 bg-gray-100 shadow-2xl">
       <p class="flex-auto mb-4">{{message}}</p>
       <div class="actions flex justify-between">
@@ -54,7 +56,8 @@ export default {
   },
 
   beforeDestroy() {
-    Mousetrap.unbind("y", "n");
+    Mousetrap.unbind("y");
+    Mousetrap.unbind("n");
   },
 
   methods: {
@@ -69,6 +72,9 @@ export default {
 </script>
 
 <style lang="scss">
+.confirm-wrapper {
+  z-index: 2000;
+}
 .confirm {
   width: 300px;
 }

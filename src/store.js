@@ -24,7 +24,15 @@ export default new Vuex.Store({
     notes: [],
     search: "",
     tags: [],
-    selectedTags: []
+    selectedTags: [],
+    editor: {
+      active: false,
+      note: false,
+      content: "",
+      tags: ""
+    },
+    noteView: false,
+    drawer: false
   },
   mutations: {
     SET_USER(state, user) {
@@ -91,6 +99,38 @@ export default new Vuex.Store({
 
     SET_VERSION_UPDATING(state, value) {
       state.version_updating = value;
+    },
+
+    SET_EDITOR_STATE(state, { key, value }) {
+      state.editor[key] = value;
+    },
+
+    SET_EDITOR_STATE_NOTE(state, note) {
+      state.editor.active = true;
+      state.editor.note = note;
+      state.editor.content = note.body;
+      state.editor.tags = note.tags
+        .map(t => {
+          return t.name;
+        })
+        .join(", ");
+    },
+
+    CLEAR_EDITOR_STATE(state) {
+      state.editor = {
+        active: false,
+        note: false,
+        content: "",
+        tags: ""
+      };
+    },
+
+    SET_NOTE_VIEW(state, note) {
+      state.noteView = note;
+    },
+
+    SET_DRAWER(state, value) {
+      state.drawer = value;
     }
   },
   actions: {
@@ -138,8 +178,10 @@ export default new Vuex.Store({
       commit("SET_SELECTED_TAGS", tags);
     },
 
-    addSelectedTag({ commit }, val) {
-      commit("ADD_SELECTED_TAG", val);
+    addSelectedTag({ commit, state }, val) {
+      if (!state.selectedTags.includes(val)) {
+        commit("ADD_SELECTED_TAG", val);
+      }
     },
 
     removeSelectedTag({ commit }, val) {
@@ -152,6 +194,30 @@ export default new Vuex.Store({
 
     versionUpdateEnd({ commit }) {
       commit("SET_VERSION_UPDATING", false);
+    },
+
+    setEditorState({ commit }, data) {
+      commit("SET_EDITOR_STATE", data);
+    },
+
+    clearEditorState({ commit }) {
+      commit("CLEAR_EDITOR_STATE");
+    },
+
+    setEditorStateNote({ commit }, note) {
+      commit("SET_EDITOR_STATE_NOTE", note);
+    },
+
+    setEditorStateActive({ commit }, value) {
+      commit("SET_EDITOR_STATE", { key: "active", value });
+    },
+
+    setNoteView({ commit }, note) {
+      commit("SET_NOTE_VIEW", note);
+    },
+
+    setDrawer({ commit }, value) {
+      commit("SET_DRAWER", value);
     }
   },
 

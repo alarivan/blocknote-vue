@@ -1,143 +1,231 @@
 <template>
-  <div class="mx-1 sm:mx-0 mb-2">
-    <div class="mb-2">
-      <label
-        ref="edittoplabel"
-        class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-        for="note"
-      >content (markdown)</label>
-      <textarea
-        class="mousetrap"
-        ref="noteinput"
-        id="note"
-        :value="noteInput"
-        v-on:input="$emit('update:noteInput', $event.target.value)"
-      ></textarea>
+  <a-modal
+    v-model="editorActive"
+    :footer="null"
+    :title="null"
+    width="80%"
+    :closable="false"
+    wrapClassName="editor-modal"
+  >
+    <div class="flex flex-col mx-1 sm:mx-0 h-full">
+      <div class="flex-auto flex flex-col">
+        <!-- <textarea class="mousetrap" ref="noteinput" id="note" :model="content"></textarea> -->
+        <label
+          ref="edittoplabel"
+          class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+          for="note"
+        >content (markdown)</label>
+        <editor
+          ref="tuiEditor"
+          class="editor-main"
+          v-model="content"
+          height="100%"
+          :options="editorOptions"
+        />
+      </div>
+      <div class="flex flex-wrap items-center border-b border-b-2 border-gray-500 mb-2">
+        <label
+          class="flex-auto uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+          for="note"
+        >tags</label>
+        <input
+          ref="tags"
+          v-model="tags"
+          class="mousetrap flex-auto appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+          type="text"
+          placeholder="work, play, joke"
+          aria-label="tags"
+        >
+      </div>
+      <div class="flex">
+        <button
+          @click="save"
+          class="save-button flex-auto py-2 px-6 button primary rounded text-white font-bold mr-2"
+        >
+          save
+          <span class="hidden sm:inline-block">( alt + enter )</span>
+        </button>
+        <button
+          @click="cancel"
+          class="py-2 px-4 border border-gray-500 hover:border-gray-600 rounded font-bold text-gray-700"
+        >
+          cancel
+          <span class="hidden sm:inline-block">( esc )</span>
+        </button>
+      </div>
     </div>
-    <div class="flex flex-wrap items-center border-b border-b-2 border-green-500 py-2 mb-2">
-      <label
-        class="flex-auto uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-        for="note"
-      >tags</label>
-      <input
-        ref="tags"
-        :value="tagsInput"
-        v-on:input="$emit('update:tagsInput', $event.target.value)"
-        class="mousetrap flex-auto appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-        type="text"
-        placeholder="work, play, joke"
-        aria-label="tags"
-      >
-    </div>
-    <div class="flex">
-      <button
-        @click="save"
-        class="save-button fixed shadow-2xl sm:shadow-none sm:static flex-auto py-2 px-6 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 rounded text-white font-bold sm:mr-2 z-20"
-      >
-        save
-        <span class="hidden sm:inline-block">( alt + enter )</span>
-      </button>
-      <button
-        @click="cancel"
-        class="py-2 px-4 w-full sm:w-auto border border-gray-500 hover:border-gray-600 rounded font-bold text-gray-700"
-      >
-        cancel
-        <span class="hidden sm:inline-block">( esc )</span>
-      </button>
-    </div>
-  </div>
+  </a-modal>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import marked from "marked";
-import EasyMDE from "easymde";
+import Mousetrap from "mousetrap";
+
+import { Editor } from "@toast-ui/vue-editor";
 
 import TagInput from "./TagInput";
+import notesApi from "../api/notes";
+
+import addEventListener from "add-dom-event-listener";
 
 export default {
   name: "note-edit",
-  components: { TagInput },
+  components: { TagInput, Editor },
 
   data() {
-    return {};
-  },
-
-  props: {
-    noteInput: {
-      type: String,
-      default: ""
-    },
-    tagsInput: {
-      type: String,
-      default: ""
-    },
-    active: {
-      type: Boolean,
-      default: false
-    }
+    return {
+      shortcuts: false,
+      editorOptions: {
+        minHeight: "100px",
+        initialEditType: "markdown",
+        hideModeSwitch: true,
+        usageStatistics: false,
+        toolbarItems: [
+          "heading",
+          "bold",
+          "italic",
+          "strike",
+          "divider",
+          "hr",
+          "quote",
+          "divider",
+          "ul",
+          "ol",
+          "indent",
+          "outdent",
+          "divider",
+          "link",
+          "code",
+          "codeblock"
+        ]
+      }
+    };
   },
 
   mounted() {
-    this.easyMDE = new EasyMDE({
-      element: this.$refs.noteinput,
-      autofocus: true,
-      shortcuts: {
-        focusTags: "Alt-Enter"
-      },
-      toolbar: [
-        "bold",
-        "italic",
-        "heading",
-        "|",
-        "quote",
-        "unordered-list",
-        "ordered-list",
-        "|",
-        "link",
-        "image",
-        "|",
-        "preview",
-        "side-by-side",
-        "fullscreen",
-        "|",
-        {
-          name: "focusTags",
-          action: editor => {
-            this.$refs.tags.focus();
-          },
-          className: "fa fa-tags",
-          title: "Focus Tags"
-        },
-        "guide"
-      ]
+    this.shortcuts = addEventListener(window, "keydown", event => {
+      if (event.altKey && event.key === "Enter") {
+        event.preventDefault();
+        if (event.target == this.$refs.tags) {
+          this.save();
+        } else if (this.$refs.tuiEditor.editor.getCodeMirror().hasFocus()) {
+          this.$refs.tags.focus();
+        }
+      }
     });
-    this.easyMDE.codemirror.on("change", () => {
-      this.$emit("update:noteInput", this.easyMDE.value());
-    });
+  },
+
+  beforeDestroy() {
+    this.shortcuts.remove();
   },
 
   methods: {
     save() {
-      this.$emit("save");
+      if (this.editedNote) {
+        this.changeNote();
+      } else {
+        this.addNewNote();
+      }
     },
 
     cancel() {
-      this.$emit("cancel");
+      this.editorActive = false;
+      this.clearEditorState();
     },
 
     focusEditor() {
       this.easyMDE.codemirror.focus();
+    },
+
+    addOrUpdate() {
+      if (this.editedNote) {
+        this.changeNote();
+      } else {
+        this.addNewNote();
+      }
+    },
+
+    addNewNote() {
+      const body = this.content.trim();
+      const tags = this.tags.trim();
+      if (body) {
+        notesApi.create(body, tags).then(doc => {
+          this.addNote(doc);
+          this.editorActive = false;
+        });
+      }
+    },
+
+    changeNote() {
+      const body = this.content.trim();
+      const tags = this.tags.trim();
+      if (body) {
+        notesApi.update(this.editedNote._id, body, tags).then(doc => {
+          this.updateNote(doc);
+          this.editorActive = false;
+        });
+      }
+    },
+
+    ...mapActions([
+      "addNote",
+      "updateNote",
+      "removeNote",
+      "setEditorStateActive",
+      "setEditorState",
+      "clearEditorState"
+    ])
+  },
+
+  computed: {
+    editor() {
+      return this.$store.state.editor;
+    },
+
+    editorActive: {
+      get() {
+        return this.$store.state.editor.active;
+      },
+
+      set(v) {
+        return this.setEditorStateActive(v);
+      }
+    },
+
+    content: {
+      get() {
+        return this.$store.state.editor.content;
+      },
+
+      set(value) {
+        return this.setEditorState({ key: "content", value });
+      }
+    },
+
+    tags: {
+      get() {
+        return this.$store.state.editor.tags;
+      },
+
+      set(value) {
+        return this.setEditorState({ key: "tags", value });
+      }
+    },
+
+    editedNote() {
+      return this.$store.state.editor.note;
     }
   },
 
-  computed: {},
-
   watch: {
-    active: function(n, o) {
+    editorActive: function(n, o) {
       if (n) {
-        this.$refs.edittoplabel.scrollIntoView(true);
-        this.easyMDE.codemirror.focus();
-        this.easyMDE.value(this.noteInput);
+        this.$nextTick(() => {
+          this.$refs.tuiEditor.invoke("focus");
+        });
+      } else {
+        this.cancel();
       }
     }
   }
@@ -150,8 +238,51 @@ export default {
   right: 10px;
 }
 
-.editor-toolbar,
-.CodeMirror.cm-s-easymde.CodeMirror-wrap {
-  border-radius: 0;
+.editor-modal {
+  .ant-modal {
+    top: 0;
+    max-height: 100vh;
+
+    .ant-modal-content {
+      max-height: 100vh;
+      height: 100vh;
+      border-radius: 0;
+
+      .ant-modal-body {
+        height: 100%;
+        @apply p-2;
+      }
+    }
+
+    .editor-main {
+      .tui-editor-defaultUI {
+        border: none;
+      }
+
+      .te-tab {
+        margin: 0;
+        height: 100%;
+        button {
+          border: none;
+          height: 31px;
+        }
+      }
+
+      .tui-editor-defaultUI-toolbar {
+        margin: 0;
+        padding: 0;
+      }
+    }
+
+    .cm-s-default .cm-header {
+      @apply text-black;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .ant-modal {
+      margin: 0;
+    }
+  }
 }
 </style>
