@@ -14,6 +14,14 @@ export default class {
     this.db = db;
   }
 
+  load() {
+    return this.loadFromStorage().then(data => {
+      return this.clearDb().then(() => {
+        return this.db.insert(data);
+      });
+    });
+  }
+
   loadFromStorage() {
     return store.state.userSession
       .getFile(this.FILE, this.GET_OPTIONS)
@@ -27,7 +35,7 @@ export default class {
   }
 
   loadToStorage() {
-    return this.db.find().then(docs => {
+    return this.db.find({}).then(docs => {
       return store.state.userSession.putFile(
         this.FILE,
         JSON.stringify(docs),
@@ -46,5 +54,18 @@ export default class {
 
   clearDb() {
     return this.db.remove({}, { multi: true });
+  }
+
+  getEncrypted() {
+    return this.db.find({}).then(docs => {
+      return {
+        name: this.NAME,
+        data: store.state.userSession.encryptContent(JSON.stringify(docs))
+      };
+    });
+  }
+
+  decrypt(data) {
+    return JSON.parse(store.state.userSession.decryptContent(data));
   }
 }

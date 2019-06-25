@@ -3,6 +3,9 @@ import Vuex from "vuex";
 import _ from "underscore";
 import Fuse from "fuse.js";
 
+import defaultSettings from "./constants/settings";
+import settingsApi from "./api/settings";
+
 const options = {
   shouldSort: true,
   findAllMatches: true,
@@ -18,12 +21,22 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    version_updating: false,
     user: null,
     userSession: null,
     notes: [],
     search: "",
     tags: [],
-    selectedTags: []
+    selectedTags: [],
+    editor: {
+      active: false,
+      note: false,
+      content: "",
+      tags: ""
+    },
+    noteView: false,
+    drawer: false,
+    settings: defaultSettings
   },
   mutations: {
     SET_USER(state, user) {
@@ -86,6 +99,54 @@ export default new Vuex.Store({
       if (index !== -1) {
         state.selectedTags.splice(index, 1);
       }
+    },
+
+    SET_VERSION_UPDATING(state, value) {
+      state.version_updating = value;
+    },
+
+    SET_EDITOR_STATE(state, { key, value }) {
+      state.editor[key] = value;
+    },
+
+    SET_EDITOR_STATE_NOTE(state, note) {
+      state.editor.active = true;
+      state.editor.note = note;
+      state.editor.content = note.body;
+      state.editor.tags = note.tags
+        .map(t => {
+          return t.name;
+        })
+        .join(", ");
+    },
+
+    CLEAR_EDITOR_STATE(state) {
+      state.editor = {
+        active: false,
+        note: false,
+        content: "",
+        tags: ""
+      };
+    },
+
+    SET_NOTE_VIEW(state, note) {
+      state.noteView = note;
+    },
+
+    SET_DRAWER(state, value) {
+      state.drawer = value;
+    },
+
+    SET_SETTINGS_VALUE(state, { key, data }) {
+      if (settingsApi.verifyOption(key, data.value)) {
+        state.settings[key] = data;
+      }
+
+      settingsApi.save();
+    },
+
+    SET_SETTINGS(state, data) {
+      state.settings = data;
     }
   },
   actions: {
@@ -133,12 +194,55 @@ export default new Vuex.Store({
       commit("SET_SELECTED_TAGS", tags);
     },
 
-    addSelectedTag({ commit }, val) {
-      commit("ADD_SELECTED_TAG", val);
+    addSelectedTag({ commit, state }, tag) {
+      const index = state.selectedTags.findIndex(t => t._id === tag._id);
+      if (index === -1) {
+        commit("ADD_SELECTED_TAG", tag);
+      }
     },
 
     removeSelectedTag({ commit }, val) {
       commit("REMOVE_SELECTED_TAG", val);
+    },
+
+    versionUpdateBegin({ commit }) {
+      commit("SET_VERSION_UPDATING", true);
+    },
+
+    versionUpdateEnd({ commit }) {
+      commit("SET_VERSION_UPDATING", false);
+    },
+
+    setEditorState({ commit }, data) {
+      commit("SET_EDITOR_STATE", data);
+    },
+
+    clearEditorState({ commit }) {
+      commit("CLEAR_EDITOR_STATE");
+    },
+
+    setEditorStateNote({ commit }, note) {
+      commit("SET_EDITOR_STATE_NOTE", note);
+    },
+
+    setEditorStateActive({ commit }, value) {
+      commit("SET_EDITOR_STATE", { key: "active", value });
+    },
+
+    setNoteView({ commit }, note) {
+      commit("SET_NOTE_VIEW", note);
+    },
+
+    setDrawer({ commit }, value) {
+      commit("SET_DRAWER", value);
+    },
+
+    setSettings({ commit }, data) {
+      commit("SET_SETTINGS", data);
+    },
+
+    setLayout({ commit }, data) {
+      commit("SET_SETTINGS_VALUE", { key: "layout", data });
     }
   },
 

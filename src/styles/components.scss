@@ -1,0 +1,17 @@
+.button.primary {
+    @apply py-2 px-3 border border-blue-800 bg-blue-800 text-white font-bold;
+
+    &:hover {
+        @apply bg-blue-900 border-blue-900
+    }
+}
+
+.tag {
+    @apply border border-white text-xs font-bold text-gray-800 rounded-full text-gray-900;
+}
+
+.absolute-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

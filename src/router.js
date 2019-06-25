@@ -15,12 +15,16 @@ const router = new Router({
       name: "home",
       component: Home,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        title: "Home"
       }
     },
     {
       path: "/about",
       name: "about",
+      meta: {
+        title: "About"
+      },
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -31,20 +35,37 @@ const router = new Router({
       path: "/settings",
       name: "settings",
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        title: "Settings"
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/Settings.vue")
     },
     {
+      path: "/manage",
+      name: "manager",
+      meta: {
+        requiresAuth: true,
+        title: "Import/Export"
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./views/Manager.vue")
+    },
+    {
       path: "/login",
       name: "login",
+      meta: {
+        title: "Login"
+      },
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/Login.vue")
     },
     {
       path: "/howto",
       name: "howto",
+      meta: {
+        title: "How To"
+      },
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/Howto.vue")
     }

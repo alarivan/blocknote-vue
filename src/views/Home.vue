@@ -13,87 +13,62 @@
           ></path>
         </svg>
       </button>
-      <div
-        class="flex flex-wrap items-center border-b border-b-2 border-teal-500 py-2 mb-2 mx-1 sm:mx-0"
-      >
-        <input
-          ref="search"
-          v-model="searchInput"
-          class="mousetrap flex-auto appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-          type="text"
-          placeholder="search: press '/' to focus"
-          aria-label="filter"
-        >
-        <button
-          @click="clearSearch()"
-          class="sm:hidden inline-block py-0 px-1 border border-gray-300 bg-gray-300 hover:bg-gray-400 hover:border-gray-400 text-gray-700 rounded h-6"
-        >
-          <svg class="svg-icon fill-current" viewBox="0 0 20 20">
+      <div class="flex items-start mb-2 mx-1 sm:mx-0">
+        <search ref="tagsearch">
+          <button
+            @click="clearSearch()"
+            class="sm:hidden inline-block py-0 px-1 border border-gray-300 bg-gray-300 hover:bg-gray-400 hover:border-gray-400 text-gray-700 rounded h-6"
+          >
+            <svg class="svg-icon fill-current" viewBox="0 0 20 20">
+              <path
+                d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"
+              ></path>
+            </svg>
+          </button>
+          <div
+            class="inline-block border border-gray-500 py-2 px-3 bg-gray-500 text-white font-bold mr-2"
+            v-if="selectMode"
+          >SS</div>
+          <button @click="editMode()" class="button primary hidden sm:block">
+            new note
+            <span class="hidden sm:inline-block">( shift + n )</span>
+          </button>
+          <button @click="setDrawer(true)" class="hidden sm:block ml-2">
+            <svg class="h-10 w-8 fill-current" viewBox="0 0 20 20">
+              <path
+                d="M10,1.445c-4.726,0-8.555,3.829-8.555,8.555c0,4.725,3.829,8.555,8.555,8.555c4.725,0,8.555-3.83,8.555-8.555C18.555,5.274,14.725,1.445,10,1.445 M10,17.654c-4.221,0-7.654-3.434-7.654-7.654c0-4.221,3.433-7.654,7.654-7.654c4.222,0,7.654,3.433,7.654,7.654C17.654,14.221,14.222,17.654,10,17.654 M14.39,10c0,0.248-0.203,0.45-0.45,0.45H6.06c-0.248,0-0.45-0.203-0.45-0.45s0.203-0.45,0.45-0.45h7.879C14.187,9.55,14.39,9.752,14.39,10 M14.39,12.702c0,0.247-0.203,0.449-0.45,0.449H6.06c-0.248,0-0.45-0.202-0.45-0.449c0-0.248,0.203-0.451,0.45-0.451h7.879C14.187,12.251,14.39,12.454,14.39,12.702 M14.39,7.298c0,0.248-0.203,0.45-0.45,0.45H6.06c-0.248,0-0.45-0.203-0.45-0.45s0.203-0.45,0.45-0.45h7.879C14.187,6.848,14.39,7.051,14.39,7.298"
+              ></path>
+            </svg>
+          </button>
+        </search>
+      </div>
+
+      <div class="flex mx-1 mb-2 sm:hidden">
+        <button @click="editMode()" class="flex-auto py-2 px-4 border button primary text-white">
+          new note
+          <span class="hidden sm:inline-block">( shift + n )</span>
+        </button>
+        <button @click="setDrawer(true)" class="ml-2 w-16 pr-2 text-center">
+          <svg class="h-10 w-8 fill-current mx-auto" viewBox="0 0 20 20">
             <path
-              d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"
+              d="M10,1.445c-4.726,0-8.555,3.829-8.555,8.555c0,4.725,3.829,8.555,8.555,8.555c4.725,0,8.555-3.83,8.555-8.555C18.555,5.274,14.725,1.445,10,1.445 M10,17.654c-4.221,0-7.654-3.434-7.654-7.654c0-4.221,3.433-7.654,7.654-7.654c4.222,0,7.654,3.433,7.654,7.654C17.654,14.221,14.222,17.654,10,17.654 M14.39,10c0,0.248-0.203,0.45-0.45,0.45H6.06c-0.248,0-0.45-0.203-0.45-0.45s0.203-0.45,0.45-0.45h7.879C14.187,9.55,14.39,9.752,14.39,10 M14.39,12.702c0,0.247-0.203,0.449-0.45,0.449H6.06c-0.248,0-0.45-0.202-0.45-0.449c0-0.248,0.203-0.451,0.45-0.451h7.879C14.187,12.251,14.39,12.454,14.39,12.702 M14.39,7.298c0,0.248-0.203,0.45-0.45,0.45H6.06c-0.248,0-0.45-0.203-0.45-0.45s0.203-0.45,0.45-0.45h7.879C14.187,6.848,14.39,7.051,14.39,7.298"
             ></path>
           </svg>
         </button>
-        <button
-          @click="editMode()"
-          class="hidden sm:block w-40 sm:w-64 inline-block py-0 px-3 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 rounded text-white h-7"
-        >
-          new note
-          <span class="hidden sm:inline-block">( shift + n )</span>
-        </button>
-        <div
-          class="inline-block border border-gray-600 py-0 px-3 bg-gray-600 text-white font-bold h-7 ml-2"
-          v-if="selectMode"
-        >SS</div>
       </div>
 
-      <tag-input
-        ref="tagsearch"
-        placeholder="tags: press 't /' to focus"
-        label="tags filter"
-        :selected="selectedTags"
-        @add="addSelectedTag"
-        @remove="removeSelectedTag"
-        @clear="clearSelectedTags"
-      ></tag-input>
-
-      <div class="mx-1 mb-2 sm:hidden">
-        <button
-          @click="editMode()"
-          class="w-full py-2 px-4 border border-teal-500 bg-teal-500 hover:bg-teal-600 hover:border-teal-600 text-white"
-        >
-          new note
-          <span class="hidden sm:inline-block">( shift + n )</span>
-        </button>
-      </div>
-
-      <edit
-        ref="editcomponent"
-        v-show="editModeActive"
-        :active="editModeActive"
-        v-bind:noteInput.sync="noteInput"
-        v-bind:tagsInput.sync="tagsInput"
-        @cancel="exitEditMode"
-        @save="addOrUpdate"
-      ></edit>
+      <edit/>
 
       <div v-if="loading" class="flex h-48 sm:h-64 justify-center items-center">
         <div class="lds-circle">
           <div></div>
         </div>
       </div>
-      <div v-else class="flex flex-wrap">
+
+      <div v-else class="flex flex-wrap sm:-mx-2">
+        <note-view/>
         <template v-for="(note, index) in filteredNotes">
-          <note
-            :ref="note._id"
-            :key="note._id"
-            :note="note"
-            :index="index"
-            :selected="selected"
-            @deleteNote="deleteNote"
-            @copyNote="copyNote"
-            @editNote="editNote"
-          ></note>
+          <note :ref="note._id" :key="note._id" :note="note" :index="index" :selected="selected"></note>
         </template>
       </div>
     </div>
@@ -105,18 +80,18 @@ import Mousetrap from "mousetrap";
 import _ from "underscore";
 import { mapActions, mapGetters } from "vuex";
 
-import noteApi from "../api/notes";
+import notesApi from "../api/notes";
 import tagsApi from "../api/tags";
-import clipboard from "../helper/clipboard";
 
 import Note from "../components/Note";
+import NoteView from "../components/NoteView";
 import Edit from "../components/Edit";
 import TagInput from "../components/TagInput";
-import { setTimeout } from "timers";
+import Search from "../components/Search";
 
 export default {
   name: "landing-page",
-  components: { Note, Edit, TagInput },
+  components: { NoteView, Note, Edit, TagInput, Search },
 
   data() {
     return {
@@ -133,6 +108,24 @@ export default {
 
   mounted() {
     this.init();
+
+    if (this.$store.state.notes.length === 0) {
+      this.loading = true;
+    }
+
+    this.$store.subscribeAction((action, state) => {
+      switch (action.type) {
+        case "versionUpdateEnd":
+          notesApi.init().then(notes => {
+            this.loading = false;
+            if (typeof this.$refs.search !== "undefined") {
+              this.$refs.search.focus();
+            }
+          });
+
+          break;
+      }
+    });
   },
 
   created() {
@@ -144,77 +137,12 @@ export default {
 
   methods: {
     init() {
-      if (this.$store.state.notes.length === 0) {
-        this.loading = true;
-        noteApi.load().then(notes => {
-          this.loading = false;
-          if (typeof this.$refs.search !== "undefined") {
-            this.$refs.search.focus();
-          }
-        });
-      }
-
       Mousetrap.bind("shift+n", event => {
         const tag = (event.target || event.srcElement).tagName.toLowerCase();
         if (tag !== "input" && tag !== "textarea") {
           event.preventDefault();
 
           this.editMode();
-        }
-      });
-
-      Mousetrap.bind("/", event => {
-        const tag = (event.target || event.srcElement).tagName.toLowerCase();
-        if (tag !== "input" && tag !== "textarea") {
-          event.preventDefault();
-          this.exitSelectMode();
-          this.editMode(false);
-          if (typeof this.$refs.search !== "undefined") {
-            this.$refs.search.focus();
-          }
-        }
-      });
-
-      Mousetrap.bind("t /", event => {
-        const tag = (event.target || event.srcElement).tagName.toLowerCase();
-        if (tag !== "input" && tag !== "textarea") {
-          event.preventDefault();
-          this.exitSelectMode();
-          this.editMode(false);
-
-          this.$refs.tagsearch.focus();
-        }
-      });
-
-      Mousetrap.bind("r r", event => {
-        const tag = (event.target || event.srcElement).tagName.toLowerCase();
-        if (tag !== "input" && tag !== "textarea") {
-          event.preventDefault();
-          this.clearSearch();
-        }
-      });
-
-      Mousetrap.bind("alt+enter", event => {
-        if (this.noteInput) {
-          event.preventDefault();
-          this.addOrUpdate();
-        }
-      });
-
-      Mousetrap.bind("tab", event => {
-        if (this.editModeActive) {
-          event.preventDefault();
-          this.$refs.editcomponent.$refs.tags.focus();
-        }
-      });
-
-      Mousetrap.bind("enter", event => {
-        if (event.target == this.tagSearchInput) {
-          event.preventDefault();
-          this.$refs.tagsearch.addFirstFiltered();
-        } else if (event.target == this.$refs.search) {
-          event.preventDefault();
-          this.$refs.tagsearch.focus();
         }
       });
 
@@ -245,8 +173,6 @@ export default {
                 }
               }
             );
-          } else {
-            this.editMode(false);
           }
         }
       });
@@ -264,9 +190,20 @@ export default {
       });
 
       Mousetrap.bind("d d", event => {
+        const tag = (event.target || event.srcElement).tagName.toLowerCase();
+
         if (this.selectMode) {
           event.preventDefault();
-          this.deleteNote(this.filteredNotes[this.selected]);
+          const note = this.$refs[this.selectedNote._id][0];
+          note.deleteNote();
+        } else if (
+          tag !== "input" &&
+          tag !== "textarea" &&
+          this.filteredNotes.length
+        ) {
+          event.preventDefault();
+          const note = this.$refs[this.filteredNotes[0]._id][0];
+          note.copyNote();
         }
       });
 
@@ -300,81 +237,54 @@ export default {
       });
 
       Mousetrap.bind("c", event => {
+        const tag = (event.target || event.srcElement).tagName.toLowerCase();
+
         if (this.selectMode) {
           event.preventDefault();
           const note = this.$refs[this.selectedNote._id][0];
           note.copyNote();
+        } else if (
+          tag !== "input" &&
+          tag !== "textarea" &&
+          this.filteredNotes.length
+        ) {
+          event.preventDefault();
+          const note = this.$refs[this.filteredNotes[0]._id][0];
+          note.copyNote();
         }
       });
+
       Mousetrap.bind("e", event => {
+        const tag = (event.target || event.srcElement).tagName.toLowerCase();
+
         if (this.selectMode) {
           event.preventDefault();
-          this.editNote(this.selectedNote);
+          this.setEditorStateNote(this.selectedNote);
+        } else if (
+          tag !== "input" &&
+          tag !== "textarea" &&
+          this.filteredNotes.length
+        ) {
+          event.preventDefault();
+          this.setEditorStateNote(this.filteredNotes[0]);
         }
       });
-    },
 
-    addNewNote() {
-      const body = this.noteInput.trim();
-      const tags = this.tagsInput.trim();
-      if (body) {
-        noteApi.create(body, tags).then(doc => {
-          this.addNote(doc);
-          this.editMode(false);
-        });
-      }
-    },
+      Mousetrap.bind("v", event => {
+        const tag = (event.target || event.srcElement).tagName.toLowerCase();
 
-    changeNote() {
-      const body = this.noteInput.trim();
-      const tags = this.tagsInput.trim();
-      if (body) {
-        noteApi.update(this.editedNote._id, body, tags).then(doc => {
-          this.updateNote(doc);
-          this.editMode(false);
-        });
-      }
-    },
-
-    addOrUpdate() {
-      if (this.editedNote) {
-        this.changeNote();
-      } else {
-        this.addNewNote();
-      }
-    },
-
-    deleteNote(note) {
-      this.$confirm(
-        "Are you sure you want to delete this note?",
-        () => {
-          noteApi.delete(note).then(() => {
-            this.removeNote(note._id);
-          });
-        },
-        () => {}
-      );
-    },
-
-    copyNote(note) {
-      const copy = noteApi.getCopy(note.raw);
-      if (copy) {
-        clipboard(copy);
-      } else {
-        clipboard(note.raw);
-      }
-    },
-
-    editNote(note) {
-      this.editMode(true);
-
-      this.editedNote = note;
-      this.noteInput = note.body;
-      this.tagsInput = note.tags
-        .map(t => {
-          return t.name;
-        })
-        .join(", ");
+        if (this.selectMode) {
+          event.preventDefault();
+          this.setNoteView(this.selectedNote);
+        } else if (
+          tag !== "input" &&
+          tag !== "textarea" &&
+          this.filteredNotes.length
+        ) {
+          event.preventDefault();
+          this.setNoteView(this.filteredNotes[0]);
+        }
+      });
     },
 
     move(position) {
@@ -402,22 +312,7 @@ export default {
     },
 
     editMode(enable = true) {
-      if (this.selectMode) {
-        this.exitSelectMode();
-      }
-
-      if (enable) {
-        this.editModeActive = true;
-        this.$nextTick(() => {
-          const el = document.getElementsByClassName("editor-toolbar")[0];
-          el.scrollIntoView({ block: "center" });
-        });
-      } else {
-        this.editModeActive = false;
-        this.noteInput = "";
-        this.tagsInput = "";
-        this.editedNote = false;
-      }
+      this.setEditorStateActive(enable);
     },
 
     exitEditMode() {
@@ -436,12 +331,6 @@ export default {
       }
     },
 
-    clearSearch() {
-      this.searchInput = "";
-      this.$refs.tagsearch.clear();
-      this.clearSelectedTags();
-    },
-
     handleScroll() {
       this.scrolled = window.scrollY;
     },
@@ -451,14 +340,10 @@ export default {
     },
 
     ...mapActions([
-      "updateSearch",
-      "addNote",
-      "updateNote",
-      "removeNote",
-      "clearSelectedTags",
-      "setSelectedTags",
-      "addSelectedTag",
-      "removeSelectedTag"
+      "setEditorStateActive",
+      "setEditorStateNote",
+      "setDrawer",
+      "setNoteView"
     ])
   },
 
@@ -482,21 +367,12 @@ export default {
       return this.$store.state.notes;
     },
 
-    searchInput: {
-      get() {
-        return this.$store.state.search;
-      },
-      set(value) {
-        this.updateSearch(value);
-      }
-    },
-
     tagSearchInput() {
       return this.$refs.tagsearch.$refs.tagsearchinput;
     },
 
-    selectedTags() {
-      return this.$store.state.selectedTags;
+    versionUpdating() {
+      return this.$store.state.version_updating;
     },
 
     ...mapGetters(["filteredNotes"])
@@ -511,6 +387,7 @@ export default {
 }
 
 .to-top {
+  z-index: 500;
   left: 10px;
   bottom: 10px;
 }

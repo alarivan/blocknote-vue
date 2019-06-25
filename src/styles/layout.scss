@@ -1,0 +1,54 @@
+.layout-1,
+.layout-2,
+.layout-3,
+.layout-4,
+    {
+    @apply w-full;
+
+    &.selected {
+        @apply w-full;
+        max-height: 100vh;
+        overflow: auto;
+    }
+
+    @apply p-1;
+
+    @screen sm {
+        @apply p-2;
+        @apply w-1/2;
+    }
+}
+
+.layout-1 {
+    @screen md {
+        @apply w-full;
+        max-height: 300px;
+    }
+}
+
+.layout-2 {
+    @screen md {
+        @apply w-1/2;
+        max-height: 300px;
+    }
+}
+
+.layout-3 {
+    @screen md {
+        @apply w-1/3;
+        max-height: 300px;
+        min-height: 300px;
+    }
+}
+
+.layout-4 {
+    @screen md {
+        @apply w-1/3;
+        max-height: 300px;
+        min-height: 300px;
+    }
+
+    @screen lg {
+        @apply w-1/4;
+    }
+}

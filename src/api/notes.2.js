@@ -8,33 +8,26 @@ import GenericApi from "./generic";
 import notesDb from "../db/notes";
 import tagsApi from "../api/tags";
 
-import versionApi from "./version";
-
 const renderer = new PlainTextRenderer();
 
 class NotesApi extends GenericApi {
-  NAME = "notes";
   FILE = "notes.json";
 
-  init() {
-    const local_data = JSON.parse(
-      localStorage.getItem(versionApi.LOCAL_STORAGE_KEY)
-    );
-
-    const local_notes = this.decrypt(local_data.notes);
-
-    return this.clearDb().then(() => {
-      return tagsApi.init().then(() => {
-        return this.db.insert(local_notes).then(docs => {
-          return tagsApi.createFromNotes(docs).then(tags_data => {
-            const promises = docs.map(n => {
-              return tagsApi.getForNote(n).then(tags => {
-                return this.build(n, tags);
+  load() {
+    return this.loadFromStorage().then(ns => {
+      return tagsApi.load().then(() => {
+        return this.clearDb().then(() => {
+          return notesDb.insert(ns).then(docs => {
+            return tagsApi.createFromNotes(docs).then(() => {
+              const promises = docs.map(n => {
+                return tagsApi.getForNote(n).then(tags => {
+                  return this.build(n, tags);
+                });
               });
-            });
 
-            return Promise.all(promises).then(result => {
-              return store.dispatch("setNotes", result);
+              return Promise.all(promises).then(result => {
+                return store.dispatch("setNotes", result);
+              });
             });
           });
         });
@@ -59,48 +52,48 @@ class NotesApi extends GenericApi {
   }
 
   create(body, tags = "") {
-    return tagsApi.createFromString(tags).then(tags_data => {
-      return this.db
+    return tagsApi.createFromString(tags).then(data => {
+      return notesDb
         .insert({
           body,
-          tags: tags_data.arr
+          tags: data.arr
         })
         .then(doc => {
-          this.updateStorage([doc], tags_data);
-
-          return this.build(doc, tags_data.obj);
+          this.loadToStorage();
+          return this.build(doc, data.obj);
         });
     });
   }
 
   update(id, body, tags = "") {
-    return tagsApi.createFromString(tags).then(tags_data => {
-      return this.db
+    return tagsApi.createFromString(tags).then(data => {
+      return notesDb
         .update(
           { _id: id },
           {
             body,
-            tags: tags_data.arr
+            tags: data.arr
           },
           { returnUpdatedDocs: true }
         )
-        .then(doc => {
-          this.updateStorage([doc], tags_data);
-
-          return this.build(doc, tags_data.obj);
+        .then(docs => {
+          this.loadToStorage();
+          return this.build(docs, data.obj);
         });
     });
   }
 
   delete(note) {
     // eslint-disable-next-line no-underscore-dangle
-    return this.db.remove({ _id: note._id }).then(() => {
-      versionApi.update_version([this.NAME]);
+    return notesDb.remove({ _id: note._id }).then(() => {
+      this.loadToStorage();
     });
   }
 
   export(filename = "export.json") {
     return this.db.find({}, { createdAt: 0, updatedAt: 0 }).then(docs => {
+      console.log(docs);
+      console.log(JSON.stringify(docs));
       const blob = new Blob([JSON.stringify(docs)], {
         type: "text/json;charset=utf-8"
       });
@@ -111,10 +104,12 @@ class NotesApi extends GenericApi {
   import(data) {
     const notes = this.validateImportData(data);
 
-    return this.init().then(() => {
-      return tagsApi.createFromNotes(notes).then(tags_data => {
-        return this.db.insert(notes).then(docs => {
-          return this.updateStorage(docs, tags_data.created);
+    return this.load().then(() => {
+      return tagsApi.createFromNotes(notes).then(() => {
+        return notesDb.insert(notes).then(docs => {
+          return this.loadToStorage().then(() => {
+            return this.load();
+          });
         });
       });
     });
@@ -145,19 +140,6 @@ class NotesApi extends GenericApi {
       );
       return n;
     });
-  }
-
-  updateStorage(notes, tags) {
-    let changed = [];
-    if (tags.length) {
-      changed.push(tagsApi.NAME);
-    }
-
-    if (notes.length) {
-      changed.push(this.NAME);
-    }
-
-    return versionApi.update_version(changed);
   }
 }
 

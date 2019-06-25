@@ -3,24 +3,17 @@ import _ from "underscore";
 import store from "../store";
 import tagsDb from "../db/tags";
 
-import versionApi from "./version";
-
 import GenericApi from "./generic";
 
 class TagsApi extends GenericApi {
-  NAME = "tags";
   FILE = "tags.json";
 
-  init() {
-    const local_data = JSON.parse(
-      localStorage.getItem(versionApi.LOCAL_STORAGE_KEY)
-    );
-
-    const local_tags = this.decrypt(local_data.tags);
-
-    return this.clearDb().then(() => {
-      return this.db.insert(local_tags).then(docs => {
-        return store.dispatch("setTags", docs);
+  load() {
+    return this.loadFromStorage().then(data => {
+      return this.clearDb().then(() => {
+        return this.db.insert(data).then(docs => {
+          return store.dispatch("setTags", docs);
+        });
       });
     });
   }
@@ -74,13 +67,14 @@ class TagsApi extends GenericApi {
 
       return this.createMultiple(arr).then(result => {
         if (result.created.length > 0) {
+          this.loadToStorage();
           this.updateStore();
         }
 
-        return { obj: result.all, arr: arr, created: result.created };
+        return { obj: result.all, arr: arr };
       });
     }
-    return Promise.resolve({ obj: [], arr: [], created: [] });
+    return Promise.resolve({ obj: [], arr: [] });
   }
 
   createFromNotes(notes) {
@@ -94,10 +88,9 @@ class TagsApi extends GenericApi {
 
     return this.createMultiple(tags).then(data => {
       if (data.created.length) {
+        this.loadToStorage();
         this.updateStore();
       }
-
-      return data;
     });
   }
 

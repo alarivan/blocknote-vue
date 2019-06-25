@@ -1,6 +1,5 @@
 <template>
   <div class="container mx-auto relative px-2">
-    <h1 class="text-center text-3xl">About</h1>
     <h2
       class="text-center text-xl my-6"
     >This is an alpha version. Check "To do" section to see what is planned to be added in the full version.</h2>

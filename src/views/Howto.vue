@@ -1,6 +1,5 @@
 <template>
   <div class="container mx-auto relative px-2">
-    <h1 class="text-center text-3xl my-2">How To</h1>
     <div :class="blockClasses">
       <div class="wista-wrapper" :class="videoClasses">
         <wistia :vid="basics"/>

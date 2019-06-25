@@ -1,78 +1,69 @@
 <template>
   <div>
     <div class="py-2 sm:py-8">
-      <div class="container mx-auto mb-4">
-        <div class="flex">
-          <router-link class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4" to="/">notes</router-link>
-
-          <router-link
-            class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
-            to="/about"
-          >about</router-link>
-
-          <router-link
-            class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
-            to="/howto"
-          >how to</router-link>
-
-          <router-link
-            v-if="user"
-            class="hidden sm:block text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
-            to="/settings"
-          >settings</router-link>
-
-          <div class="flex-auto"></div>
-          <dropdown v-if="user" class="block sm:hidden">
-            <li>
-              <router-link
-                class="block text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
-                to="/settings"
-              >settings</router-link>
-            </li>
-            <li>
-              <button
-                class="block text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
-                @click="signOut"
-              >sign out</button>
-            </li>
-          </dropdown>
-          <div v-if="user" class="profile ml-1 hidden sm:flex">
-            <picture>
-              <source :srcset="smallest_img" media="(max-width: 640px)">
-              <img
-                v-if="user.avatarUrl()"
-                class="hidden sm:block"
-                :src="user.avatarUrl()"
-                alt="avatar"
-                width="40"
-                height="40"
-              >
-            </picture>
-            <button
-              class="text-gray-700 hover:text-gray-900 font-bold py-2 px-4"
-              @click="signOut"
-            >sign out</button>
+      <Drawer
+        class="nav-drawer"
+        :direction="'right'"
+        :exist="true"
+        ref="drawer"
+        @close="closeDrawer"
+      >
+        <div class="container mx-auto mb-4 text-right">
+          <div v-if="user" class="profile flex px-4 py-2 justify-end">
+            <div class="mr-2 text-right text-sm">
+              <div>{{user.name()}}</div>
+              <div>{{user.username}}</div>
+            </div>
+            <img
+              v-if="user.avatarUrl()"
+              :src="user.avatarUrl()"
+              alt="avatar"
+              width="40"
+              height="40"
+            >
           </div>
+          <ul>
+            <li>
+              <router-link @click="closeDrawer" class="nav-drawer-link" to="/">notes</router-link>
+            </li>
+            <li>
+              <router-link @click="closeDrawer" class="nav-drawer-link" to="/about">about</router-link>
+            </li>
+
+            <li v-if="user">
+              <router-link @click="closeDrawer" class="nav-drawer-link" to="/settings">settings</router-link>
+            </li>
+            <li v-if="user">
+              <router-link @click="closeDrawer" class="nav-drawer-link" to="/manage">import/export</router-link>
+            </li>
+            <li v-if="user">
+              <button @click="signOut" class="w-full text-right nav-drawer-link">sign out</button>
+            </li>
+          </ul>
         </div>
-      </div>
+      </Drawer>
+      <navigation v-if="!isHome"/>
       <router-view/>
     </div>
   </div>
 </template>
 
 <script>
+import Mousetrap from "mousetrap";
 import { mapActions } from "vuex";
 
 import { Person } from "blockstack";
 import { userSession } from "./helper/userSession";
 
-import tagsApi from "./api/tags";
+import versionApi from "./api/version";
+import settingsApi from "./api/settings";
 
-import Dropdown from "./components/Dropdown";
+import Navigation from "./components/Navigation";
+import Drawer from "./components/Drawer.vue";
 
 export default {
   name: "app",
-  components: { Dropdown },
+  components: { Drawer, Navigation },
 
   data() {
     return {
@@ -82,14 +73,27 @@ export default {
 
   created() {
     this.setUserSession(userSession);
+
+    this.$router.beforeEach((to, from, next) => {
+      this.closeDrawer();
+      return next();
+    });
   },
 
   mounted() {
+    Mousetrap.bind("\\", event => {
+      this.drawer = !this.drawer;
+    });
+
     if (userSession.isUserSignedIn()) {
       const userData = userSession.loadUserData();
       let user = new Person(userData.profile);
       user.username = userData.username;
-      this.setUser(user);
+      this.setUser(user).then(() => {
+        versionApi.init().then(() => {
+          settingsApi.init();
+        });
+      });
       this.$router.push("/");
     } else if (userSession.isSignInPending()) {
       userSession.handlePendingSignIn().then(userData => {
@@ -98,21 +102,55 @@ export default {
     }
   },
 
+  beforeDestroy() {
+    Mousetrap.unbind("\\");
+  },
+
   methods: {
     signOut() {
       this.userSession.signUserOut();
       this.removeUser();
       this.$router.push("/login");
     },
-    ...mapActions(["setUser", "removeUser", "setUserSession"])
+
+    closeDrawer() {
+      this.setDrawer(false);
+    },
+
+    ...mapActions(["setUser", "removeUser", "setUserSession", "setDrawer"])
   },
 
   computed: {
     user() {
       return this.$store.state.user;
     },
+
     userSession() {
       return this.$store.state.userSession;
+    },
+
+    drawer: {
+      get() {
+        return this.$store.state.drawer;
+      },
+
+      set(value) {
+        return this.setDrawer(value);
+      }
+    },
+
+    isHome() {
+      return this.$route.name === "home";
+    }
+  },
+
+  watch: {
+    drawer(n) {
+      if (n) {
+        this.$refs.drawer.open();
+      } else {
+        this.$refs.drawer.close();
+      }
     }
   }
 };
@@ -120,8 +158,22 @@ export default {
 
 <style lang="scss">
 .profile {
-  display: flex;
+  box-sizing: content-box;
   height: 40px;
+}
+
+.nav-drawer {
+  .ant-drawer-body {
+    padding: 0;
+  }
+
+  .nav-drawer-link {
+    @apply block text-gray-700 font-bold py-2 px-4;
+    &:hover {
+      @apply text-gray-900 bg-gray-200;
+      text-decoration: underline;
+    }
+  }
 }
 </style>
 
