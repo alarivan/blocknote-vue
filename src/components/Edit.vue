@@ -1,7 +1,7 @@
 <template>
   <modal
     name="edit-modal"
-    width="80%"
+    width="100%"
     class="editor-modal"
     height="100%"
     :adaptive="true"
@@ -255,7 +255,6 @@ export default {
 }
 
 .editor-modal {
-  @apply w-full;
   .v--modal-box.v--modal {
     border-radius: 0;
 
@@ -285,7 +284,10 @@ export default {
   }
 
   @screen sm {
-    width: 80%;
+    .v--modal-box.v--modal {
+      width: 80% !important;
+      margin: 0 auto;
+    }
   }
 }
 </style>

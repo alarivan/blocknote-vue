@@ -1,7 +1,7 @@
 <template>
   <div class>
     <div class="mb-2">
-      <label class="block text-gray-200">Layout</label>
+      <label class="block">Layout</label>
       <select v-model="layout">
         <option
           v-for="(option, index) in options.layout"

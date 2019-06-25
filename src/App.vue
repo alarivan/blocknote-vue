@@ -2,7 +2,6 @@
   <div>
     <div class="py-2 sm:py-8">
       <Drawer
-        v-if="isHome"
         class="nav-drawer"
         :direction="'right'"
         :exist="true"
@@ -31,9 +30,6 @@
               <router-link @click="closeDrawer" class="nav-drawer-link" to="/about">about</router-link>
             </li>
 
-            <li>
-              <router-link @click="closeDrawer" class="nav-drawer-link" to="/howto">how to</router-link>
-            </li>
             <li v-if="user">
               <router-link @click="closeDrawer" class="nav-drawer-link" to="/settings">settings</router-link>
             </li>
@@ -46,7 +42,7 @@
           </ul>
         </div>
       </Drawer>
-      <navigation v-else/>
+      <navigation v-if="!isHome"/>
       <router-view/>
     </div>
   </div>
