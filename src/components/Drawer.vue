@@ -211,6 +211,7 @@ export default {
       this.element.style.transform = "translate3d(" + this.translate + ",0,0)";
       this.element.style.transitionDuration = this.auto_speed;
       this.overlayOpacity(0);
+      this.handleZindex();
       this.unlock(document.querySelector("html"));
       this.unlock(document.querySelector("body"));
       this.element.classList.remove("active");
