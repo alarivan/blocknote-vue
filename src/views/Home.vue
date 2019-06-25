@@ -339,6 +339,10 @@ export default {
       window.scrollTo(0, 0);
     },
 
+    clearSearch() {
+      this.$refs.tagsearch.clear();
+    },
+
     ...mapActions([
       "setEditorStateActive",
       "setEditorStateNote",
