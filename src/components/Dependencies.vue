@@ -66,17 +66,20 @@ export default {
           source: "https://loading.io/css/"
         },
         {
-          name: "EasyMDE - Markdown Editor",
-          source: "https://github.com/Ionaru/easy-markdown-editor"
+          name: "CodeMirror",
+          source: "https://github.com/codemirror/codemirror"
+        },
+        {
+          name: "Vue-Codemirror",
+          source: "https://github.com/surmon-china/vue-codemirror"
         },
         {
           name: "Fuse.js",
           source: "https://github.com/krisk/fuse"
         },
         {
-          name: "Icons by Bryn Taylor",
-          source:
-            "https://dribbble.com/shots/1934932-77-Essential-Icons-Free-Download"
+          name: "Icons by icomoon.io",
+          source: "https://icomoon.io/#icons"
         },
         {
           name: "FileSaver.js",
@@ -85,6 +88,14 @@ export default {
         {
           name: "he (HTML entity encoder/decoder)",
           source: "https://github.com/mathiasbynens/he"
+        },
+        {
+          name: "scroll-lock",
+          source: "https://github.com/FL3NKEY/scroll-lock"
+        },
+        {
+          name: "Vue.js modal",
+          source: "https://github.com/euvl/vue-js-modal"
         }
       ]
     };

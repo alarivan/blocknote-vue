@@ -5,25 +5,25 @@
     class="editor-modal"
     height="100%"
     :adaptive="true"
+    @opened="opened"
     @closed="close"
     @before-open="beforeOpen"
     @before-close="beforeClose"
   >
     <div class="flex flex-col mx-1 sm:mx-0 h-full p-2">
       <div class="flex-auto flex flex-col">
-        <!-- <textarea class="mousetrap" ref="noteinput" id="note" :model="content"></textarea> -->
         <label
           ref="edittoplabel"
           class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           for="note"
         >content (markdown)</label>
-        <editor
-          ref="tuiEditor"
-          class="editor-main"
+        <codemirror
+          data-scroll-lock-scrollable
+          ref="mycm"
+          class="flex-auto"
           v-model="content"
-          height="100%"
-          :options="editorOptions"
-        />
+          :options="cmOption"
+        ></codemirror>
       </div>
       <div class="flex flex-wrap items-center border-b border-b-2 border-gray-500 mb-2">
         <label
@@ -65,16 +65,19 @@ import marked from "marked";
 import Mousetrap from "mousetrap";
 import scrollLock from "scroll-lock";
 
-import { Editor } from "@toast-ui/vue-editor";
-
 import TagInput from "./TagInput";
 import notesApi from "../api/notes";
 
 import addEventListener from "add-dom-event-listener";
 
+import "codemirror/addon/display/panel";
+import "../plugins/codemirror/buttons";
+
+import { editorButtons } from "../helper/editor";
+
 export default {
   name: "note-edit",
-  components: { TagInput, Editor },
+  components: { TagInput },
 
   data() {
     return {
@@ -102,6 +105,24 @@ export default {
           "code",
           "codeblock"
         ]
+      },
+      cmOption: {
+        tabSize: 4,
+        mode: "gfm",
+        lineNumbers: true,
+        lineWrapping: true,
+        line: true,
+        buttons: editorButtons([
+          {
+            title: "Focus tags",
+            class: "focus-tags",
+            label:
+              "<svg class='icon'><use xlink:href='#icon-price-tags'></use></svg>",
+            callback: cm => {
+              this.$refs.tags.focus();
+            }
+          }
+        ])
       }
     };
   },
@@ -112,7 +133,7 @@ export default {
         event.preventDefault();
         if (event.target == this.$refs.tags) {
           this.save();
-        } else if (this.$refs.tuiEditor.editor.getCodeMirror().hasFocus()) {
+        } else if (this.$refs.mycm.codemirror.hasFocus()) {
           this.$refs.tags.focus();
         }
       }
@@ -124,11 +145,16 @@ export default {
   },
 
   methods: {
+    opened() {
+      this.$refs.mycm.codemirror.focus();
+    },
+
     close() {
       this.cancel();
     },
 
     beforeOpen() {
+      scrollLock.addScrollableSelector(".CodeMirror-scroll");
       scrollLock.disablePageScroll(document.documentElement);
     },
 
@@ -237,9 +263,6 @@ export default {
     editorActive: function(n, o) {
       if (n) {
         this.$modal.show("edit-modal");
-        this.$nextTick(() => {
-          // this.$refs.tuiEditor.invoke("focus");
-        });
       } else {
         this.$modal.hide("edit-modal");
       }
@@ -287,6 +310,14 @@ export default {
     .v--modal-box.v--modal {
       width: 80% !important;
       margin: 0 auto;
+    }
+  }
+
+  .CodeMirror {
+    @apply h-full;
+
+    .CodeMirror-gutters {
+      background: transparent;
     }
   }
 }

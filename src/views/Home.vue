@@ -4,25 +4,22 @@
       <button
         v-if="scrolled > 800"
         @click="scrollToTop"
-        class="to-top fixed bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-1 rounded-full shadow-xl"
+        class="to-top fixed bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-full shadow-xl"
         title="Back to top"
       >
-        <svg class="fill-current w-8 h-8" viewBox="0 0 20 20">
-          <path
-            d="M13.889,11.611c-0.17,0.17-0.443,0.17-0.612,0l-3.189-3.187l-3.363,3.36c-0.171,0.171-0.441,0.171-0.612,0c-0.172-0.169-0.172-0.443,0-0.611l3.667-3.669c0.17-0.17,0.445-0.172,0.614,0l3.496,3.493C14.058,11.167,14.061,11.443,13.889,11.611 M18.25,10c0,4.558-3.693,8.25-8.25,8.25c-4.557,0-8.25-3.692-8.25-8.25c0-4.557,3.693-8.25,8.25-8.25C14.557,1.75,18.25,5.443,18.25,10 M17.383,10c0-4.07-3.312-7.382-7.383-7.382S2.618,5.93,2.618,10S5.93,17.381,10,17.381S17.383,14.07,17.383,10"
-          ></path>
+        <svg class="icon h-10 w-8 mx-auto">
+          <use xlink:href="#icon-arrow-up"></use>
         </svg>
       </button>
       <div class="flex items-start mb-2 mx-1 sm:mx-0">
         <search ref="tagsearch">
           <button
+            title="Clear Search"
             @click="clearSearch()"
-            class="sm:hidden inline-block py-0 px-1 border border-gray-300 bg-gray-300 hover:bg-gray-400 hover:border-gray-400 text-gray-700 rounded h-6"
+            class="mr-2 px-2 border border-gray-300 bg-gray-300 hover:bg-gray-400 hover:border-gray-400 text-gray-700"
           >
-            <svg class="svg-icon fill-current" viewBox="0 0 20 20">
-              <path
-                d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"
-              ></path>
+            <svg class="icon mx-auto">
+              <use xlink:href="#icon-cross"></use>
             </svg>
           </button>
           <div
@@ -33,11 +30,9 @@
             new note
             <span class="hidden sm:inline-block">( shift + n )</span>
           </button>
-          <button @click="setDrawer(true)" class="hidden sm:block ml-2">
-            <svg class="h-10 w-8 fill-current" viewBox="0 0 20 20">
-              <path
-                d="M10,1.445c-4.726,0-8.555,3.829-8.555,8.555c0,4.725,3.829,8.555,8.555,8.555c4.725,0,8.555-3.83,8.555-8.555C18.555,5.274,14.725,1.445,10,1.445 M10,17.654c-4.221,0-7.654-3.434-7.654-7.654c0-4.221,3.433-7.654,7.654-7.654c4.222,0,7.654,3.433,7.654,7.654C17.654,14.221,14.222,17.654,10,17.654 M14.39,10c0,0.248-0.203,0.45-0.45,0.45H6.06c-0.248,0-0.45-0.203-0.45-0.45s0.203-0.45,0.45-0.45h7.879C14.187,9.55,14.39,9.752,14.39,10 M14.39,12.702c0,0.247-0.203,0.449-0.45,0.449H6.06c-0.248,0-0.45-0.202-0.45-0.449c0-0.248,0.203-0.451,0.45-0.451h7.879C14.187,12.251,14.39,12.454,14.39,12.702 M14.39,7.298c0,0.248-0.203,0.45-0.45,0.45H6.06c-0.248,0-0.45-0.203-0.45-0.45s0.203-0.45,0.45-0.45h7.879C14.187,6.848,14.39,7.051,14.39,7.298"
-              ></path>
+          <button @click="setDrawer(true)" class="hidden sm:block ml-2 drawer-trigger">
+            <svg class="icon icon-menu mx-auto">
+              <use xlink:href="#icon-menu"></use>
             </svg>
           </button>
         </search>
@@ -48,11 +43,9 @@
           new note
           <span class="hidden sm:inline-block">( shift + n )</span>
         </button>
-        <button @click="setDrawer(true)" class="ml-2 w-16 pr-2 text-center">
-          <svg class="h-10 w-8 fill-current mx-auto" viewBox="0 0 20 20">
-            <path
-              d="M10,1.445c-4.726,0-8.555,3.829-8.555,8.555c0,4.725,3.829,8.555,8.555,8.555c4.725,0,8.555-3.83,8.555-8.555C18.555,5.274,14.725,1.445,10,1.445 M10,17.654c-4.221,0-7.654-3.434-7.654-7.654c0-4.221,3.433-7.654,7.654-7.654c4.222,0,7.654,3.433,7.654,7.654C17.654,14.221,14.222,17.654,10,17.654 M14.39,10c0,0.248-0.203,0.45-0.45,0.45H6.06c-0.248,0-0.45-0.203-0.45-0.45s0.203-0.45,0.45-0.45h7.879C14.187,9.55,14.39,9.752,14.39,10 M14.39,12.702c0,0.247-0.203,0.449-0.45,0.449H6.06c-0.248,0-0.45-0.202-0.45-0.449c0-0.248,0.203-0.451,0.45-0.451h7.879C14.187,12.251,14.39,12.454,14.39,12.702 M14.39,7.298c0,0.248-0.203,0.45-0.45,0.45H6.06c-0.248,0-0.45-0.203-0.45-0.45s0.203-0.45,0.45-0.45h7.879C14.187,6.848,14.39,7.051,14.39,7.298"
-            ></path>
+        <button @click="setDrawer(true)" class="ml-2 w-16 pr-2 text-center drawer-trigger">
+          <svg class="icon icon-menu mx-auto">
+            <use xlink:href="#icon-menu"></use>
           </svg>
         </button>
       </div>
@@ -394,5 +387,12 @@ export default {
   z-index: 500;
   left: 10px;
   bottom: 10px;
+
+  @apply p-2;
+
+  .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 }
 </style>

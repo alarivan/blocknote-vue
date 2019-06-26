@@ -86,3 +86,9 @@ button {
 .h-70vh {
     height: 70vh;
 }
+
+.absolute-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

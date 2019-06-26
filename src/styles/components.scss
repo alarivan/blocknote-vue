@@ -10,8 +10,31 @@
     @apply border border-white text-xs font-bold text-gray-800 rounded-full text-gray-900;
 }
 
-.absolute-center {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.drawer-trigger {
+    @apply px-2 border-2 border-black;
+
+    &:hover {
+        @apply border-gray-700 text-gray-700;
+    }
+}
+
+.icon {
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+}
+
+.icon-menu {
+    width: 2rem;
+    height: 2rem;
+}
+
+.CodeMirror-buttonsPanel {
+    @apply flex flex-wrap;
+
+    button {
+        @apply px-2 py-1 border border-gray-100;
+    }
 }

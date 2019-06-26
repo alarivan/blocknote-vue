@@ -29,14 +29,12 @@
 .layout-2 {
     @screen md {
         @apply w-1/2;
-        max-height: 300px;
     }
 }
 
 .layout-3 {
     @screen md {
         @apply w-1/3;
-        max-height: 300px;
         min-height: 300px;
     }
 }
@@ -44,11 +42,18 @@
 .layout-4 {
     @screen md {
         @apply w-1/3;
-        max-height: 300px;
         min-height: 300px;
     }
 
     @screen lg {
         @apply w-1/4;
+    }
+}
+
+.layout-2,
+.layout-3,
+.layout-4 {
+    @screen sm {
+        max-height: 300px;
     }
 }
