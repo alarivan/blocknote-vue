@@ -16,7 +16,11 @@
           >{{tag.name}}</button>
         </template>
       </div>
-      <div class="markdown-body p-3 flex-auto overflow-hidden" v-html="body()"></div>
+      <div
+        data-scroll-lock-scrollable
+        class="markdown-body p-3 flex-auto overflow-hidden"
+        v-html="body()"
+      ></div>
       <div class="flex flex-row-reverse m-2 note-actions z-10">
         <button
           :class="buttonClasses"
