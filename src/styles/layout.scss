@@ -4,6 +4,7 @@
 .layout-4,
     {
     @apply w-full;
+    max-height: 300px;
 
     &.selected {
         @apply w-full;
@@ -47,13 +48,5 @@
 
     @screen lg {
         @apply w-1/4;
-    }
-}
-
-.layout-2,
-.layout-3,
-.layout-4 {
-    @screen sm {
-        max-height: 300px;
     }
 }
