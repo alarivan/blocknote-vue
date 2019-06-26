@@ -20,7 +20,7 @@
         <codemirror
           data-scroll-lock-scrollable
           ref="mycm"
-          class="flex-auto"
+          class="flex-auto h-full"
           v-model="content"
           :options="cmOption"
         ></codemirror>
@@ -72,6 +72,7 @@ import addEventListener from "add-dom-event-listener";
 
 import "codemirror/addon/display/panel";
 import "../plugins/codemirror/buttons";
+import "codemirror/mode/gfm/gfm";
 
 import { editorButtons } from "../helper/editor";
 
@@ -123,7 +124,8 @@ export default {
             }
           }
         ])
-      }
+      },
+      windowResizeEvent: false
     };
   },
 
@@ -138,13 +140,25 @@ export default {
         }
       }
     });
+
+    this.windowResizeEvent = addEventListener(window, "resize", event => {
+      this.resizeEditor();
+    });
   },
 
   beforeDestroy() {
     this.shortcuts.remove();
+    this.windowResizeEvent.remove();
   },
 
   methods: {
+    resizeEditor() {
+      this.$refs.mycm.codemirror.setSize(
+        "100%",
+        this.$refs.mycm.$el.offsetHeight
+      );
+    },
+
     opened() {
       this.$refs.mycm.codemirror.focus();
     },
