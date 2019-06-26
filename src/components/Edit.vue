@@ -10,11 +10,11 @@
     @before-open="beforeOpen"
     @before-close="beforeClose"
   >
-    <div class="flex flex-col mx-1 sm:mx-0 h-full p-2">
+    <div class="flex flex-col mx-1 sm:mx-0 h-full p-2" :class="{'tags-focused': tagsFocused}">
       <div class="flex-auto flex flex-col">
         <label
           ref="edittoplabel"
-          class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+          class="content-label uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           for="note"
         >content (markdown)</label>
         <codemirror
@@ -25,7 +25,9 @@
           :options="cmOption"
         ></codemirror>
       </div>
-      <div class="flex flex-wrap items-center border-b border-b-2 border-gray-500 mb-2">
+      <div
+        class="tags-input-group flex flex-wrap items-center border-b border-b-2 border-gray-500 mb-2 z-10 bg-white"
+      >
         <label
           class="flex-auto uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           for="note"
@@ -39,7 +41,7 @@
           aria-label="tags"
         >
       </div>
-      <div class="flex">
+      <div class="flex edit-actions z-10">
         <button
           @click="save"
           class="save-button flex-auto py-2 px-6 button primary rounded text-white font-bold mr-2"
@@ -120,12 +122,14 @@ export default {
             label:
               "<svg class='icon'><use xlink:href='#icon-price-tags'></use></svg>",
             callback: cm => {
-              this.$refs.tags.focus();
+              this.focusTags();
             }
           }
         ])
       },
-      windowResizeEvent: false
+      windowResizeEvent: false,
+      tagsFocus: false,
+      focusTagsEvent: false
     };
   },
 
@@ -136,7 +140,7 @@ export default {
         if (event.target == this.$refs.tags) {
           this.save();
         } else if (this.$refs.mycm.codemirror.hasFocus()) {
-          this.$refs.tags.focus();
+          this.focusTags();
         }
       }
     });
@@ -153,17 +157,41 @@ export default {
 
   methods: {
     resizeEditor() {
-      this.$refs.mycm.codemirror.setSize(
-        "100%",
-        this.$refs.mycm.$el.offsetHeight
-      );
+      if (typeof this.$refs.mycm !== "undefined") {
+        this.$refs.mycm.codemirror.setSize(
+          "100%",
+          this.$refs.mycm.$el.offsetHeight
+        );
+      }
+    },
+
+    focusTags() {
+      this.tagsFocus = true;
+
+      this.$nextTick(() => {
+        this.resizeEditor();
+        this.$refs.tags.focus();
+      });
+    },
+
+    unfocusTags() {
+      this.tagsFocus = false;
+      this.$nextTick(() => {
+        this.resizeEditor();
+      });
     },
 
     opened() {
       this.$refs.mycm.codemirror.focus();
+
+      this.focusTagsEvent = addEventListener(this.$refs.tags, "blur", event => {
+        this.unfocusTags();
+      });
     },
 
     close() {
+      this.focusTagsEvent.remove();
+
       this.cancel();
     },
 
@@ -270,6 +298,10 @@ export default {
 
     editedNote() {
       return this.$store.state.editor.note;
+    },
+
+    tagsFocused() {
+      return this.tagsFocus || document.activeElement == this.$refs.tags;
     }
   },
 
@@ -332,6 +364,22 @@ export default {
 
     .CodeMirror-gutters {
       background: transparent;
+    }
+  }
+
+  @media screen and (max-height: 300px) {
+    .edit-actions,
+    .content-label,
+    .tags-input-group {
+      display: none;
+    }
+
+    .tags-focused {
+      .edit-actions,
+      .content-label,
+      .tags-input-group {
+        display: flex;
+      }
     }
   }
 }
