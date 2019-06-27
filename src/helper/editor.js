@@ -128,7 +128,7 @@ export function appendLinesToEndCursor(cm) {
   const cursor = cm.getCursor();
   const lastLine = cm.lastLine();
 
-  if (cursor.line + 4 > lastLine) {
+  if (cursor.line + 4 > lastLine && cm.doc.history.lastOrigin !== "+delete") {
     const prevPosition = {
       line: cursor.line,
       ch: cursor.ch
