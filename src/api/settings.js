@@ -27,7 +27,9 @@ class SettingsApi {
   }
 
   load() {
-    return this.loadFromStorage();
+    return this.loadFromStorage().then(data => {
+      return store.dispatch("setSettings", data);
+    });
   }
 
   loadFromStorage() {
