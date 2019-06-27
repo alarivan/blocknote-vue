@@ -370,12 +370,12 @@ export default {
   .CodeMirror {
     @apply h-full;
 
-    .CodeMirror-gutters {
-      background: transparent;
+    .CodeMirror-scroll {
+      padding-bottom: 0;
     }
 
-    .CodeMirror-lines {
-      padding-bottom: 1rem;
+    .CodeMirror-gutters {
+      background: transparent;
     }
   }
 
