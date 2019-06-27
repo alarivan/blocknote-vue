@@ -123,3 +123,21 @@ export const EDITOR_BUTTONS = [
 export function editorButtons(items = []) {
   return EDITOR_BUTTONS.concat(items);
 }
+
+export function appendLinesToEnd(cm) {
+  const cursor = cm.getCursor();
+  const lastLine = cm.lastLine();
+
+  if (cursor.line + 4 > lastLine) {
+    const prevPosition = {
+      line: cursor.line,
+      ch: cursor.ch
+    };
+    const start = {
+      line: lastLine + 1,
+      ch: 0
+    };
+    cm.replaceRange("\n\n\n\n", start);
+    cm.setCursor(prevPosition);
+  }
+}

@@ -10,7 +10,10 @@
     @before-open="beforeOpen"
     @before-close="beforeClose"
   >
-    <div class="flex flex-col mx-1 sm:mx-0 h-full p-2" :class="{'tags-focused': tagsFocused}">
+    <div
+      class="editor-wrapper flex flex-col mx-1 sm:mx-0 h-full p-2"
+      :class="{'tags-focused': tagsFocused}"
+    >
       <div class="flex-auto flex flex-col">
         <label
           ref="edittoplabel"
@@ -76,7 +79,7 @@ import "codemirror/addon/display/panel";
 import "../plugins/codemirror/buttons";
 import "codemirror/mode/gfm/gfm";
 
-import { editorButtons } from "../helper/editor";
+import { editorButtons, appendLinesToEnd } from "../helper/editor";
 
 export default {
   name: "note-edit",
@@ -115,6 +118,7 @@ export default {
         lineNumbers: true,
         lineWrapping: true,
         line: true,
+        cursorScrollMargin: 100,
         buttons: editorButtons([
           {
             title: "Focus tags",
@@ -184,6 +188,8 @@ export default {
     opened() {
       this.$refs.mycm.codemirror.focus();
 
+      this.$refs.mycm.codemirror.on("cursorActivity", appendLinesToEnd);
+
       this.focusTagsEvent = addEventListener(this.$refs.tags, "blur", event => {
         this.unfocusTags();
       });
@@ -202,6 +208,8 @@ export default {
 
     beforeClose() {
       scrollLock.enablePageScroll(document.documentElement);
+
+      this.$refs.mycm.codemirror.off("cursorActivity", appendLinesToEnd);
     },
 
     save() {
@@ -364,6 +372,10 @@ export default {
 
     .CodeMirror-gutters {
       background: transparent;
+    }
+
+    .CodeMirror-lines {
+      padding-bottom: 1rem;
     }
   }
 
