@@ -124,7 +124,7 @@ export function editorButtons(items = []) {
   return EDITOR_BUTTONS.concat(items);
 }
 
-export function appendLinesToEnd(cm) {
+export function appendLinesToEndCursor(cm) {
   const cursor = cm.getCursor();
   const lastLine = cm.lastLine();
 
@@ -133,11 +133,18 @@ export function appendLinesToEnd(cm) {
       line: cursor.line,
       ch: cursor.ch
     };
-    const start = {
-      line: lastLine + 1,
-      ch: 0
-    };
-    cm.replaceRange("\n\n\n\n", start);
+
+    appendLinesToEnd(cm);
+
     cm.setCursor(prevPosition);
   }
+}
+
+export function appendLinesToEnd(cm) {
+  const lastLine = cm.lastLine();
+  const start = {
+    line: lastLine + 1,
+    ch: 0
+  };
+  cm.replaceRange("\n\n\n\n", start);
 }

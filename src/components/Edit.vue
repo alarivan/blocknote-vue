@@ -79,7 +79,11 @@ import "codemirror/addon/display/panel";
 import "../plugins/codemirror/buttons";
 import "codemirror/mode/gfm/gfm";
 
-import { editorButtons, appendLinesToEnd } from "../helper/editor";
+import {
+  editorButtons,
+  appendLinesToEnd,
+  appendLinesToEndCursor
+} from "../helper/editor";
 
 export default {
   name: "note-edit",
@@ -188,7 +192,8 @@ export default {
     opened() {
       this.$refs.mycm.codemirror.focus();
 
-      this.$refs.mycm.codemirror.on("cursorActivity", appendLinesToEnd);
+      this.$refs.mycm.codemirror.on("cursorActivity", appendLinesToEndCursor);
+      appendLinesToEnd(this.$refs.mycm.codemirror);
 
       this.focusTagsEvent = addEventListener(this.$refs.tags, "blur", event => {
         this.unfocusTags();
@@ -209,7 +214,7 @@ export default {
     beforeClose() {
       scrollLock.enablePageScroll(document.documentElement);
 
-      this.$refs.mycm.codemirror.off("cursorActivity", appendLinesToEnd);
+      this.$refs.mycm.codemirror.off("cursorActivity", appendLinesToEndCursor);
     },
 
     save() {
@@ -371,7 +376,7 @@ export default {
     @apply h-full;
 
     .CodeMirror-scroll {
-      padding-bottom: 0;
+      // padding-bottom: 0;
     }
 
     .CodeMirror-gutters {
