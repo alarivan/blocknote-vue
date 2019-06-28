@@ -109,12 +109,14 @@ export default {
     this.$store.subscribeAction((action, state) => {
       switch (action.type) {
         case "versionUpdateEnd":
-          notesApi.init().then(notes => {
-            this.loading = false;
-            if (typeof this.$refs.search !== "undefined") {
-              this.$refs.search.focus();
-            }
-          });
+          if (this.$store.state.notes.length === 0) {
+            notesApi.init().then(notes => {
+              this.loading = false;
+              if (typeof this.$refs.search !== "undefined") {
+                this.$refs.search.focus();
+              }
+            });
+          }
 
           break;
       }
