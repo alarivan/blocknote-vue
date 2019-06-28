@@ -243,6 +243,10 @@ export default new Vuex.Store({
 
     setLayout({ commit }, data) {
       commit("SET_SETTINGS_VALUE", { key: "layout", data });
+    },
+
+    setSettingsOption({ commit }, data) {
+      commit("SET_SETTINGS_VALUE", data);
     }
   },
 

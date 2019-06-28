@@ -23,12 +23,12 @@ class SettingsApi {
 
     const local = this.decrypt(local_data.settings);
 
-    return store.dispatch("setSettings", local);
+    return store.dispatch("setSettings", _.extend(defaultSettings, local));
   }
 
   load() {
     return this.loadFromStorage().then(data => {
-      return store.dispatch("setSettings", data);
+      return store.dispatch("setSettings", _.extend(defaultSettings, data));
     });
   }
 

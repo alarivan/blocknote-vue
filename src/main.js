@@ -12,6 +12,7 @@ import "./styles/main.scss";
 import "../node_modules/github-markdown-css";
 
 import "codemirror/lib/codemirror.css";
+import "codemirror/theme/nord.css";
 
 Vue.config.productionTip = false;
 

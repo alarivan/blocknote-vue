@@ -24,7 +24,7 @@
       <div class="flex flex-row-reverse m-2 note-actions z-10">
         <button
           :class="buttonClasses"
-          class="bg-red-800 hover:bg-red-900 text-white"
+          class="note-action bg-red-800 hover:bg-red-900"
           @click="deleteNote()"
           title="delete"
         >
@@ -34,7 +34,7 @@
         </button>
         <button
           :class="buttonClasses"
-          class="bg-blue-800 hover:bg-blue-900 text-white mr-2"
+          class="note-action bg-blue-800 hover:bg-blue-900 mr-2"
           @click="copyNote()"
           title="copy"
         >
@@ -44,7 +44,7 @@
         </button>
         <button
           :class="buttonClasses"
-          class="bg-orange-500 hover:bg-orange-600 text-white mr-2"
+          class="note-action bg-orange-500 hover:bg-orange-600 mr-2"
           @click="editNote()"
           title="edit"
         >
@@ -55,14 +55,14 @@
         <button
           title="Close"
           v-if="isNoteView"
-          class="view-action w-full mr-2 hover:bg-gray-100"
+          class="view-action w-full mr-2"
           @click="setNoteView(false)"
         >
           <svg class="icon mx-auto">
             <use xlink:href="#icon-cross"></use>
           </svg>
         </button>
-        <button v-else class="view-action w-full mr-2 hover:bg-gray-100" @click="setNoteView(note)">
+        <button v-else class="view-action w-full mr-2" @click="setNoteView(note)">
           <svg class="icon mx-auto">
             <use xlink:href="#icon-enlarge"></use>
           </svg>
@@ -195,12 +195,7 @@ export default {
   overflow: hidden;
   width: 50%;
   box-sizing: border-box;
-  border: 2px solid white;
-  @apply border-2 border-gray-300 bg-white;
-
-  &.active {
-    @apply border-gray-500;
-  }
+  @apply border-2;
 
   .view-action {
     .svg-icon {
@@ -236,9 +231,6 @@ export default {
   }
 }
 
-.note-actions {
-  box-shadow: 0px -15px 10px 0px rgba(255, 255, 255, 1);
-}
 .tag {
   padding: 0.15rem 0.5rem;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="theme" :class="themeClass">
     <div class="py-2 sm:py-8">
       <Drawer
         class="nav-drawer"
@@ -141,6 +141,10 @@ export default {
 
     isHome() {
       return this.$route.name === "home";
+    },
+
+    themeClass() {
+      return this.$store.state.settings.theme.cssClass;
     }
   },
 

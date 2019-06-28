@@ -17,7 +17,7 @@
       <div class="flex-auto flex flex-col">
         <label
           ref="edittoplabel"
-          class="content-label uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+          class="content-label uppercase tracking-wide \ text-xs font-bold mb-2"
           for="note"
         >content (markdown)</label>
         <codemirror
@@ -29,33 +29,24 @@
         ></codemirror>
       </div>
       <div
-        class="tags-input-group flex flex-wrap items-center border-b border-b-2 border-gray-500 mb-2 z-10 bg-white"
+        class="tags-input-group flex flex-wrap items-center border-b border-b-2 border-gray-500 mb-2 pt-2 z-10"
       >
-        <label
-          class="flex-auto uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-          for="note"
-        >tags</label>
+        <label class="flex-auto uppercase tracking-wide text-xs font-bold" for="note">tags</label>
         <input
           ref="tags"
           v-model="tags"
-          class="mousetrap flex-auto appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+          class="mousetrap flex-auto appearance-none bg-transparent border-none w-full mr-3 py-1 px-2 leading-tight focus:outline-none"
           type="text"
           placeholder="work, play, joke"
           aria-label="tags"
         >
       </div>
       <div class="flex edit-actions z-10">
-        <button
-          @click="save"
-          class="save-button flex-auto py-2 px-6 button primary rounded text-white font-bold mr-2"
-        >
+        <button @click="save" class="save-button flex-auto py-2 px-6 button primary font-bold mr-2">
           save
           <span class="hidden sm:inline-block">( alt + enter )</span>
         </button>
-        <button
-          @click="cancel"
-          class="py-2 px-4 border border-gray-500 hover:border-gray-600 rounded font-bold text-gray-700"
-        >
+        <button @click="cancel" class="cancel-button py-2 px-4 border-2 font-bold">
           cancel
           <span class="hidden sm:inline-block">( esc )</span>
         </button>
@@ -123,6 +114,7 @@ export default {
         lineWrapping: true,
         line: true,
         cursorScrollMargin: 100,
+        theme: "nord",
         buttons: editorButtons([
           {
             title: "Focus tags",

@@ -6,16 +6,22 @@
     }
 }
 
+select.settings-select {
+    @apply block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 leading-tight;
+
+    &:hover {}
+
+    &:focus {
+        @apply outline-none bg-white border-gray-500;
+    }
+}
+
 .tag {
-    @apply border border-white text-xs font-bold text-gray-800 rounded-full text-gray-900;
+    @apply border text-xs font-bold rounded-full;
 }
 
 .drawer-trigger {
-    @apply px-2 border-2 border-black;
-
-    &:hover {
-        @apply border-gray-700 text-gray-700;
-    }
+    @apply px-2 border-2;
 }
 
 .icon {

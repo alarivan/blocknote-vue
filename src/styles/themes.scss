@@ -1,0 +1,194 @@
+@mixin apptheme( //
+
+    $main-bg,
+    $main-color,
+    $box-shadow-color,
+    $note-border-color,
+    $note-border-color-active,
+    $drawer-trigger-color,
+    $drawer-trigger-color-hover,
+    $view-action-color-hover,
+    $note-action-color,
+    $markdown-pre-bg,
+    $mrkdown-pre-color,
+    $editor-button-border-color,
+    $editor-button-color,
+    $drawer-link-color,
+    $drawer-link-color-hover,
+    $drawer-link-bg-hover,
+    $clear-search-color,
+    $clear-search-hover,
+) {
+
+    background-color: $main-bg;
+    color: $main-color;
+
+    .search {
+        color: $main-color;
+    }
+
+    .clear-search {
+        background-color: $main-bg;
+        border-color: $clear-search-color;
+        color: $clear-search-color;
+
+        &:hover {
+            color: $clear-search-hover;
+            border-color: $clear-search-hover;
+        }
+    }
+
+    .selected-tags {
+        border-color: $main-bg;
+    }
+
+    .drawer-trigger {
+        border-color: $drawer-trigger-color;
+        color: $drawer-trigger-color;
+
+        &:hover {
+            border-color: $drawer-trigger-color-hover;
+            color: $drawer-trigger-color-hover;
+        }
+    }
+
+    .tag {
+        border-color: $main-bg;
+        color: theme('colors.gray.900')
+    }
+
+    .tag-sggestion {
+        color: $main-color;
+    }
+
+    .note {
+        background-color: $main-bg;
+        border-color: $note-border-color;
+
+        &.active {
+            border-color: $note-border-color-active;
+        }
+
+        .note-actions {
+            box-shadow: 0px -15px 10px 0px $box-shadow-color;
+
+            .note-action {
+                color: $note-action-color;
+            }
+
+            .view-action {
+                &:hover {
+                    background-color: $view-action-color-hover;
+                }
+            }
+        }
+
+        .markdown-body {
+            color: $main-color;
+        }
+    }
+
+    .markdown-body .highlight pre,
+    .markdown-body pre,
+    pre {
+        background-color: $markdown-pre-bg;
+        color: $mrkdown-pre-color;
+    }
+
+    .editor-modal {
+
+        .v--modal-box.v--modal {
+            background-color: $main-bg;
+        }
+
+        .tags-input-group {
+            background-color: $main-bg;
+            color: $main-color;
+        }
+
+        .CodeMirror-buttonsPanel {
+
+            button {
+                color: $editor-button-color;
+                border-color: $editor-button-border-color;
+            }
+        }
+
+        .cancel-button {
+            border-color: $drawer-trigger-color;
+            color: $drawer-trigger-color;
+
+            &:hover {
+                border-color: $drawer-trigger-color-hover;
+                color: $drawer-trigger-color-hover;
+            }
+        }
+    }
+
+    .nav-drawer {
+        aside {
+            background-color: $main-bg;
+
+            .nav-drawer-link {
+                color: $drawer-link-color;
+
+                &:hover {
+                    color: $drawer-link-color-hover;
+                    background-color: $drawer-link-bg-hover;
+                }
+            }
+        }
+    }
+
+    .shortcut {
+        &:nth-child(even) {
+            background-color: $markdown-pre-bg;
+            color: $mrkdown-pre-color;
+        }
+    }
+}
+
+
+.theme-light {
+    @include apptheme($main-bg: theme('colors.white'),
+        $main-color: theme('colors.gray.900'),
+        $box-shadow-color: theme('colors.white'),
+        $note-border-color: theme('colors.gray.300'),
+        $note-border-color-active: theme('colors.gray.500'),
+        $drawer-trigger-color: theme('colors.gray.700'),
+        $drawer-trigger-color-hover: theme('colors.gray.600'),
+        $view-action-color-hover: theme('colors.gray.300'),
+        $note-action-color: theme('colors.white'),
+        $markdown-pre-bg: theme('colors.gray.100'),
+        $mrkdown-pre-color: theme('colors.gray.900'),
+        $editor-button-border-color: theme('colors.gray.100'),
+        $editor-button-color: theme('colors.gray.900'),
+        $drawer-link-color: theme('colors.gray.700'),
+        $drawer-link-color-hover: theme('colors.gray.900'),
+        $drawer-link-bg-hover: theme('colors.gray.200'),
+        $clear-search-color: theme('colors.gray.700'),
+        $clear-search-hover: theme('colors.gray.600'));
+}
+
+.theme-dark {
+
+    @include apptheme($main-bg: theme('colors.gray.900'),
+        $main-color: theme('colors.gray.200'),
+        $box-shadow-color: theme('colors.gray.900'),
+        $note-border-color: theme('colors.gray.500'),
+        $note-border-color-active: theme('colors.blue.700'),
+        $drawer-trigger-color: theme('colors.gray.300'),
+        $drawer-trigger-color-hover: theme('colors.gray.400'),
+        $view-action-color-hover: theme('colors.gray.800'),
+        $note-action-color: theme('colors.white'),
+        $markdown-pre-bg: theme('colors.gray.700'),
+        $mrkdown-pre-color: theme('colors.gray.300'),
+        $editor-button-border-color: theme('colors.gray.700'),
+        $editor-button-color: theme('colors.gray.300'),
+        $drawer-link-color: theme('colors.gray.200'),
+        $drawer-link-color-hover: theme('colors.gray.400'),
+        $drawer-link-bg-hover: theme('colors.gray.700'),
+        $clear-search-color: theme('colors.gray.300'),
+        $clear-search-hover: theme('colors.gray.400'));
+
+}

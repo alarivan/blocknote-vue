@@ -16,7 +16,7 @@
           <button
             title="Clear Search"
             @click="clearSearch()"
-            class="mr-2 px-2 border border-gray-300 bg-gray-300 hover:bg-gray-400 hover:border-gray-400 text-gray-700"
+            class="clear-search mr-2 px-2 border-2"
           >
             <svg class="icon mx-auto">
               <use xlink:href="#icon-cross"></use>
@@ -203,14 +203,14 @@ export default {
       Mousetrap.bind(["j", "down"], event => {
         if (this.selectMode) {
           event.preventDefault();
-          this.move(this.selected + 2);
+          this.move(this.selected + this.layoutValue);
           this.scrollToSelected();
         }
       });
       Mousetrap.bind(["k", "up"], event => {
         if (this.selectMode) {
           event.preventDefault();
-          this.move(this.selected - 2);
+          this.move(this.selected - this.layoutValue);
           this.scrollToSelected();
         }
       });
@@ -370,6 +370,10 @@ export default {
 
     versionUpdating() {
       return this.$store.state.version_updating;
+    },
+
+    layoutValue() {
+      return this.$store.state.settings.layout.value;
     },
 
     ...mapGetters(["filteredNotes"])

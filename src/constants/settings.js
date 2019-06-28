@@ -20,9 +20,22 @@ export const options = {
       label: "Layout 4",
       cssClass: "layout-4"
     }
+  ],
+  theme: [
+    {
+      value: 1,
+      label: "Light",
+      cssClass: "theme-light"
+    },
+    {
+      value: 2,
+      label: "Dark",
+      cssClass: "theme-dark"
+    }
   ]
 };
 
 export default {
-  layout: options.layout[2]
+  layout: options.layout[2],
+  theme: options.theme[0]
 };

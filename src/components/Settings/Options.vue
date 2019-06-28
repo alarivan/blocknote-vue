@@ -2,9 +2,19 @@
   <div class>
     <div class="mb-2">
       <label class="block">Layout</label>
-      <select v-model="layout">
+      <select v-model="layout" class="settings-select">
         <option
           v-for="(option, index) in options.layout"
+          :key="index"
+          :value="option"
+        >{{option.label}}</option>
+      </select>
+    </div>
+    <div class="mb-2">
+      <label class="block">Theme</label>
+      <select v-model="theme" class="settings-select">
+        <option
+          v-for="(option, index) in options.theme"
           :key="index"
           :value="option"
         >{{option.label}}</option>
@@ -31,7 +41,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setLayout"])
+    ...mapActions(["setLayout", "setSettingsOption"])
   },
 
   computed: {
@@ -41,6 +51,15 @@ export default {
       },
       set(value) {
         this.setLayout(value);
+      }
+    },
+
+    theme: {
+      get() {
+        return this.$store.state.settings.theme;
+      },
+      set(value) {
+        this.setSettingsOption({ key: "theme", data: value });
       }
     }
   }

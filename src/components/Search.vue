@@ -3,7 +3,7 @@
     <div class="w-full flex flex-wrap flex-auto border-b border-b-2 border-gray-500 py-2 mb-1">
       <input
         ref="search"
-        class="mousetrap appearance-none bg-transparent border-none text-gray-700 py-1 px-2 leading-tight focus:outline-none flex-auto"
+        class="search mousetrap appearance-none bg-transparent border-none py-1 px-2 leading-tight focus:outline-none flex-auto"
         type="text"
         placeholder="press '/' to focus, type '?' for help"
         aria-label="search"
@@ -13,9 +13,9 @@
     </div>
     <div
       v-if="this.searchInput === '?'"
-      class="w-full text-xs text-gray-800"
+      class="w-full text-xs"
     >press "enter" or "," to select the first tag, "backspace" in empty search to remove last tag</div>
-    <div class="border-l-2 border-white">
+    <div class="selected-tags border-l-2">
       <button
         v-for="(tag, index) in selected"
         :key="index"
@@ -27,7 +27,7 @@
     <div class="w-full">
       <div
         @click="add(tag)"
-        class="tag text-xs font-bold text-gray-800 cursor-pointer"
+        class="tag tag-sggestion text-xs font-bold cursor-pointer"
         v-for="(tag, index) in filtered"
         :key="index"
       >{{tag.name}}</div>
