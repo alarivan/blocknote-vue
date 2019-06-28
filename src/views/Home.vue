@@ -102,25 +102,16 @@ export default {
   mounted() {
     this.init();
 
-    if (this.$store.state.notes.length === 0) {
-      this.loading = true;
-    }
+    this.loadNotes();
 
-    this.$store.subscribeAction((action, state) => {
-      switch (action.type) {
-        case "versionUpdateEnd":
-          if (this.$store.state.notes.length === 0) {
-            notesApi.init().then(notes => {
-              this.loading = false;
-              if (typeof this.$refs.search !== "undefined") {
-                this.$refs.search.focus();
-              }
-            });
-          }
+    // this.$store.subscribeAction((action, state) => {
+    //   switch (action.type) {
+    //     case "versionUpdateEnd":
+    //       this.loadNotes();
 
-          break;
-      }
-    });
+    //       break;
+    //   }
+    // });
   },
 
   created() {
@@ -131,6 +122,18 @@ export default {
   },
 
   methods: {
+    loadNotes() {
+      if (this.$store.state.notes.length === 0) {
+        this.loading = true;
+        // notesApi.init().then(notes => {
+        //   this.loading = false;
+        //   if (typeof this.$refs.search !== "undefined") {
+        //     this.$refs.search.focus();
+        //   }
+        // });
+      }
+    },
+
     init() {
       Mousetrap.bind("shift+n", event => {
         const tag = (event.target || event.srcElement).tagName.toLowerCase();
@@ -395,6 +398,12 @@ export default {
     },
 
     ...mapGetters(["filteredNotes"])
+  },
+
+  watch: {
+    notes() {
+      this.loading = false;
+    }
   }
 };
 </script>

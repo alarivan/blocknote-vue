@@ -75,9 +75,10 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (store.state.user == null) {
+      store.dispatch("setRouteBeforeLogin", to.fullPath);
+
       next({
-        path: "/login",
-        params: { nextUrl: to.fullPath }
+        path: "/login"
       });
     } else {
       next();

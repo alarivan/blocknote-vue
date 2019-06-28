@@ -36,7 +36,8 @@ export default new Vuex.Store({
     },
     noteView: false,
     drawer: false,
-    settings: defaultSettings
+    settings: defaultSettings,
+    routeBeforeLogin: false
   },
   mutations: {
     SET_USER(state, user) {
@@ -153,6 +154,10 @@ export default new Vuex.Store({
 
     SET_SETTINGS(state, data) {
       state.settings = data;
+    },
+
+    SET_ROUTE_BEFORE_LOGIN(state, value) {
+      state.routeBeforeLogin = value;
     }
   },
   actions: {
@@ -253,6 +258,10 @@ export default new Vuex.Store({
 
     setSettingsValue({ commit }, data) {
       commit("SET_SETTINGS_VALUE", data);
+    },
+
+    setRouteBeforeLogin({ commit }, data) {
+      commit("SET_ROUTE_BEFORE_LOGIN", data);
     }
   },
 

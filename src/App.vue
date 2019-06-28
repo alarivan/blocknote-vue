@@ -26,6 +26,7 @@ import { userSession } from "./helper/userSession";
 
 import versionApi from "./api/version";
 import settingsApi from "./api/settings";
+import notesApi from "./api/notes";
 
 import Navigation from "./components/Navigation";
 import Drawer from "./components/Drawer.vue";
@@ -66,9 +67,13 @@ export default {
       this.setUser(user).then(() => {
         versionApi.init().then(() => {
           settingsApi.init();
+          notesApi.init();
         });
       });
-      this.$router.push("/");
+
+      if (this.routeBeforeLogin) {
+        this.$router.push(this.routeBeforeLogin);
+      }
     } else if (userSession.isSignInPending()) {
       userSession.handlePendingSignIn().then(userData => {
         window.location = window.location.origin;
@@ -123,6 +128,10 @@ export default {
 
     actionPanel() {
       return this.$store.state.settings.actionPanel;
+    },
+
+    routeBeforeLogin() {
+      return this.$store.state.routeBeforeLogin;
     }
   },
 

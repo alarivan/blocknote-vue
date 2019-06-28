@@ -29,9 +29,7 @@ export default {
           "This will delete all of your tags. Are you sure you want to proceed?"
         )
       ) {
-        tagsApi.clearStorage().then(() => {
-          notesApi.load();
-        });
+        tagsApi.clearStorage();
       }
     },
 

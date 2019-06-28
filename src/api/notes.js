@@ -27,15 +27,7 @@ class NotesApi extends GenericApi {
       return tagsApi.init().then(() => {
         return this.db.insert(local_notes).then(docs => {
           return tagsApi.createFromNotes(docs).then(tags_data => {
-            const promises = docs.map(n => {
-              return tagsApi.getForNote(n).then(tags => {
-                return this.build(n, tags);
-              });
-            });
-
-            return Promise.all(promises).then(result => {
-              return store.dispatch("setNotes", result);
-            });
+            return this.updateStore(docs);
           });
         });
       });
@@ -114,7 +106,9 @@ class NotesApi extends GenericApi {
     return this.init().then(() => {
       return tagsApi.createFromNotes(notes).then(tags_data => {
         return this.db.insert(notes).then(docs => {
-          return this.updateStorage(docs, tags_data.created);
+          return this.updateStorage(docs, tags_data.created).then(() => {
+            this.updateStore(docs);
+          });
         });
       });
     });
@@ -158,6 +152,18 @@ class NotesApi extends GenericApi {
     }
 
     return versionApi.update_version(changed);
+  }
+
+  updateStore(notes) {
+    const promises = notes.map(n => {
+      return tagsApi.getForNote(n).then(tags => {
+        return this.build(n, tags);
+      });
+    });
+
+    return Promise.all(promises).then(result => {
+      return store.dispatch("setNotes", result);
+    });
   }
 }
 

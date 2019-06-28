@@ -1,6 +1,8 @@
 import _ from "underscore";
 import store from "../store";
 
+import versionApi from "./version";
+
 export default class {
   GET_OPTIONS = {
     encrypt: true
@@ -45,11 +47,15 @@ export default class {
   }
 
   clearStorage() {
-    return store.state.userSession
-      .putFile(this.FILE, "", this.PUT_OPTIONS)
-      .then(() => {
-        console.log(`${this.FILE} cleared`);
-      });
+    return this.clearDb().then(() => {
+      store.state.userSession
+        .putFile(this.FILE, "", this.PUT_OPTIONS)
+        .then(() => {
+          console.log(`${this.FILE} cleared`);
+
+          return versionApi.update_version([this.NAME]);
+        });
+    });
   }
 
   clearDb() {
