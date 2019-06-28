@@ -194,11 +194,13 @@ export default {
         } else if (
           tag !== "input" &&
           tag !== "textarea" &&
-          this.filteredNotes.length
+          this.filteredNotes.length &&
+          !this.editorActive &&
+          !this.noteView
         ) {
           event.preventDefault();
           const note = this.$refs[this.filteredNotes[0]._id][0];
-          note.copyNote();
+          note.deleteNote();
         }
       });
 
@@ -241,7 +243,9 @@ export default {
         } else if (
           tag !== "input" &&
           tag !== "textarea" &&
-          this.filteredNotes.length
+          this.filteredNotes.length &&
+          !this.editorActive &&
+          !this.noteView
         ) {
           event.preventDefault();
           const note = this.$refs[this.filteredNotes[0]._id][0];
@@ -258,7 +262,9 @@ export default {
         } else if (
           tag !== "input" &&
           tag !== "textarea" &&
-          this.filteredNotes.length
+          this.filteredNotes.length &&
+          !this.editorActive &&
+          !this.noteView
         ) {
           event.preventDefault();
           this.setEditorStateNote(this.filteredNotes[0]);
@@ -274,7 +280,9 @@ export default {
         } else if (
           tag !== "input" &&
           tag !== "textarea" &&
-          this.filteredNotes.length
+          this.filteredNotes.length &&
+          !this.editorActive &&
+          !this.noteView
         ) {
           event.preventDefault();
           this.setNoteView(this.filteredNotes[0]);
@@ -376,6 +384,14 @@ export default {
 
     layoutValue() {
       return this.$store.state.settings.layout.value;
+    },
+
+    editorActive() {
+      return this.$store.state.editor.active;
+    },
+
+    noteView() {
+      return this.$store.state.noteView;
     },
 
     ...mapGetters(["filteredNotes"])
