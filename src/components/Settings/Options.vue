@@ -20,6 +20,26 @@
         >{{option.label}}</option>
       </select>
     </div>
+    <div class="mb-2">
+      <label for="settings[actionPanel]" class="flex items-center py-2">
+        <div class="mr-2">
+          <svg v-if="actionPanel" class="icon icon-checkbox-checked">
+            <use xlink:href="#icon-checkbox-checked"></use>
+          </svg>
+          <svg v-else class="icon icon-checkbox-unchecked">
+            <use xlink:href="#icon-checkbox-unchecked"></use>
+          </svg>
+        </div>
+        <span>Show Action Panel (Only Mobile)</span>
+      </label>
+      <input
+        class="invisible"
+        v-model="actionPanel"
+        type="checkbox"
+        id="settings[actionPanel]"
+        name="settings[actionPanel]"
+      >
+    </div>
   </div>
 </template>
 
@@ -41,7 +61,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setLayout", "setSettingsOption"])
+    ...mapActions(["setSettingsOption", "setSettingsValue"])
   },
 
   computed: {
@@ -50,7 +70,7 @@ export default {
         return this.$store.state.settings.layout;
       },
       set(value) {
-        this.setLayout(value);
+        this.setSettingsOption({ key: "layout", data: value });
       }
     },
 
@@ -60,6 +80,15 @@ export default {
       },
       set(value) {
         this.setSettingsOption({ key: "theme", data: value });
+      }
+    },
+
+    actionPanel: {
+      get() {
+        return this.$store.state.settings.actionPanel;
+      },
+      set(value) {
+        this.setSettingsValue({ key: "actionPanel", value });
       }
     }
   }

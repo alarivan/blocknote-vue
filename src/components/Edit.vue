@@ -383,7 +383,7 @@ export default {
     }
   }
 
-  @media screen and (max-height: 500px) {
+  @media screen and (max-height: 400px) {
     .edit-actions,
     .content-label,
     .tags-input-group {

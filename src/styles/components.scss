@@ -7,7 +7,7 @@
 }
 
 select.settings-select {
-    @apply block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 leading-tight;
+    @apply block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-1 px-1 pr-8 leading-tight;
 
     &:hover {}
 
@@ -43,4 +43,8 @@ select.settings-select {
     button {
         @apply px-2 py-1 border border-gray-100;
     }
+}
+
+.action-panel-item {
+    @apply px-5 py-3;
 }

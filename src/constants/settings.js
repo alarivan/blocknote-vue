@@ -37,5 +37,6 @@ export const options = {
 
 export default {
   layout: options.layout[2],
-  theme: options.theme[0]
+  theme: options.theme[0],
+  actionPanel: true
 };

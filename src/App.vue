@@ -8,43 +8,12 @@
         ref="drawer"
         @close="closeDrawer"
       >
-        <div class="container mx-auto mb-4 text-right">
-          <div v-if="user" class="profile flex px-4 py-2 justify-end">
-            <div class="mr-2 text-right text-sm">
-              <div>{{user.name()}}</div>
-              <div>{{user.username}}</div>
-            </div>
-            <img
-              v-if="user.avatarUrl()"
-              :src="user.avatarUrl()"
-              alt="avatar"
-              width="40"
-              height="40"
-            >
-          </div>
-          <ul>
-            <li>
-              <router-link @click="closeDrawer" class="nav-drawer-link" to="/">notes</router-link>
-            </li>
-            <li>
-              <router-link @click="closeDrawer" class="nav-drawer-link" to="/about">about</router-link>
-            </li>
-
-            <li v-if="user">
-              <router-link @click="closeDrawer" class="nav-drawer-link" to="/settings">settings</router-link>
-            </li>
-            <li v-if="user">
-              <router-link @click="closeDrawer" class="nav-drawer-link" to="/manage">import/export</router-link>
-            </li>
-            <li v-if="user">
-              <button @click="signOut" class="w-full text-right nav-drawer-link">sign out</button>
-            </li>
-          </ul>
-        </div>
+        <drawer-content/>
       </Drawer>
       <navigation v-if="!isHome"/>
       <router-view/>
     </div>
+    <action-panel v-if="actionPanel"/>
   </div>
 </template>
 
@@ -60,10 +29,12 @@ import settingsApi from "./api/settings";
 
 import Navigation from "./components/Navigation";
 import Drawer from "./components/Drawer.vue";
+import DrawerContent from "./components/DrawerContent.vue";
+import ActionPanel from "./components/ActionPanel.vue";
 
 export default {
   name: "app",
-  components: { Drawer, Navigation },
+  components: { Drawer, DrawerContent, Navigation, ActionPanel },
 
   data() {
     return {
@@ -82,7 +53,10 @@ export default {
 
   mounted() {
     Mousetrap.bind("\\", event => {
-      this.drawer = !this.drawer;
+      const tag = (event.target || event.srcElement).tagName.toLowerCase();
+      if (tag !== "input" && tag !== "textarea") {
+        this.drawer = !this.drawer;
+      }
     });
 
     if (userSession.isUserSignedIn()) {
@@ -145,6 +119,10 @@ export default {
 
     themeClass() {
       return this.$store.state.settings.theme.cssClass;
+    },
+
+    actionPanel() {
+      return this.$store.state.settings.actionPanel;
     }
   },
 

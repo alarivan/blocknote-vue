@@ -137,10 +137,16 @@ export default new Vuex.Store({
       state.drawer = value;
     },
 
-    SET_SETTINGS_VALUE(state, { key, data }) {
+    SET_SETTINGS_OPTION(state, { key, data }) {
       if (settingsApi.verifyOption(key, data.value)) {
         state.settings[key] = data;
       }
+
+      settingsApi.save();
+    },
+
+    SET_SETTINGS_VALUE(state, { key, value }) {
+      state.settings[key] = value;
 
       settingsApi.save();
     },
@@ -241,11 +247,11 @@ export default new Vuex.Store({
       commit("SET_SETTINGS", data);
     },
 
-    setLayout({ commit }, data) {
-      commit("SET_SETTINGS_VALUE", { key: "layout", data });
+    setSettingsOption({ commit }, data) {
+      commit("SET_SETTINGS_OPTION", data);
     },
 
-    setSettingsOption({ commit }, data) {
+    setSettingsValue({ commit }, data) {
       commit("SET_SETTINGS_VALUE", data);
     }
   },
