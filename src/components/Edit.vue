@@ -107,26 +107,6 @@ export default {
           "codeblock"
         ]
       },
-      cmOption: {
-        tabSize: 4,
-        mode: "gfm",
-        lineNumbers: true,
-        lineWrapping: true,
-        line: true,
-        cursorScrollMargin: 100,
-        theme: "nord",
-        buttons: editorButtons([
-          {
-            title: "Focus tags",
-            class: "focus-tags",
-            label:
-              "<svg class='icon'><use xlink:href='#icon-price-tags'></use></svg>",
-            callback: cm => {
-              this.focusTags();
-            }
-          }
-        ])
-      },
       windowResizeEvent: false,
       tagsFocus: false,
       focusTagsEvent: false
@@ -307,6 +287,33 @@ export default {
 
     tagsFocused() {
       return this.tagsFocus || document.activeElement == this.$refs.tags;
+    },
+
+    darkMode() {
+      return this.$store.state.settings.theme.value == 2;
+    },
+
+    cmOption() {
+      return {
+        tabSize: 4,
+        mode: "gfm",
+        lineNumbers: true,
+        lineWrapping: true,
+        line: true,
+        cursorScrollMargin: 100,
+        theme: this.darkMode ? "nord" : "default",
+        buttons: editorButtons([
+          {
+            title: "Focus tags",
+            class: "focus-tags",
+            label:
+              "<svg class='icon'><use xlink:href='#icon-price-tags'></use></svg>",
+            callback: cm => {
+              this.focusTags();
+            }
+          }
+        ])
+      };
     }
   },
 
