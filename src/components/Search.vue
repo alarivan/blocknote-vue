@@ -8,7 +8,7 @@
         placeholder="press '/' to focus, type '?' for help"
         aria-label="search"
         v-model="searchInput"
-      >
+      />
       <slot></slot>
     </div>
     <div

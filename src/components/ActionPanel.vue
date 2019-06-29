@@ -1,6 +1,11 @@
 <template>
   <div class="sm:hidden fixed action-panel-wrapper z-40">
     <div class="action-panel flex">
+      <button class="action-panel-item bg-teal-800" @click="focusSearch">
+        <svg class="icon icon-search">
+          <use xlink:href="#icon-search" />
+        </svg>
+      </button>
       <button class="action-panel-item bg-blue-800" @click="setEditorStateActive(true)">
         <svg class="icon">
           <use xlink:href="#icon-plus" />
@@ -33,6 +38,10 @@ export default {
     clearSearch() {
       this.updateSearch("");
       this.clearSelectedTags();
+    },
+
+    focusSearch() {
+      this.$emit("focusSearch");
     },
 
     ...mapActions(["setEditorStateActive", "updateSearch", "clearSelectedTags"])

@@ -11,7 +11,7 @@
           <use xlink:href="#icon-arrow-up" />
         </svg>
       </button>
-      <action-panel v-if="actionPanel" />
+      <action-panel v-if="actionPanel" @focusSearch="focusSearch" />
       <div class="flex items-start mb-2 mx-1 sm:mx-0">
         <search ref="tagsearch">
           <button
@@ -334,6 +334,10 @@ export default {
 
     clearSearch() {
       this.$refs.tagsearch.clear();
+    },
+
+    focusSearch() {
+      this.$refs.tagsearch.focus();
     },
 
     ...mapActions([
