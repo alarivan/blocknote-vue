@@ -3,12 +3,16 @@
     <div class="action-panel flex">
       <button class="action-panel-item bg-blue-800" @click="setEditorStateActive(true)">
         <svg class="icon">
-          <use xlink:href="#icon-plus"></use>
+          <use xlink:href="#icon-plus" />
         </svg>
       </button>
-      <button class="action-panel-item bg-gray-700" @click="clearSearch">
+      <button
+        v-if="searchInput || selectedTags"
+        class="action-panel-item bg-gray-600"
+        @click="clearSearch"
+      >
         <svg class="icon">
-          <use xlink:href="#icon-cross"></use>
+          <use xlink:href="#icon-cross" />
         </svg>
       </button>
     </div>
@@ -41,6 +45,14 @@ export default {
 
     userSession() {
       return this.$store.state.userSession;
+    },
+
+    selectedTags() {
+      return this.$store.state.selectedTags.length;
+    },
+
+    searchInput() {
+      return this.$store.state.search.length;
     }
   }
 };

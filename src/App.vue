@@ -8,12 +8,11 @@
         ref="drawer"
         @close="closeDrawer"
       >
-        <drawer-content/>
+        <drawer-content />
       </Drawer>
-      <navigation v-if="!isHome"/>
-      <router-view/>
+      <navigation v-if="!isHome" />
+      <router-view />
     </div>
-    <action-panel v-if="actionPanel"/>
   </div>
 </template>
 
@@ -31,11 +30,10 @@ import notesApi from "./api/notes";
 import Navigation from "./components/Navigation";
 import Drawer from "./components/Drawer.vue";
 import DrawerContent from "./components/DrawerContent.vue";
-import ActionPanel from "./components/ActionPanel.vue";
 
 export default {
   name: "app",
-  components: { Drawer, DrawerContent, Navigation, ActionPanel },
+  components: { Drawer, DrawerContent, Navigation },
 
   data() {
     return {
@@ -124,10 +122,6 @@ export default {
 
     themeClass() {
       return this.$store.state.settings.theme.cssClass;
-    },
-
-    actionPanel() {
-      return this.$store.state.settings.actionPanel;
     },
 
     routeBeforeLogin() {

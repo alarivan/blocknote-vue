@@ -8,9 +8,10 @@
         title="Back to top"
       >
         <svg class="icon h-10 w-8 mx-auto">
-          <use xlink:href="#icon-arrow-up"></use>
+          <use xlink:href="#icon-arrow-up" />
         </svg>
       </button>
+      <action-panel v-if="actionPanel" />
       <div class="flex items-start mb-2 mx-1 sm:mx-0">
         <search ref="tagsearch">
           <button
@@ -19,7 +20,7 @@
             class="clear-search mr-2 px-2 border-2"
           >
             <svg class="icon mx-auto">
-              <use xlink:href="#icon-cross"></use>
+              <use xlink:href="#icon-cross" />
             </svg>
           </button>
           <div
@@ -32,7 +33,7 @@
           </button>
           <button @click="setDrawer(true)" class="hidden sm:block ml-2 drawer-trigger">
             <svg class="icon icon-menu mx-auto">
-              <use xlink:href="#icon-menu"></use>
+              <use xlink:href="#icon-menu" />
             </svg>
           </button>
         </search>
@@ -45,12 +46,12 @@
         </button>
         <button @click="setDrawer(true)" class="ml-2 w-16 pr-2 text-center drawer-trigger">
           <svg class="icon icon-menu mx-auto">
-            <use xlink:href="#icon-menu"></use>
+            <use xlink:href="#icon-menu" />
           </svg>
         </button>
       </div>
 
-      <edit/>
+      <edit />
 
       <div v-if="loading" class="flex h-48 sm:h-64 justify-center items-center">
         <div class="lds-circle">
@@ -59,7 +60,7 @@
       </div>
 
       <div v-else class="flex flex-wrap sm:-mx-2">
-        <note-view/>
+        <note-view />
         <template v-for="(note, index) in filteredNotes">
           <note :ref="note._id" :key="note._id" :note="note" :index="index" :selected="selected"></note>
         </template>
@@ -81,10 +82,11 @@ import NoteView from "../components/NoteView";
 import Edit from "../components/Edit";
 import TagInput from "../components/TagInput";
 import Search from "../components/Search";
+import ActionPanel from "../components/ActionPanel.vue";
 
 export default {
   name: "landing-page",
-  components: { NoteView, Note, Edit, TagInput, Search },
+  components: { NoteView, Note, Edit, TagInput, Search, ActionPanel },
 
   data() {
     return {
@@ -103,15 +105,6 @@ export default {
     this.init();
 
     this.loadNotes();
-
-    // this.$store.subscribeAction((action, state) => {
-    //   switch (action.type) {
-    //     case "versionUpdateEnd":
-    //       this.loadNotes();
-
-    //       break;
-    //   }
-    // });
   },
 
   created() {
@@ -125,12 +118,6 @@ export default {
     loadNotes() {
       if (this.$store.state.notes.length === 0) {
         this.loading = true;
-        // notesApi.init().then(notes => {
-        //   this.loading = false;
-        //   if (typeof this.$refs.search !== "undefined") {
-        //     this.$refs.search.focus();
-        //   }
-        // });
       }
     },
 
@@ -395,6 +382,10 @@ export default {
 
     noteView() {
       return this.$store.state.noteView;
+    },
+
+    actionPanel() {
+      return this.$store.state.settings.actionPanel;
     },
 
     ...mapGetters(["filteredNotes"])
