@@ -1,17 +1,9 @@
 <template>
   <div>
     <h1 class="text-3xl mb-2">Shortcuts:</h1>
-    <p class="italic mb-2">
-      IMPORTANT: Markdown editor has it's own shortcuts so you need to press esc or click outside of markdown editor for app shorcuts to work.
-      <a
-        class="mb-2 underline"
-        href="https://github.com/Ionaru/easy-markdown-editor#keyboard-shortcuts"
-        target="_blank"
-      >EasyMDE - Markdown Editor Shortcuts</a>
-    </p>
     <div v-for="(mode, index) in modes" :key="index" class="mb-2">
       <h4 class="text-xl mb-1">{{mode.name}}:</h4>
-      <div v-for="(item, index) in mode.items" :key="index" class="shortcut flex pl-2">
+      <div v-for="(item, index) in mode.items" :key="index" class="shortcut flex p-2">
         <div class="w-1/2 px-2">{{item.keys}}</div>
         <div class="w-1/2 px-2">{{item.description}}</div>
       </div>
@@ -29,26 +21,25 @@ export default {
           name: "general",
           items: [
             {
-              keys: "shift+n",
-              description: "new note (enter edit mode)"
+              keys: "shift+n (enter edit mode)",
+              description: "new note"
             },
             {
               keys: "/",
               description: "focus on search"
             },
             {
-              keys: "t /",
-              description: "focus on tag search"
-            },
-            {
-              keys: "enter (when in tag search)",
+              keys: "'enter' or ',' (when in search)",
               description:
                 "adds a tag to filter (you can click on a tag to remove it)"
             },
             {
+              keys: "backspace (when in empty search)",
+              description: "removess last added tag"
+            },
+            {
               keys: "r r",
-              description:
-                "clear search, clear tags search, clear selected tags"
+              description: "clear search, clear selected tags"
             },
             {
               keys: "s s",
@@ -87,6 +78,14 @@ export default {
             {
               keys: "e",
               description: "edit selected note (enter edit mode)"
+            },
+            {
+              keys: "d d",
+              description: "delete note"
+            },
+            {
+              keys: "v",
+              description: "open note"
             },
             {
               keys: "j, down arrow",

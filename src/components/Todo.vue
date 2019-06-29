@@ -25,7 +25,7 @@ export default {
           description: ""
         },
         {
-          title: "Add themes",
+          title: "Add custom themes",
           description:
             "Combine all the color definitions in to a theme. Add the abilty to create new themes."
         },
@@ -45,10 +45,6 @@ export default {
         {
           title: "Add sorting",
           description: ""
-        },
-        {
-          title: "Add caching",
-          description: "Only load data from storage if it was changed."
         }
       ]
     };
