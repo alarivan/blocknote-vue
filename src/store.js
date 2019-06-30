@@ -289,6 +289,14 @@ export default new Vuex.Store({
         return result;
       }
 
+      if (
+        _.every(result, n => {
+          return !_.isUndefined(n.position);
+        })
+      ) {
+        return _.sortBy(result, "position");
+      }
+
       return _.sortBy(result, "createdAt");
     }
   }

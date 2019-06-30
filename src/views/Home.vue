@@ -64,6 +64,14 @@
         <template v-for="(note, index) in filteredNotes">
           <note :ref="note._id" :key="note._id" :note="note" :index="index" :selected="selected"></note>
         </template>
+        <div v-if="notes.length === 0" class="w-full text-center">
+          <h1 class="mb-2">You don't have any notes yet.</h1>
+          <button
+            :disabled="disableLoadingTutorial"
+            class="bg-blue-700 px-4 py-3 rounded font-bold text-gray-300"
+            @click="loadTutorialNotes"
+          >Show Tutorial</button>
+        </div>
       </div>
     </div>
   </div>
@@ -73,6 +81,10 @@
 import Mousetrap from "mousetrap";
 import _ from "underscore";
 import { mapActions, mapGetters } from "vuex";
+
+import addEventListener from "add-dom-event-listener";
+
+import { resetTutorialNotes } from "../api/tutorial";
 
 import notesApi from "../api/notes";
 import tagsApi from "../api/tags";
@@ -97,7 +109,9 @@ export default {
       selectMode: false,
       editedNote: false,
       loading: false,
-      scrolled: 0
+      scrolled: 0,
+      loadingTimeout: false,
+      disableLoadingTutorial: false
     };
   },
 
@@ -118,6 +132,9 @@ export default {
     loadNotes() {
       if (this.$store.state.notes.length === 0) {
         this.loading = true;
+        this.loadingTimeout = setTimeout(() => {
+          this.loading = false;
+        }, 3000);
       }
     },
 
@@ -132,7 +149,7 @@ export default {
       });
 
       Mousetrap.bind("esc", event => {
-        if (this.selectMode) {
+        if (this.selectMode && !this.noteView) {
           event.preventDefault();
           this.exitSelectMode();
         }
@@ -340,6 +357,13 @@ export default {
       this.$refs.tagsearch.focus();
     },
 
+    loadTutorialNotes() {
+      this.disableLoadingTutorial = true;
+      resetTutorialNotes().then(() => {
+        this.disableLoadingTutorial = false;
+      });
+    },
+
     ...mapActions([
       "setEditorStateActive",
       "setEditorStateNote",
@@ -398,6 +422,9 @@ export default {
   watch: {
     notes() {
       this.loading = false;
+      if (this.loadingTimeout) {
+        clearTimeout(this.loadingTimeout);
+      }
     }
   }
 };

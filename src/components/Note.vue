@@ -17,7 +17,9 @@
         </template>
       </div>
       <div
+        ref="notebody"
         data-scroll-lock-scrollable
+        :class="{'show-more': showMore && !isNoteView}"
         class="markdown-body p-3 flex-auto overflow-hidden"
         v-html="body()"
       ></div>
@@ -29,7 +31,7 @@
           title="delete"
         >
           <svg class="icon mx-auto">
-            <use xlink:href="#icon-bin2"></use>
+            <use xlink:href="#icon-bin2" />
           </svg>
         </button>
         <button
@@ -39,7 +41,7 @@
           title="copy"
         >
           <svg class="icon mx-auto">
-            <use xlink:href="#icon-copy"></use>
+            <use xlink:href="#icon-copy" />
           </svg>
         </button>
         <button
@@ -49,7 +51,7 @@
           title="edit"
         >
           <svg class="icon">
-            <use xlink:href="#icon-pencil"></use>
+            <use xlink:href="#icon-pencil" />
           </svg>
         </button>
         <button
@@ -59,12 +61,12 @@
           @click="setNoteView(false)"
         >
           <svg class="icon mx-auto">
-            <use xlink:href="#icon-cross"></use>
+            <use xlink:href="#icon-cross" />
           </svg>
         </button>
         <button v-else class="view-action w-full mr-2" @click="setNoteView(note)">
           <svg class="icon mx-auto">
-            <use xlink:href="#icon-enlarge"></use>
+            <use xlink:href="#icon-enlarge" />
           </svg>
         </button>
       </div>
@@ -90,6 +92,8 @@ import { mapActions, mapGetters } from "vuex";
 import clipboard from "../helper/clipboard";
 import notesApi from "../api/notes";
 
+import htmlRenderer from "../plugins/marked/rendrer/html";
+
 export default {
   name: "note",
   components: {},
@@ -97,7 +101,8 @@ export default {
   data() {
     return {
       buttonClasses: "font-bold py-3 px-5 sm:py-1 sm:px-3 rounded",
-      copied: false
+      copied: false,
+      showMore: false
     };
   },
 
@@ -114,16 +119,22 @@ export default {
     }
   },
 
-  mounted() {},
+  mounted() {
+    this.$nextTick(() => {
+      this.showMore =
+        this.$refs.notebody.scrollHeight > this.$refs.notebody.clientHeight;
+    });
+  },
 
   methods: {
     body() {
       return marked(
         this.note.body
-          .replace("^c", "<span class='copy'>")
-          .replace("c^", "</span>"),
+          .replace("^c ", "<span class='copy'>")
+          .replace(" c^", "</span>"),
         {
-          breaks: true
+          breaks: true,
+          renderer: htmlRenderer
         }
       );
     },
@@ -201,6 +212,23 @@ export default {
     .svg-icon {
       width: 1.5em;
       height: 1.5em;
+    }
+  }
+
+  .markdown-body.show-more {
+    position: relative;
+    &:before {
+      content: "...";
+      position: absolute;
+      bottom: 0px;
+      left: 0;
+      padding: 0rem 0.75rem;
+      width: 100%;
+      height: 8px;
+      display: block;
+      line-height: 0px;
+      overflow: visible;
+      text-align: center;
     }
   }
 }

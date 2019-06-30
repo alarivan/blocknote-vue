@@ -71,7 +71,7 @@
         }
 
         .note-actions {
-            box-shadow: 0px -15px 10px 0px $box-shadow-color;
+            // box-shadow: 0px -15px 10px 0px $box-shadow-color;
 
             .note-action {
                 color: $note-action-color;
@@ -86,11 +86,20 @@
 
         .markdown-body {
             color: $main-color;
+
+            &.show-more {
+                &:before {
+                    box-shadow: 0px 0px 8px 10px $main-bg;
+                    background: $main-bg;
+                }
+
+            }
         }
     }
 
     .markdown-body .highlight pre,
-    .markdown-body pre {
+    .markdown-body pre,
+    .markdown-body code {
         background-color: $markdown-pre-bg;
         color: $mrkdown-pre-color;
     }

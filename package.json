@@ -17,7 +17,6 @@
     "github-markdown-css": "^3.0.1",
     "he": "^1.2.0",
     "marked": "^0.6.2",
-    "marked-plaintext": "^0.0.2",
     "mousetrap": "^1.6.3",
     "nedb-promises": "^3.0.5",
     "randomcolor": "^0.5.4",

@@ -1,5 +1,4 @@
 import marked from "marked";
-import PlainTextRenderer from "marked-plaintext";
 import _ from "underscore";
 import { saveAs } from "file-saver";
 
@@ -10,7 +9,7 @@ import tagsApi from "../api/tags";
 
 import versionApi from "./version";
 
-const renderer = new PlainTextRenderer();
+import PlainTextRenderer from "../plugins/marked/rendrer/plainText";
 
 class NotesApi extends GenericApi {
   NAME = "notes";
@@ -27,6 +26,8 @@ class NotesApi extends GenericApi {
       return tagsApi.init().then(() => {
         return this.db.insert(local_notes).then(docs => {
           return tagsApi.createFromNotes(docs).then(tags_data => {
+            this.updateStorage([], tags_data.created);
+
             return this.updateStore(docs);
           });
         });
@@ -35,13 +36,13 @@ class NotesApi extends GenericApi {
   }
 
   build(note, tags) {
-    note.raw = marked(note.body, { renderer: renderer });
+    note.raw = marked(note.body, { renderer: PlainTextRenderer });
     note.tags = tags;
     return note;
   }
 
   getCopy(raw) {
-    const m = raw.match(/\^c([\s\S]*?)c\^/);
+    const m = raw.match(/\^c ([\s\S]*?) c\^/);
 
     if (!_.isNull(m) && !_.isUndefined(m[1])) {
       return m[1].trim();
@@ -58,7 +59,7 @@ class NotesApi extends GenericApi {
           tags: tags_data.arr
         })
         .then(doc => {
-          this.updateStorage([doc], tags_data);
+          this.updateStorage([doc], tags_data.created);
 
           return this.build(doc, tags_data.obj);
         });
@@ -71,13 +72,15 @@ class NotesApi extends GenericApi {
         .update(
           { _id: id },
           {
-            body,
-            tags: tags_data.arr
+            $set: {
+              body,
+              tags: tags_data.arr
+            }
           },
           { returnUpdatedDocs: true }
         )
         .then(doc => {
-          this.updateStorage([doc], tags_data);
+          this.updateStorage([doc], tags_data.created);
 
           return this.build(doc, tags_data.obj);
         });
@@ -88,6 +91,18 @@ class NotesApi extends GenericApi {
     // eslint-disable-next-line no-underscore-dangle
     return this.db.remove({ _id: note._id }).then(() => {
       versionApi.update_version([this.NAME]);
+    });
+  }
+
+  deleteMany(query) {
+    return this.db.remove(query, { multi: true }).then(deletedNum => {
+      if (deletedNum) {
+        return versionApi.update_version([this.NAME]).then(() => {
+          return deletedNum;
+        });
+      } else {
+        return deletedNum;
+      }
     });
   }
 
@@ -107,7 +122,7 @@ class NotesApi extends GenericApi {
       return tagsApi.createFromNotes(notes).then(tags_data => {
         return this.db.insert(notes).then(docs => {
           return this.updateStorage(docs, tags_data.created).then(() => {
-            this.updateStore(docs);
+            this.init();
           });
         });
       });
@@ -117,6 +132,9 @@ class NotesApi extends GenericApi {
   validateImportData(data) {
     const notes = data.map(n => {
       let result = { _id: n._id, body: n.body };
+      if (!_.isUndefined(n.position)) {
+        result.position = n.position;
+      }
 
       if (_.isArray(n.tags)) {
         result.tags = n.tags;
@@ -151,7 +169,11 @@ class NotesApi extends GenericApi {
       changed.push(this.NAME);
     }
 
-    return versionApi.update_version(changed);
+    if (changed.length > 0) {
+      return versionApi.update_version(changed);
+    }
+
+    return Promise.resolve();
   }
 
   updateStore(notes) {

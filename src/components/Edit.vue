@@ -73,10 +73,6 @@ import notesApi from "../api/notes";
 
 import addEventListener from "add-dom-event-listener";
 
-import "codemirror/addon/display/panel";
-import "../plugins/codemirror/buttons";
-import "codemirror/mode/gfm/gfm";
-
 import { Editor } from "@toast-ui/vue-editor";
 
 import {
@@ -388,7 +384,7 @@ export default {
     }
   }
 
-  @media screen and (max-height: 400px) {
+  @media screen and (max-height: 400px) and (max-width: 640px) {
     .content-label,
     .editor-footer {
       display: none;
