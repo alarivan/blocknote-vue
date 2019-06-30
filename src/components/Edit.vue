@@ -22,6 +22,7 @@
         >content (markdown)</label>
         <editor
           @load="load"
+          @focus="unfocusTags"
           ref="tuiEditor"
           height="100%"
           v-model="content"
@@ -113,14 +114,14 @@ export default {
       }
     });
 
-    this.windowResizeEvent = addEventListener(window, "resize", event => {
-      this.resizeEditor();
-    });
+    // this.windowResizeEvent = addEventListener(window, "resize", event => {
+    //   this.resizeEditor();
+    // });
   },
 
   beforeDestroy() {
     this.shortcuts.remove();
-    this.windowResizeEvent.remove();
+    // this.windowResizeEvent.remove();
   },
 
   methods: {
@@ -157,36 +158,37 @@ export default {
         .getCodeMirror()
         .setOption("theme", this.darkMode ? "nord" : "default");
 
-      this.$nextTick(() => {
-        this.resizeEditor();
-      });
+      // this.$nextTick(() => {
+      //   this.resizeEditor();
+      // });
     },
 
     focusTags() {
       this.tagsFocus = true;
 
       this.$nextTick(() => {
-        this.resizeEditor().then(() => {
-          this.$refs.tags.focus();
-        });
+        // this.resizeEditor().then(() => {
+        //   this.$refs.tags.focus();
+        // });
+        this.$refs.tags.focus();
       });
     },
 
     unfocusTags() {
       this.tagsFocus = false;
-      this.$nextTick(() => {
-        this.resizeEditor();
-      });
+      // this.$nextTick(() => {
+      //   this.resizeEditor();
+      // });
     },
 
     opened() {
-      this.focusTagsEvent = addEventListener(this.$refs.tags, "blur", event => {
-        this.unfocusTags();
-      });
+      // this.focusTagsEvent = addEventListener(this.$refs.tags, "blur", event => {
+      //   this.unfocusTags();
+      // });
     },
 
     close() {
-      this.focusTagsEvent.remove();
+      // this.focusTagsEvent.remove();
 
       this.cancel();
     },
