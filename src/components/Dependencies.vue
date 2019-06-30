@@ -70,8 +70,8 @@ export default {
           source: "https://github.com/codemirror/codemirror"
         },
         {
-          name: "Vue-Codemirror",
-          source: "https://github.com/surmon-china/vue-codemirror"
+          name: "TOASTUI Editor Vue",
+          source: "https://github.com/nhn/toast-ui.vue-editor"
         },
         {
           name: "Fuse.js",

@@ -1,150 +1,164 @@
+import $ from "jquery";
+import { CommandManager } from "tui-editor";
+
+function tuiButton(name, command, tooltip, innerHTML) {
+  return {
+    type: "button",
+    options: {
+      $el: $('<button class="tui-toolbar-custom">' + innerHTML + "</div>"),
+      name: name,
+      command: command,
+      tooltip: tooltip
+    }
+  };
+}
+
 export const EDITOR_BUTTONS = [
   {
-    hotkey: "Ctrl-B",
-    title: "Bold",
-    class: "bold",
-    label: "<svg class='icon'><use xlink:href='#icon-bold'></use></svg>",
-    callback: function(cm) {
-      var selection = cm.getSelection();
-      cm.replaceSelection("**" + selection + "**");
-      if (!selection) {
-        var cursorPos = cm.getCursor();
-        cm.setCursor(cursorPos.line, cursorPos.ch - 2);
-      }
+    type: "button",
+    options: {
+      $el: $(
+        '<button class="tui-heading tui-toolbar-custom"><div class="icon-text tui-heading"><div class="icon-text-value">H</div></div></div>"'
+      ),
+      name: "heading",
+      event: "openHeadingSelect",
+      tooltip: "Heading"
     }
   },
-  {
-    hotkey: "Ctrl-I",
-    title: "Italic",
-    class: "italic",
-    label: "<svg class='icon'><use xlink:href='#icon-italic'></use></svg>",
-    callback: function(cm) {
-      var selection = cm.getSelection();
-      cm.replaceSelection("*" + selection + "*");
-      if (!selection) {
-        var cursorPos = cm.getCursor();
-        cm.setCursor(cursorPos.line, cursorPos.ch - 1);
-      }
-    }
-  },
-  {
-    title: "Inline Code",
-    class: "inline-code",
-    label: "<svg class='icon'><use xlink:href='#icon-embed'></use></svg>",
-    callback: function(cm) {
-      var selection = cm.getSelection();
-      cm.replaceSelection("`" + selection + "`");
-      if (!selection) {
-        var cursorPos = cm.getCursor();
-        cm.setCursor(cursorPos.line, cursorPos.ch - 1);
-      }
-    }
-  },
-  {
-    title: "Code Block",
-    class: "block-code",
-    label: "<svg class='icon'><use xlink:href='#icon-embed2'></use></svg>",
-    callback: function(cm) {
-      var selection = cm.getSelection();
-      cm.replaceSelection("```\n" + selection + "\n```\n");
-      if (!selection) {
-        var cursorPos = cm.getCursor();
-        cm.setCursor(cursorPos.line - 2, 0);
-      }
-    }
-  },
-  {
-    title: "Quote",
-    class: "quote",
-    label: "<svg class='icon'><use xlink:href='#icon-quotes-left'></use></svg>",
-    callback: function(cm) {
-      cm.replaceSelection("> " + cm.getSelection());
-    }
-  },
-  {
-    title: "Unordered List",
-    class: "ul",
-    label: "<svg class='icon'><use xlink:href='#icon-list2'></use></svg>",
-    callback: function(cm) {
-      cm.replaceSelection("- " + cm.getSelection());
-    }
-  },
-  {
-    title: "Ordered List",
-    class: "ol",
-    label:
-      "<svg class='icon'><use xlink:href='#icon-list-numbered'></use></svg>",
-    callback: function(cm) {
-      cm.replaceSelection("1. " + cm.getSelection());
-    }
-  },
-  {
-    title: "Link",
-    class: "a",
-    label: "<svg class='icon'><use xlink:href='#icon-link'></use></svg>",
-    callback: function(cm) {
-      var selection = cm.getSelection();
-      var text = "";
-      var link = "";
-
-      if (selection.match(/^https?:\/\//)) {
-        link = selection;
-      } else {
-        text = selection;
-      }
-      cm.replaceSelection("[" + text + "](" + link + ")");
-
-      var cursorPos = cm.getCursor();
-      if (!selection) {
-        cm.setCursor(cursorPos.line, cursorPos.ch - 3);
-      } else if (link) {
-        cm.setCursor(cursorPos.line, cursorPos.ch - (3 + link.length));
-      } else {
-        cm.setCursor(cursorPos.line, cursorPos.ch - 1);
-      }
-    }
-  },
-  {
-    hotkey: "Ctrl-P",
-    title: "Copy Block",
-    class: "copy",
-    label: "c^",
-    callback: function(cm) {
-      var selection = cm.getSelection();
-      cm.replaceSelection("^c " + selection + " c^");
-      if (!selection) {
-        var cursorPos = cm.getCursor();
-        cm.setCursor(cursorPos.line, cursorPos.ch - 3);
-      }
-    }
-  }
+  tuiButton(
+    "bold",
+    "Bold",
+    "Bold",
+    "<svg class='icon'><use xlink:href='#icon-bold'></use></svg>"
+  ),
+  tuiButton(
+    "italic",
+    "Italic",
+    "Italic",
+    "<svg class='icon'><use xlink:href='#icon-italic'></use></svg>"
+  ),
+  tuiButton(
+    "strike",
+    "Strike",
+    "Strike",
+    "<svg class='icon'><use xlink:href='#icon-strikethrough'></use></svg>"
+  ),
+  tuiButton(
+    "blockquote",
+    "Blockquote",
+    "Blockquote",
+    "<svg class='icon'><use xlink:href='#icon-quotes-left'></use></svg>"
+  ),
+  tuiButton(
+    "ul",
+    "UL",
+    "Unordered List",
+    "<svg class='icon'><use xlink:href='#icon-list2'></use></svg>"
+  ),
+  tuiButton(
+    "ol",
+    "OL",
+    "Numbered List",
+    "<svg class='icon'><use xlink:href='#icon-list-numbered'></use></svg>"
+  ),
+  tuiButton(
+    "link",
+    "Link",
+    "Link",
+    "<svg class='icon'><use xlink:href='#icon-link'></use></svg>"
+  ),
+  tuiButton(
+    "code",
+    "Code",
+    "Inline Code",
+    "<svg class='icon'><use xlink:href='#icon-embed'></use></svg>"
+  ),
+  tuiButton(
+    "codeBlock",
+    "CodeBlock",
+    "Code Block",
+    "<svg class='icon'><use xlink:href='#icon-embed2'></use></svg>"
+  )
 ];
 
 export function editorButtons(items = []) {
   return EDITOR_BUTTONS.concat(items);
 }
 
-export function appendLinesToEndCursor(cm) {
-  const cursor = cm.getCursor();
-  const lastLine = cm.lastLine();
+export function createTuiButtonEvent(
+  editor,
+  eventName,
+  eventFunc,
+  name,
+  className,
+  tooltip,
+  innerHTML
+) {
+  var toolbar = editor.getUI().getToolbar();
 
-  if (cursor.line + 4 > lastLine && cm.doc.history.lastOrigin !== "+delete") {
-    const prevPosition = {
-      line: cursor.line,
-      ch: cursor.ch
-    };
+  editor.eventManager.addEventType(eventName);
+  editor.eventManager.listen(eventName, eventFunc);
 
-    appendLinesToEnd(cm);
+  className += " tui-toolbar-custom";
 
-    cm.setCursor(prevPosition);
-  }
+  toolbar.addButton({
+    name: name,
+    className: className,
+    event: eventName,
+    tooltip: tooltip,
+    $el: $('<button class="' + className + '">' + innerHTML + "</div>")
+  });
 }
 
-export function appendLinesToEnd(cm) {
-  const lastLine = cm.lastLine();
-  const start = {
-    line: lastLine + 1,
-    ch: 0
-  };
-  cm.replaceRange("\n\n\n\n", start);
+export function createTuiButtonCommand(
+  editor,
+  name,
+  className,
+  tooltip,
+  command,
+  innerHTML
+) {
+  var toolbar = editor.getUI().getToolbar();
+
+  className += " tui-toolbar-custom";
+
+  toolbar.addButton({
+    name: name,
+    className: className,
+    command: command,
+    tooltip: tooltip,
+    $el: $('<button class="' + className + '">' + innerHTML + "</div>")
+  });
+}
+
+export function afterLoad(editor) {
+  const copy = CommandManager.command("markdown", {
+    name: "CopyBlock",
+    keyMap: ["CTRL+P", "META+P"],
+
+    exec(mde) {
+      const cm = mde.getEditor();
+      const doc = cm.getDoc();
+
+      let selection = doc.getSelection();
+      doc.replaceSelection("^c " + selection + " c^");
+
+      if (!selection) {
+        const cursorPos = doc.getCursor();
+        doc.setCursor(cursorPos.line, cursorPos.ch - 3);
+      }
+
+      cm.focus();
+    }
+  });
+  editor.commandManager.addCommand(copy);
+
+  createTuiButtonCommand(
+    editor,
+    "copyBlock",
+    "copy-block",
+    "Copy Block (CTRL+P)",
+    "<div class='icon-text'><div class='icon-text-value'>c^</div></div>",
+    20
+  );
 }

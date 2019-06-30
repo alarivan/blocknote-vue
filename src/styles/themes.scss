@@ -18,6 +18,7 @@
     $drawer-link-bg-hover,
     $clear-search-color,
     $clear-search-hover,
+    $editor-bg,
 ) {
 
     background-color: $main-bg;
@@ -123,6 +124,10 @@
                 color: $drawer-trigger-color-hover;
             }
         }
+
+        .tui-toolbar-custom {
+            color: $main-color;
+        }
     }
 
     .nav-drawer {
@@ -150,6 +155,38 @@
     // .action-panel-item {
     //     color: color;
     // }
+
+    .tui-editor-defaultUI {
+        .tui-editor {
+            background-color: $editor-bg;
+        }
+
+        .tui-editor-defaultUI-toolbar,
+        .te-markdown-tab-section {
+            background-color: $main-bg;
+        }
+
+        .te-markdown-tab-section {
+            button {
+                background-color: $main-bg;
+                color: $editor-button-color;
+                border-color: $editor-button-border-color;
+            }
+        }
+
+        .tui-editor-defaultUI-toolbar {
+
+            .tui-toolbar-custom,
+            .tui-heading.tui-toolbar-icons {
+                background-color: $main-bg;
+                color: $editor-button-color;
+                border-color: $editor-button-border-color;
+            }
+        }
+    }
+
+
+
 }
 
 
@@ -171,7 +208,8 @@
         $drawer-link-color-hover: theme('colors.gray.900'),
         $drawer-link-bg-hover: theme('colors.gray.200'),
         $clear-search-color: theme('colors.gray.700'),
-        $clear-search-hover: theme('colors.gray.600'));
+        $clear-search-hover: theme('colors.gray.600'),
+        $editor-bg: theme('colors.white'));
 }
 
 .theme-dark {
@@ -193,6 +231,8 @@
         $drawer-link-color-hover: theme('colors.gray.400'),
         $drawer-link-bg-hover: theme('colors.gray.700'),
         $clear-search-color: theme('colors.gray.300'),
-        $clear-search-hover: theme('colors.gray.400'));
+        $clear-search-hover: theme('colors.gray.400'),
+        $editor-bg:#2e3440,
+    );
 
 }

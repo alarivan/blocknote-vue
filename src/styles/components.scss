@@ -48,3 +48,17 @@ select.settings-select {
 .action-panel-item {
     @apply px-5 py-4 text-gray-300;
 }
+
+.icon-text {
+    position: relative;
+    width: 0.75rem;
+    height: 0.75rem;
+    margin: 0.5rem;
+
+    .icon-text-value {
+        position: absolute;
+        top: -5px;
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+}

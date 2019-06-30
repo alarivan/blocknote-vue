@@ -20,13 +20,14 @@
           class="content-label uppercase tracking-wide \ text-xs font-bold mb-2"
           for="note"
         >content (markdown)</label>
-        <codemirror
-          data-scroll-lock-scrollable
-          ref="mycm"
-          class="flex-auto h-full"
+        <editor
+          @load="load"
+          ref="tuiEditor"
+          height="100%"
           v-model="content"
-          :options="cmOption"
-        ></codemirror>
+          :options="editorOptions"
+          :key="editedNote._id"
+        />
       </div>
       <div
         class="tags-input-group flex flex-wrap items-center border-b border-b-2 border-gray-500 mb-2 pt-2 z-10"
@@ -39,7 +40,7 @@
           type="text"
           placeholder="work, play, joke"
           aria-label="tags"
-        >
+        />
       </div>
       <div class="flex edit-actions z-10">
         <button @click="save" class="save-button flex-auto py-2 px-6 button primary font-bold mr-2">
@@ -70,15 +71,17 @@ import "codemirror/addon/display/panel";
 import "../plugins/codemirror/buttons";
 import "codemirror/mode/gfm/gfm";
 
+import { Editor } from "@toast-ui/vue-editor";
+
 import {
   editorButtons,
-  appendLinesToEnd,
-  appendLinesToEndCursor
+  createTuiButtonEvent,
+  afterLoad
 } from "../helper/editor";
 
 export default {
   name: "note-edit",
-  components: { TagInput },
+  components: { TagInput, Editor },
 
   data() {
     return {
@@ -88,24 +91,7 @@ export default {
         initialEditType: "markdown",
         hideModeSwitch: true,
         usageStatistics: false,
-        toolbarItems: [
-          "heading",
-          "bold",
-          "italic",
-          "strike",
-          "divider",
-          "hr",
-          "quote",
-          "divider",
-          "ul",
-          "ol",
-          "indent",
-          "outdent",
-          "divider",
-          "link",
-          "code",
-          "codeblock"
-        ]
+        toolbarItems: editorButtons()
       },
       windowResizeEvent: false,
       tagsFocus: false,
@@ -119,8 +105,10 @@ export default {
         event.preventDefault();
         if (event.target == this.$refs.tags) {
           this.save();
-        } else if (this.$refs.mycm.codemirror.hasFocus()) {
+        } else if (this.$refs.tuiEditor.invoke("getCodeMirror").hasFocus()) {
           this.focusTags();
+        } else {
+          this.save();
         }
       }
     });
@@ -137,12 +125,36 @@ export default {
 
   methods: {
     resizeEditor() {
-      if (typeof this.$refs.mycm !== "undefined") {
-        this.$refs.mycm.codemirror.setSize(
+      if (typeof this.$refs.tuiEditor !== "undefined") {
+        const cm = this.$refs.tuiEditor.invoke("getCodeMirror");
+        cm.setSize(
           "100%",
-          this.$refs.mycm.$el.offsetHeight
+          this.$refs.tuiEditor.editor.layout.$containerEl.height()
         );
       }
+    },
+
+    load(editor) {
+      afterLoad(editor);
+
+      createTuiButtonEvent(
+        editor,
+        "focuTags",
+        this.focusTags,
+        "Focus Tags",
+        "focus-tags",
+        "Focus Tags",
+        "<svg class='icon'><use xlink:href='#icon-price-tags'></use></svg>",
+        21
+      );
+
+      editor
+        .getCodeMirror()
+        .setOption("theme", this.darkMode ? "nord" : "default");
+
+      this.$nextTick(() => {
+        this.resizeEditor();
+      });
     },
 
     focusTags() {
@@ -162,11 +174,6 @@ export default {
     },
 
     opened() {
-      this.$refs.mycm.codemirror.focus();
-
-      this.$refs.mycm.codemirror.on("cursorActivity", appendLinesToEndCursor);
-      appendLinesToEnd(this.$refs.mycm.codemirror);
-
       this.focusTagsEvent = addEventListener(this.$refs.tags, "blur", event => {
         this.unfocusTags();
       });
@@ -185,8 +192,6 @@ export default {
 
     beforeClose() {
       scrollLock.enablePageScroll(document.documentElement);
-
-      this.$refs.mycm.codemirror.off("cursorActivity", appendLinesToEndCursor);
     },
 
     save() {
@@ -200,10 +205,6 @@ export default {
     cancel() {
       this.editorActive = false;
       this.clearEditorState();
-    },
-
-    focusEditor() {
-      this.easyMDE.codemirror.focus();
     },
 
     addOrUpdate() {
@@ -291,29 +292,6 @@ export default {
 
     darkMode() {
       return this.$store.state.settings.theme.value == 2;
-    },
-
-    cmOption() {
-      return {
-        tabSize: 4,
-        mode: "gfm",
-        lineNumbers: true,
-        lineWrapping: true,
-        line: true,
-        cursorScrollMargin: 100,
-        theme: this.darkMode ? "nord" : "default",
-        buttons: editorButtons([
-          {
-            title: "Focus tags",
-            class: "focus-tags",
-            label:
-              "<svg class='icon'><use xlink:href='#icon-price-tags'></use></svg>",
-            callback: cm => {
-              this.focusTags();
-            }
-          }
-        ])
-      };
     }
   },
 
@@ -339,24 +317,40 @@ export default {
   .v--modal-box.v--modal {
     border-radius: 0;
 
-    .editor-main {
-      .tui-editor-defaultUI {
-        border: none;
-      }
+    .te-markdown-tab-section {
+      display: none !important;
+    }
 
-      .te-tab {
+    .tui-editor-defaultUI {
+      border: none;
+    }
+
+    .te-tab {
+      margin: 0;
+      height: 100%;
+      button {
+        border: none;
+        height: 31px;
+      }
+    }
+
+    .tui-editor-defaultUI-toolbar {
+      margin: 0;
+      padding: 0;
+
+      button.tui-toolbar-custom {
+        padding: 0;
         margin: 0;
-        height: 100%;
-        button {
-          border: none;
-          height: 31px;
+        width: auto;
+        height: auto;
+
+        .icon {
+          margin: 0.5rem;
         }
       }
-
-      .tui-editor-defaultUI-toolbar {
-        margin: 0;
-        padding: 0;
-      }
+    }
+    .tui-editor-defaultUI .CodeMirror-line {
+      @apply px-2;
     }
 
     .cm-s-default .cm-header {
@@ -373,10 +367,6 @@ export default {
 
   .CodeMirror {
     @apply h-full;
-
-    .CodeMirror-scroll {
-      // padding-bottom: 0;
-    }
 
     .CodeMirror-gutters {
       background: transparent;
