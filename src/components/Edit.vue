@@ -125,13 +125,18 @@ export default {
 
   methods: {
     resizeEditor() {
-      if (typeof this.$refs.tuiEditor !== "undefined") {
-        const cm = this.$refs.tuiEditor.invoke("getCodeMirror");
-        cm.setSize(
-          "100%",
-          this.$refs.tuiEditor.editor.layout.$containerEl.height()
-        );
-      }
+      return new Promise((resolve, reject) => {
+        if (typeof this.$refs.tuiEditor !== "undefined") {
+          const cm = this.$refs.tuiEditor.invoke("getCodeMirror");
+          cm.setSize(
+            "100%",
+            this.$refs.tuiEditor.editor.layout.$containerEl.height()
+          );
+          setTimeout(resolve, 100);
+          return;
+        }
+        return resolve();
+      });
     },
 
     load(editor) {
@@ -161,8 +166,9 @@ export default {
       this.tagsFocus = true;
 
       this.$nextTick(() => {
-        this.resizeEditor();
-        this.$refs.tags.focus();
+        this.resizeEditor().then(() => {
+          this.$refs.tags.focus();
+        });
       });
     },
 
