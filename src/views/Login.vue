@@ -18,17 +18,28 @@
         >Sign In With Blockstack</button>
       </div>
     </div>
-    <landing/>
   </div>
 </template>
 
 <script>
 import { userSession } from "../helper/userSession";
-import Landing from "../components/Landing";
 
 export default {
   name: "login",
-  components: { Landing },
+  components: {},
+
+  mounted() {
+    if (userSession.isUserSignedIn()) {
+      this.$router.push("/");
+    } else if (userSession.isSignInPending()) {
+      userSession.handlePendingSignIn().then(userData => {
+        window.location = window.location.origin;
+      });
+    } else {
+      this.signIn();
+    }
+  },
+
   methods: {
     signIn() {
       userSession.redirectToSignIn();

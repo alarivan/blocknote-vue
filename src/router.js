@@ -77,9 +77,8 @@ router.beforeEach((to, from, next) => {
     if (store.state.user == null) {
       store.dispatch("setRouteBeforeLogin", to.fullPath);
 
-      next({
-        path: "/login"
-      });
+      window.location = "https://landing.blocknote.xyz/";
+      return;
     } else {
       next();
     }
