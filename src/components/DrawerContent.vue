@@ -5,7 +5,7 @@
         <div>{{user.name()}}</div>
         <div>{{user.username}}</div>
       </div>
-      <img v-if="user.avatarUrl()" :src="user.avatarUrl()" alt="avatar" width="40" height="40">
+      <img v-if="user.avatarUrl()" :src="user.avatarUrl()" alt="avatar" width="40" height="40" />
     </div>
     <ul>
       <li>
@@ -25,9 +25,9 @@
         <button @click="signOut" class="w-full text-right nav-drawer-link">sign out</button>
       </li>
     </ul>
-    <div class="p-4">
+    <div v-if="user" class="p-4">
       <h1 class="font-bold uppercase">settings</h1>
-      <Options/>
+      <Options />
     </div>
   </div>
 </template>
