@@ -97,7 +97,8 @@
 
     .editor-modal {
 
-        .v--modal-box.v--modal {
+        .v--modal-box.v--modal,
+        .editor-footer {
             background-color: $main-bg;
         }
 

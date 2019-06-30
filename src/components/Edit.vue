@@ -30,28 +30,33 @@
           :key="editedNote._id"
         />
       </div>
-      <div
-        class="tags-input-group flex flex-wrap items-center border-b border-b-2 border-gray-500 mb-2 pt-2 z-10"
-      >
-        <label class="flex-auto uppercase tracking-wide text-xs font-bold" for="note">tags</label>
-        <input
-          ref="tags"
-          v-model="tags"
-          class="mousetrap flex-auto appearance-none bg-transparent border-none w-full mr-3 py-1 px-2 leading-tight focus:outline-none"
-          type="text"
-          placeholder="work, play, joke"
-          aria-label="tags"
-        />
-      </div>
-      <div class="flex edit-actions z-10">
-        <button @click="save" class="save-button flex-auto py-2 px-6 button primary font-bold mr-2">
-          save
-          <span class="hidden sm:inline-block">( alt + enter )</span>
-        </button>
-        <button @click="cancel" class="cancel-button py-2 px-4 border-2 font-bold">
-          cancel
-          <span class="hidden sm:inline-block">( esc )</span>
-        </button>
+      <div class="editor-footer">
+        <div
+          class="tags-input-group flex flex-wrap items-center border-b border-b-2 border-gray-500 mb-2 pt-2 z-10"
+        >
+          <label class="flex-auto uppercase tracking-wide text-xs font-bold" for="note">tags</label>
+          <input
+            ref="tags"
+            v-model="tags"
+            class="mousetrap flex-auto appearance-none bg-transparent border-none w-full mr-3 py-1 px-2 leading-tight focus:outline-none"
+            type="text"
+            placeholder="work, play, joke"
+            aria-label="tags"
+          />
+        </div>
+        <div class="flex edit-actions z-10">
+          <button
+            @click="save"
+            class="save-button flex-auto py-2 px-6 button primary font-bold mr-2"
+          >
+            save
+            <span class="hidden sm:inline-block">( alt + enter )</span>
+          </button>
+          <button @click="cancel" class="cancel-button py-2 px-4 border-2 font-bold">
+            cancel
+            <span class="hidden sm:inline-block">( esc )</span>
+          </button>
+        </div>
       </div>
     </div>
   </modal>
@@ -157,9 +162,10 @@ export default {
         .getCodeMirror()
         .setOption("theme", this.darkMode ? "nord" : "default");
 
-      // this.$nextTick(() => {
-      //   this.resizeEditor();
-      // });
+      this.$nextTick(() => {
+        this.resizeEditor();
+        editor.focus();
+      });
     },
 
     focusTags() {
@@ -382,17 +388,25 @@ export default {
   }
 
   @media screen and (max-height: 400px) {
-    .edit-actions,
     .content-label,
-    .tags-input-group {
+    .editor-footer {
       display: none;
     }
 
     .tags-focused {
-      .edit-actions,
-      .content-label,
-      .tags-input-group {
-        display: flex;
+      .content-label {
+        display: block;
+      }
+
+      .editor-footer {
+        box-sizing: border-box;
+        width: 100%;
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        @apply px-2;
       }
     }
   }
