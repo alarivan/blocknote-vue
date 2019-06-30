@@ -101,7 +101,8 @@ export default {
       },
       windowResizeEvent: false,
       tagsFocus: false,
-      focusTagsEvent: false
+      tagsBlurEvent: false,
+      tagsFocusEvent: false
     };
   },
 
@@ -170,29 +171,29 @@ export default {
 
     focusTags() {
       this.tagsFocus = true;
-
-      this.$nextTick(() => {
-        this.resizeEditor().then(() => {
-          this.$refs.tags.focus();
-        });
-      });
+      this.$refs.tags.focus();
     },
 
     unfocusTags() {
       this.tagsFocus = false;
-      this.$nextTick(() => {
-        this.resizeEditor();
-      });
     },
 
     opened() {
-      this.focusTagsEvent = addEventListener(this.$refs.tags, "blur", event => {
+      this.tagsBlurEvent = addEventListener(this.$refs.tags, "blur", event => {
         this.unfocusTags();
       });
+      this.tagsFocusEvent = addEventListener(
+        this.$refs.tags,
+        "focus",
+        event => {
+          this.tagsFocus = true;
+        }
+      );
     },
 
     close() {
-      this.focusTagsEvent.remove();
+      this.tagsBlurEvent.remove();
+      this.tagsFocusEvent.remove();
 
       this.cancel();
     },
@@ -406,7 +407,7 @@ export default {
         bottom: 0;
         left: 0;
         z-index: 1000;
-        @apply px-2;
+        @apply p-2;
       }
     }
   }
