@@ -158,7 +158,7 @@ export function afterLoad(editor) {
     "copyBlock",
     "copy-block",
     "Copy Block (CTRL+P)",
-    "<div class='icon-text'><div class='icon-text-value'>c^</div></div>",
-    20
+    "CopyBlock",
+    "<div class='icon-text'><div class='icon-text-value'>c^</div></div>"
   );
 }

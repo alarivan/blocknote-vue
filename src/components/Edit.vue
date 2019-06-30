@@ -337,6 +337,8 @@ export default {
     .tui-editor-defaultUI-toolbar {
       margin: 0;
       padding: 0;
+      display: flex;
+      flex-wrap: wrap;
 
       button.tui-toolbar-custom {
         padding: 0;
