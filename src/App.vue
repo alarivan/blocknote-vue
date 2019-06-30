@@ -1,6 +1,6 @@
 <template>
   <div class="theme" :class="themeClass">
-    <div class="py-8 px-1" v-if="user">
+    <div class="py-8 px-1">
       <Drawer
         class="nav-drawer"
         :direction="'right'"
