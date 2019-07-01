@@ -31,7 +31,7 @@ const TUTORIAL_NOTES = [
   },
   {
     body:
-      "### 6: General Shortcuts\n\n`shift+n` - create new note\n`` - focus on search\n`r r` - clear search\n`v` - open first note\n`e` - edit first note\n`c` - copy first note\n`d d` - delete first note",
+      "### 6: General Shortcuts\n\n`shift+n` - create new note\n`/` - focus on search\n`r r` - clear search\n`v` - open first note\n`e` - edit first note\n`c` - copy first note\n`d d` - delete first note",
     tags: ["tutorial"],
     position: 6
   },
