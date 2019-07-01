@@ -18,14 +18,16 @@ const router = new Router({
       component: Home,
       meta: {
         requiresAuth: true,
-        title: "Home"
+        title: "Home",
+        layout: "default"
       }
     },
     {
       path: "/about",
       name: "about",
       meta: {
-        title: "About"
+        title: "About",
+        layout: "default"
       },
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -38,7 +40,8 @@ const router = new Router({
       name: "settings",
       meta: {
         requiresAuth: true,
-        title: "Settings"
+        title: "Settings",
+        layout: "default"
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/Settings.vue")
@@ -48,7 +51,8 @@ const router = new Router({
       name: "manager",
       meta: {
         requiresAuth: true,
-        title: "Import/Export"
+        title: "Import/Export",
+        layout: "default"
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/Manager.vue")
@@ -57,7 +61,8 @@ const router = new Router({
       path: "/login",
       name: "login",
       meta: {
-        title: "Login"
+        title: "Login",
+        layout: "simple"
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/Login.vue")
@@ -66,7 +71,8 @@ const router = new Router({
       path: "/howto",
       name: "howto",
       meta: {
-        title: "How To"
+        title: "How To",
+        layout: "default"
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/Howto.vue")
@@ -79,11 +85,12 @@ router.beforeEach((to, from, next) => {
     if (store.state.user == null) {
       store.dispatch("setRouteBeforeLogin", to.fullPath);
 
-      if (userSession.isUserSignedIn()) {
-      } else if (userSession.isSignInPending()) {
-      } else {
-        window.location = "https://landing.blocknote.xyz/";
-      }
+      // if (userSession.isUserSignedIn()) {
+      // } else if (userSession.isSignInPending()) {
+      // } else {
+      //   window.location = "https://landing.blocknote.xyz/";
+      // }
+      next();
 
       return;
     } else {

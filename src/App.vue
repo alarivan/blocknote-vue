@@ -1,6 +1,6 @@
 <template>
   <div class="theme" :class="themeClass">
-    <div class="py-8 px-1">
+    <div class="py-8 px-1" v-if="pageLayout == 'default'">
       <Drawer
         class="nav-drawer"
         :direction="'right'"
@@ -11,6 +11,9 @@
         <drawer-content />
       </Drawer>
       <navigation v-if="!isHome" />
+      <router-view />
+    </div>
+    <div v-else>
       <router-view />
     </div>
   </div>
@@ -126,6 +129,10 @@ export default {
 
     routeBeforeLogin() {
       return this.$store.state.routeBeforeLogin;
+    },
+
+    pageLayout() {
+      return this.$route.meta.layout;
     }
   },
 

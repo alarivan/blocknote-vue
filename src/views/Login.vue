@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex justify-center items-center h-70vh">
+    <!-- <div class="flex justify-center items-center h-70vh">
       <div class="text-center sm:w-1/2">
         <h1 class="mb-4 text-2xl font-bold">BlockNote.xyz</h1>
         <p class>Note taking application with keyboard shortcuts for everything.</p>
@@ -17,27 +17,29 @@
           @click.prevent="signIn"
         >Sign In With Blockstack</button>
       </div>
-    </div>
+    </div>-->
+    <landing />
   </div>
 </template>
 
 <script>
 import { userSession } from "../helper/userSession";
+import Landing from "../components/Landing";
 
 export default {
   name: "login",
-  components: {},
+  components: { Landing },
 
   mounted() {
-    if (userSession.isUserSignedIn()) {
-      this.$router.push("/");
-    } else if (userSession.isSignInPending()) {
-      userSession.handlePendingSignIn().then(userData => {
-        window.location = window.location.origin;
-      });
-    } else {
-      this.signIn();
-    }
+    // if (userSession.isUserSignedIn()) {
+    //   this.$router.push("/");
+    // } else if (userSession.isSignInPending()) {
+    //   userSession.handlePendingSignIn().then(userData => {
+    //     window.location = window.location.origin;
+    //   });
+    // } else {
+    //   this.signIn();
+    // }
   },
 
   methods: {

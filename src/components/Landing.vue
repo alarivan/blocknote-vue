@@ -1,19 +1,112 @@
 <template>
-  <div class="container mx-auto">
-    <div class="flex flex-wrap mb-20">
-      <div
-        v-for="(item, index) in items"
-        :key="index"
-        class="w-full sm:w-1/2 p-4 pb-10 text-center"
-      >
-        <h3 class="text-xl font-bold mb-2">{{item.title}}</h3>
-        <p class="max-w-xs mx-auto text-lg" v-html="item.description"></p>
+  <!-- Wrapper -->
+  <div id="wrapper">
+    <!-- Banner -->
+    <section id="banner" class="major">
+      <div class="inner">
+        <header class="major">
+          <h1>BlockNote.xyz</h1>
+        </header>
+        <div class="content">
+          <p>
+            Most productive way to write your notes.
+            <br />
+            <a target="_blank" href="https://blockstack.org/about/">What is Blockstack?</a>
+          </p>
+          <ul class="actions">
+            <li>
+              <a href="https://blocknote.xyz/login" class="button">Login With Blockstack</a>
+            </li>
+          </ul>
+        </div>
       </div>
+    </section>
+
+    <!-- Main -->
+    <div id="main">
+      <!-- One -->
+      <section id="one" class="tiles">
+        <article>
+          <span class="image">
+            <img src="~@/assets/landing/pic01.jpg" alt />
+          </span>
+          <header class="major">
+            <h3>
+              <i class="fas fa-shield-alt"></i> Secure
+            </h3>
+            <p>
+              Your data is encrypted with keys that only you hold via
+              <a
+                href="https://blockstack.org"
+                target="_blank"
+              >Blockstack.</a>
+            </p>
+          </header>
+        </article>
+        <article>
+          <span class="image">
+            <img src="~@/assets/landing/pic02.jpg" alt />
+          </span>
+          <header class="major">
+            <h3>
+              <i class="fas fa-fighter-jet"></i>
+              <i class="fas fa-running"></i> Quick and Simple
+            </h3>
+            <p>Find, edit and copy your notes in seconds using advanced search and tags.</p>
+          </header>
+        </article>
+        <article>
+          <span class="image">
+            <img src="@/assets/landing/pic03.jpg" alt />
+          </span>
+          <header class="major">
+            <h3>
+              <i class="fas fa-mobile-alt"></i>
+              <i class="fas fa-desktop"></i> Access anywhere
+            </h3>
+            <p>Access your notes on mobile and desktop devices.</p>
+          </header>
+        </article>
+        <article>
+          <span class="image">
+            <img src="@/assets/landing/pic04.jpg" alt />
+          </span>
+          <header class="major">
+            <h3>
+              <i class="fas fa-keyboard"></i> Keyboard Focused
+            </h3>
+            <p>Keyboard shortcuts for everything</p>
+          </header>
+        </article>
+      </section>
+
+      <!-- Two -->
+      <section id="two">
+        <div class="inner">
+          <ul class="actions">
+            <li>
+              <a href="https://blocknote.xyz/login" class="button">Get Started</a>
+            </li>
+          </ul>
+        </div>
+      </section>
     </div>
-    <div class="w-full mx-auto py-2 mb-8 text-center">
-      <h4>contact developer:</h4>
-      <a class="underline" href="mailto:alarivan@pm.me">alarivan@pm.me</a>
-    </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+      <div class="inner">
+        <p>
+          contact:
+          <a href="mailto:alarivan@pm.me">alarivan@pm.me</a>
+        </p>
+        <ul class="copyright">
+          <li>
+            Design:
+            <a href="https://html5up.net">HTML5 UP</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -50,4 +143,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../styles/landing/main.scss";
 </style>
