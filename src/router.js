@@ -4,6 +4,8 @@ import Home from "./views/Home.vue";
 
 import store from "./store";
 
+import { userSession } from "./helper/userSession";
+
 Vue.use(Router);
 
 const router = new Router({
@@ -77,7 +79,12 @@ router.beforeEach((to, from, next) => {
     if (store.state.user == null) {
       store.dispatch("setRouteBeforeLogin", to.fullPath);
 
-      window.location = "https://landing.blocknote.xyz/";
+      if (userSession.isUserSignedIn()) {
+      } else if (userSession.isSignInPending()) {
+      } else {
+        window.location = "https://landing.blocknote.xyz/";
+      }
+
       return;
     } else {
       next();
