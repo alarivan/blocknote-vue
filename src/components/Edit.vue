@@ -161,7 +161,6 @@ export default {
         .setOption("theme", this.darkMode ? "nord" : "default");
 
       this.$nextTick(() => {
-        this.resizeEditor();
         editor.focus();
       });
     },
@@ -178,6 +177,9 @@ export default {
     focusEditor() {
       this.unfocusTags();
       this.editorFocused = true;
+      this.$nextTick(() => {
+        this.resizeEditor();
+      });
     },
 
     blurEditor() {
