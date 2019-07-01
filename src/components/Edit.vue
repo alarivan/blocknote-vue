@@ -12,7 +12,7 @@
   >
     <div
       class="editor-wrapper flex flex-col mx-1 sm:mx-0 h-full p-2"
-      :class="{'tags-focused': tagsFocused}"
+      :class="{'tags-focused': tagsFocused, 'editor-unfocused': !editorFocused}"
     >
       <div class="flex-auto flex flex-col">
         <label
@@ -22,7 +22,8 @@
         >content (markdown)</label>
         <editor
           @load="load"
-          @focus="unfocusTags"
+          @focus="focusEditor"
+          @blur="blurEditor"
           ref="tuiEditor"
           height="100%"
           v-model="content"
@@ -97,8 +98,8 @@ export default {
       },
       windowResizeEvent: false,
       tagsFocus: false,
-      tagsBlurEvent: false,
-      tagsFocusEvent: false
+      editorFocused: false,
+      listenerEventsModal: []
     };
   },
 
@@ -174,22 +175,37 @@ export default {
       this.tagsFocus = false;
     },
 
+    focusEditor() {
+      this.unfocusTags();
+      this.editorFocused = true;
+    },
+
+    blurEditor() {
+      this.editorFocused = false;
+    },
+
     opened() {
-      this.tagsBlurEvent = addEventListener(this.$refs.tags, "blur", event => {
-        this.unfocusTags();
-      });
-      this.tagsFocusEvent = addEventListener(
-        this.$refs.tags,
-        "focus",
-        event => {
+      this.listenerEventsModal.push(
+        addEventListener(this.$refs.tags, "blur", event => {
+          this.unfocusTags();
+        })
+      );
+      this.listenerEventsModal.push(
+        addEventListener(this.$refs.tags, "focus", event => {
           this.tagsFocus = true;
-        }
+        })
+      );
+      this.listenerEventsModal.push(
+        addEventListener(this.$refs.tags, "focus", event => {
+          this.tagsFocus = true;
+        })
       );
     },
 
     close() {
-      this.tagsBlurEvent.remove();
-      this.tagsFocusEvent.remove();
+      this.listenerEventsModal.forEach(e => {
+        e.remove();
+      });
 
       this.cancel();
     },
@@ -404,6 +420,17 @@ export default {
         left: 0;
         z-index: 1000;
         @apply p-2;
+
+        .edit-actions {
+          display: none;
+        }
+      }
+    }
+
+    .editor-unfocused {
+      .content-label,
+      .editor-footer {
+        display: block;
       }
     }
   }
