@@ -87,7 +87,7 @@ export default {
     signOut() {
       this.userSession.signUserOut();
       this.removeUser();
-      this.$router.push("/login");
+      this.$router.push("/");
     },
 
     closeDrawer() {
