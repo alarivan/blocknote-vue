@@ -21,8 +21,11 @@ class SettingsApi {
       localStorage.getItem(versionApi.LOCAL_STORAGE_KEY)
     );
 
-    const local = this.decrypt(local_data.settings);
+    if (_.isNull(local_data) || _.isUndefined(local_data.settings)) {
+      return store.dispatch("setSettings", defaultSettings);
+    }
 
+    const local = this.decrypt(local_data.settings);
     return store.dispatch("setSettings", _.extend(defaultSettings, local));
   }
 
