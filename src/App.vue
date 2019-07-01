@@ -87,7 +87,7 @@ export default {
     signOut() {
       this.userSession.signUserOut();
       this.removeUser();
-      this.$router.push("/");
+      window.location = "https://landing.blocknote.xyz/";
     },
 
     closeDrawer() {
