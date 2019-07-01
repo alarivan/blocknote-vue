@@ -66,7 +66,7 @@ Renderer.prototype.del = function(text) {
   return text;
 };
 Renderer.prototype.link = function(href, title, text) {
-  return href;
+  return text;
 };
 Renderer.prototype.image = function(href, title, text) {
   return this.showImageText ? text : "";
