@@ -13,7 +13,7 @@
       <navigation v-if="!isHome" />
       <router-view />
     </div>
-    <div v-else>
+    <div class="bg-gray-900" v-else>
       <router-view />
     </div>
   </div>
