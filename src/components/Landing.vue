@@ -1,7 +1,5 @@
 <template>
-  <!-- Wrapper -->
   <div id="wrapper">
-    <!-- Banner -->
     <section id="banner" class="major">
       <div class="inner">
         <header class="major">
@@ -105,7 +103,16 @@ export default {
   name: "landing",
   methods: {
     signIn() {
-      userSession.redirectToSignIn();
+      if (this.user) {
+        this.$router.push("/");
+      } else {
+        userSession.redirectToSignIn();
+      }
+    }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user;
     }
   }
 };
