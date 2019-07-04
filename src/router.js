@@ -4,8 +4,6 @@ import Home from "./views/Home.vue";
 
 import store from "./store";
 
-import { userSession } from "./helper/userSession";
-
 Vue.use(Router);
 
 const router = new Router({
@@ -81,16 +79,14 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+  store.dispatch("setDrawer", false);
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (store.state.user == null) {
       store.dispatch("setRouteBeforeLogin", to.fullPath);
 
-      // if (userSession.isUserSignedIn()) {
-      // } else if (userSession.isSignInPending()) {
-      // } else {
-      //   window.location = "https://landing.blocknote.xyz/";
-      // }
-      next();
+      next({
+        path: "/login"
+      });
 
       return;
     } else {

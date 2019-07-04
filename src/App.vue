@@ -46,11 +46,6 @@ export default {
 
   created() {
     this.setUserSession(userSession);
-
-    this.$router.beforeEach((to, from, next) => {
-      this.closeDrawer();
-      return next();
-    });
   },
 
   mounted() {
@@ -90,7 +85,7 @@ export default {
     signOut() {
       this.userSession.signUserOut();
       this.removeUser();
-      window.location = "https://landing.blocknote.xyz/";
+      this.$router.push("/login");
     },
 
     closeDrawer() {

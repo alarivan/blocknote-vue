@@ -9,17 +9,17 @@
     </div>
     <ul>
       <li>
-        <router-link @click="closeDrawer" class="nav-drawer-link" to="/">notes</router-link>
+        <router-link class="nav-drawer-link" to="/">notes</router-link>
       </li>
       <li>
-        <router-link @click="closeDrawer" class="nav-drawer-link" to="/about">about</router-link>
+        <router-link class="nav-drawer-link" to="/about">about</router-link>
       </li>
 
       <li v-if="user">
-        <router-link @click="closeDrawer" class="nav-drawer-link" to="/settings">settings</router-link>
+        <router-link class="nav-drawer-link" to="/settings">settings</router-link>
       </li>
       <li v-if="user">
-        <router-link @click="closeDrawer" class="nav-drawer-link" to="/manage">import/export</router-link>
+        <router-link class="nav-drawer-link" to="/manage">import/export</router-link>
       </li>
       <li v-if="user">
         <button @click="signOut" class="w-full text-right nav-drawer-link">sign out</button>
@@ -47,7 +47,7 @@ export default {
     signOut() {
       this.userSession.signUserOut();
       this.removeUser();
-      window.location = "https://landing.blocknote.xyz/";
+      this.$router.push("/login");
     },
 
     closeDrawer() {
