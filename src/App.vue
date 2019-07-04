@@ -1,6 +1,6 @@
 <template>
   <div class="theme" :class="themeClass">
-    <div class="py-8 px-1">
+    <div class="py-8 px-1" v-if="pageLayout == 'default'">
       <Drawer
         class="nav-drawer"
         :direction="'right'"
@@ -11,6 +11,9 @@
         <drawer-content />
       </Drawer>
       <navigation v-if="!isHome" />
+      <router-view />
+    </div>
+    <div class="bg-gray-900" v-else>
       <router-view />
     </div>
   </div>
@@ -43,11 +46,6 @@ export default {
 
   created() {
     this.setUserSession(userSession);
-
-    this.$router.beforeEach((to, from, next) => {
-      this.closeDrawer();
-      return next();
-    });
   },
 
   mounted() {
@@ -87,7 +85,7 @@ export default {
     signOut() {
       this.userSession.signUserOut();
       this.removeUser();
-      window.location = "https://landing.blocknote.xyz/";
+      this.$router.push("/login");
     },
 
     closeDrawer() {
@@ -126,6 +124,10 @@ export default {
 
     routeBeforeLogin() {
       return this.$store.state.routeBeforeLogin;
+    },
+
+    pageLayout() {
+      return this.$route.meta.layout;
     }
   },
 
